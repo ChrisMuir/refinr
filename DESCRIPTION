@@ -1,0 +1,22 @@
+Package: refinr
+Title: Functions for Merging Similar Values within a Character Vector
+Version: 0.0.0.9000
+Authors@R: person("Chris", "Muir", email = "chrismuirRVA@gmail.com", role = c("aut", "cre"))
+Description: These functions take a character vector as input, identify and 
+  cluster similar values, and then merge clusters together so their values 
+  become identical. The functions in this package are an implementation of the 
+  key collision and ngram fingerprint algorithms from the OSS tool OpenRefine. 
+  More info on OpenRefine can be found here http://openrefine.org/. More info 
+  on key collision and ngram fingerprint can be found here 
+  https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth.
+Depends: R (>= 3.0.1)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports:
+        ngram, 
+        stringdist, 
+        dplyr, 
+        Rcpp
+RoxygenNote: 6.0.1
+LinkingTo: Rcpp
