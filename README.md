@@ -1,11 +1,19 @@
 refinr
 ========
 
-R package implementation of two algorithms from the OSS software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth). In addition, the function `n_gram_merge` uses approximate string matching applied to the ngram fingerprints to form clusters.
+R package implementation of two algorithms from the open source software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)). In addition, the function `n_gram_merge` uses approximate string matching applied to the ngram fingerprints to form clusters.
 
 This package is built using [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) for approximate string matching and [ngram](https://cran.r-project.org/web/packages/ngram/index.html) for tokenization.
 
 The clustering is also designed to be insensitive to common business name suffixes (i.e. inc, llc, co, etc.).
+
+Installation
+------------
+
+``` r
+# install.packages("devtools")
+devtools::install_github("ChrisMuir/refinr")
+```
 
 Example Usage
 -------------
@@ -47,4 +55,13 @@ n_gram_merge(x,
              edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1), 
              bus_suffix = TRUE)
 [1] "Acme Pizzazza LLC" "ACME PIZA COMPANY" "Acme Pizzazza LLC"
+```
+
+For both `key_collision_merge` and `n_gram_merge`, the merge value for a given cluster will always be the value that appears the greatest number of times in the original vector.
+```r
+x <- c("Acme Pizza, Inc.", "Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
+```
+```r
+key_collision_merge(x)
+[1] "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc."
 ```

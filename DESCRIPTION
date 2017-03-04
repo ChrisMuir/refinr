@@ -20,3 +20,5 @@ Imports:
         Rcpp
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
+URL: http://github.com/ChrisMuir/refinr
+BugReports: http://github.com/ChrisMuir/refinr/issues
