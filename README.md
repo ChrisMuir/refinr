@@ -3,7 +3,7 @@ refinr
 
 R package implementation of two algorithms from the open source software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)). In addition, the function `n_gram_merge` uses approximate string matching applied to the ngram fingerprints to form clusters.
 
-This package is built using [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) for approximate string matching and [ngram](https://cran.r-project.org/web/packages/ngram/index.html) for tokenization.
+This package is built using [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) for approximate string matching, [ngram](https://cran.r-project.org/web/packages/ngram/index.html) for string tokenization and [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) to allow for a handful of functions written in C++ for faster performance.
 
 The clustering is also designed to be insensitive to common business name suffixes (i.e. inc, llc, co, etc.).
 
@@ -14,6 +14,10 @@ Installation
 # install.packages("devtools")
 devtools::install_github("ChrisMuir/refinr")
 ```
+
+Software Requirements
+---------------------
+Installing this package directly from GitHub requires a C++ compiler. See [here](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) for an explaination of how to meet this requirement for Windows, Mac and Linux.
 
 Example Usage
 -------------
@@ -65,3 +69,12 @@ x <- c("Acme Pizza, Inc.", "Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza
 key_collision_merge(x)
 [1] "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc."
 ```
+
+Notes
+-----
+
+- This package is NOT meant to replace OpenRefine for every use case. For situations in which merging accuracy is the most important consideration, OpenRefine is preferable. Since the merging steps in refinr are automated, there will usually be more false positive merges, versus manually selecting clusters to merge in OpenRefine.
+- The advantages this package has over OpenRefine: 
+  * Operations are fully automated.
+  * Facilitates a more repoducable workflow.
+  * Seems to handle larger datasets better (1000000 - 5000000 observations).
