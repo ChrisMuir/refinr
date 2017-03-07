@@ -55,9 +55,9 @@ key_collision_merge <- function(vect, bus_suffix = TRUE) {
   # Perform merging on all clusters with length greater than one.
   if (any(csize > 1)) {
     ids <- clusters[which(csize > 1)]
-    vect <- merge_clusters(ids, keys, vect, keyssub, vectsub)
+    output <- merge_clusters(ids, keys, vect, keyssub, vectsub)
   } else {
     return(vect)
   }
-  return(vect)
+  return(output)
 }

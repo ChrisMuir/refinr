@@ -19,6 +19,7 @@ CharacterVector merge_clusters(CharacterVector clusters,
   int clust_len = clusters.size();
   int keyssub_len = keyssub.size();
   int keys_len = keys.size();
+  CharacterVector output = clone(vect);
 
   for(int i = 0; i < clust_len; ++i) {
     String clust(1);
@@ -35,9 +36,9 @@ CharacterVector merge_clusters(CharacterVector clusters,
     match_bool_keys = equality(keys, clust);
     for(int n = 0; n < keys_len; ++n) {
       if ( match_bool_keys[n] ) {
-        vect[n] = most_freq_string;
+        output[n] = most_freq_string;
       }
     }
   }
-  return vect;
+  return output;
 }
