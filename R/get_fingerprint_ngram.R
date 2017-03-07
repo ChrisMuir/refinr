@@ -69,7 +69,8 @@ get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
       vapply(., function(x) paste(x, collapse = ""), character(1)) %>%
       iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)} %>%
-      ifelse(. == "" || is.na(.), NA, .)
+      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x},
+             USE.NAMES = FALSE)
   } else {
     vect %>%
       tolower %>%
@@ -108,6 +109,7 @@ get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
       vapply(., function(x) paste(x, collapse = ""), character(1)) %>%
       iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)} %>%
-      ifelse(. == "" || is.na(.), NA, .)
+      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x},
+             USE.NAMES = FALSE)
   }
 }
