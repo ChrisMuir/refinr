@@ -23,9 +23,6 @@
 #' [1] "eneqipmemsntomorpmpoqurtsespsstotsui"
 #' }
 get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
-  ## TODO: ----
-  ## Add utf encoding normalization to both the if leg and else leg of this
-  ## function (to eliminate accent marks)
   stopifnot(is.character(vect))
   stopifnot(is.logical(bus_suffix))
 
