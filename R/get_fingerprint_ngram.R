@@ -44,7 +44,7 @@ get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
         }}, USE.NAMES = FALSE) %>%
 
       sapply(., function(x) {
-        if (!is.na(x) && nchar(x) >= 2) {
+        if (!is.na(x) && nchar(x) >= (numgram + (numgram - 1))) {
           x
         } else {
           NA
@@ -67,8 +67,9 @@ get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
       lapply(., sort) %>%
       lapply(., unique) %>%
       vapply(., function(x) paste(x, collapse = ""), character(1)) %>%
+      iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)} %>%
-      ifelse(. == "", NA, .)
+      ifelse(. == "" || is.na(.), NA, .)
   } else {
     vect %>%
       tolower %>%
@@ -82,7 +83,7 @@ get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
         }}, USE.NAMES = FALSE) %>%
 
       sapply(., function(x) {
-        if (!is.na(x) && nchar(x) >= 2) {
+        if (!is.na(x) && nchar(x) >= (numgram + (numgram - 1))) {
           x
         } else {
           NA
@@ -105,7 +106,8 @@ get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
       lapply(., sort) %>%
       lapply(., unique) %>%
       vapply(., function(x) paste(x, collapse = ""), character(1)) %>%
+      iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)} %>%
-      ifelse(. == "", NA, .)
+      ifelse(. == "" || is.na(.), NA, .)
   }
 }

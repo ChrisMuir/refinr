@@ -18,9 +18,6 @@
 #' [1] "equipment sports toms"
 #' }
 get_fingerprint_KC <- function(vect, bus_suffix) {
-  ## TODO: ----
-  ## Add utf encoding normalization to both the if leg and else leg of this
-  ## function (to eliminate accent marks)
   stopifnot(is.character(vect))
   stopifnot(is.logical(bus_suffix))
 
@@ -37,7 +34,8 @@ get_fingerprint_KC <- function(vect, bus_suffix) {
       lapply(., sort) %>%
       lapply(., unique) %>%
       vapply(., function(x) paste(x, collapse = " "), character(1)) %>%
-      sapply(., function(x) if (x == "") {NA} else {x}, USE.NAMES = FALSE)
+      iconv(., to = "ASCII//TRANSLIT") %>%
+      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x}, USE.NAMES = FALSE)
   } else {
     vect %>%
       tolower %>%
@@ -48,6 +46,7 @@ get_fingerprint_KC <- function(vect, bus_suffix) {
       lapply(., sort) %>%
       lapply(., unique) %>%
       vapply(., function(x) paste(x, collapse = " "), character(1)) %>%
-      sapply(., function(x) if (x == "") {NA} else {x}, USE.NAMES = FALSE)
+      iconv(., to = "ASCII//TRANSLIT") %>%
+      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x}, USE.NAMES = FALSE)
   }
 }
