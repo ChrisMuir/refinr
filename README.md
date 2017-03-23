@@ -76,5 +76,5 @@ Notes
 - This package is NOT meant to replace OpenRefine for every use case. For situations in which merging accuracy is the most important consideration, OpenRefine is preferable. Since the merging steps in refinr are automated, there will usually be more false positive merges, versus manually selecting clusters to merge in OpenRefine.
 - The advantages this package has over OpenRefine: 
   * Operations are fully automated.
-  * Facilitates a more repoducable workflow.
+  * Facilitates a more reproducible workflow.
   * Seems to handle larger datasets better (1000000 - 5000000 observations).
