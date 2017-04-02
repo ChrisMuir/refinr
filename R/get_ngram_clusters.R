@@ -61,24 +61,37 @@ get_ngram_clusters <- function(one_gram_keys,
   stopifnot(is.numeric(edit_dist_weights))
 
   if (is.na(edit_threshold) || edit_threshold == 0) {
-    # Find all n_gram_keys for which their associated one gram key has an
-    # identical match within the entire list of one gram keys.
+    # If approximate string matching is disabled (via param 'edit_threshold'),
+    # then find all elements of n_gram_keys that have one or more identical
+    # matches. From that list, create clusters of n_gram_keys (groups that all
+    # have an identical n_gram_key), eliminate all NA's within each group, and
+    # eliminate all groups with length less than two, then return clusters.
     n_gram_keys_dups <- n_gram_keys %>%
       .[!is.na(.)] %>%
       .[duplicated(.)] %>%
       unique
-    clusters <- lapply(n_gram_keys_dups, function(x)
-      n_gram_keys[which(equality(lookupvect = n_gram_keys, charstring = x))])
+    clusters <- lapply(n_gram_keys_dups, function(x) {
+      n_gram_keys[which(equality(n_gram_keys, x))] %>%
+        .[!is.na(.)]
+    }) %>%
+      .[sapply(., function(k) length(k) > 1)]
     return(clusters)
   } else {
-    # Find all n_gram_keys for which their associated one gram key has an
-    # identical match within the entire list of one gram keys.
+    # If approximate string matching is enabled, then find all elements of
+    # n_gram_keys for which their associated one_gram_key has one or more
+    # identical matches within the entire list of one_gram_keys. From that
+    # list, create clusters of n_gram_keys (groups that all have an identical
+    # one_gram_key), eliminate all NA's within each group, and eliminate all
+    # groups with length less than two.
     one_gram_keys_dups <- one_gram_keys %>%
       .[!is.na(.)] %>%
       .[duplicated(.)] %>%
       unique
-    initial_clust <- lapply(one_gram_keys_dups, function(x)
-      n_gram_keys[which(equality(lookupvect = one_gram_keys, charstring = x))])
+    initial_clust <- lapply(one_gram_keys_dups, function(x) {
+      n_gram_keys[which(equality(one_gram_keys, x))] %>%
+        .[!is.na(.)]
+    }) %>%
+      .[sapply(., function(k) length(k) > 1)]
 
     # For each element of initial_clust, do a stringdist matrix and analyze the
     # closest match for each element (so if theres a cluster of n_gram_keys
@@ -106,23 +119,24 @@ get_ngram_clusters <- function(one_gram_keys,
       if (any(lows < edit_threshold)) {
         # ID whether or not any of the rows of distmatrices[[i]] have more than
         # one cluster match (ie a min value that repeats within any given row).
-        # This is the same as IDing clusters that have length greater than 2.
         olap <- vapply(seq_len(length(lows)), function(x)
-          if (lows[x] > edit_threshold) {return(1)}
-          else {sum(distmatrices[[i]][x, ] == lows[x]) + 1}, numeric(1))
-        # If olap indicates any clusters have length greater than 2, then code
-        # below will generate the clusters, and then eliminate pair-wise
-        # clusters that appear in any clusters of length greater than 2.
-        if (any(olap > 2)) {
+          if (lows[x] > edit_threshold) {return(0)}
+          else {sum(distmatrices[[i]][x, -x] == lows[x])}, numeric(1))
+        # If any rows of distmatrices[[i]] have a min edit distance that
+        # repeats, then code below will generate the clusters, and then
+        # eliminate pair-wise clusters that appear in any clusters of length
+        # greater than 2.
+        if (any(olap > 1)) {
           # Generate clusters.
           clust <- lapply(which(lows < edit_threshold), function(x)
             initial_clust[[i]][which(distmatrices[[i]][x, ] < edit_threshold)]) %>%
             unique
           # ID the cluster(s) that have the longest length.
-          maxclust <- which(olap[olap > 1] == max(olap))
-          # clust_bool is a logical vector of length == clust, indicating which
-          # clusters to keep (pair-wise clusters that appear in longer clusters
-          # are not kept).
+          maxclust <- which.max(vapply(clust, length, numeric(1)))
+
+          # clust_bool is a logical vector with the same length as clust,
+          # indicating which clusters to keep (pair-wise clusters that appear
+          # in longer clusters are not kept).
           clust_bool <- vapply(clust, function(k) {
             if (any(vapply(
               clust[maxclust], function(x) all(x %in% k), logical(1)))) {
