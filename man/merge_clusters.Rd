@@ -4,18 +4,18 @@
 \alias{merge_clusters}
 \title{Merge clusters of similar values.}
 \usage{
-merge_clusters(clusters, keys, vect, keyssub, vectsub)
+merge_clusters(clusters, keys_vect, vect, keys_vect_sub, vect_sub)
 }
 \arguments{
 \item{clusters}{character vector}
 
-\item{keys}{character vector}
+\item{keys_vect}{character vector}
 
 \item{vect}{character vector}
 
-\item{keyssub}{character vector}
+\item{keys_vect_sub}{character vector}
 
-\item{vectsub}{character vector}
+\item{vect_sub}{character vector}
 }
 \description{
 Function that performs all merges related to input value clusters.

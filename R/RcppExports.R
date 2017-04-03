@@ -17,28 +17,41 @@ equality <- function(lookupvect, charstring) {
 #'
 #' Function that performs all merges related to input value clusters.
 #' @param clusters character vector
-#' @param keys character vector
+#' @param keys_vect character vector
 #' @param vect character vector
-#' @param keyssub character vector
-#' @param vectsub character vector
-merge_clusters <- function(clusters, keys, vect, keyssub, vectsub) {
-    .Call('refinr_merge_clusters', PACKAGE = 'refinr', clusters, keys, vect, keyssub, vectsub)
+#' @param keys_vect_sub character vector
+#' @param vect_sub character vector
+merge_clusters <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub) {
+    .Call('refinr_merge_clusters', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub)
+}
+
+#' Function that performs all merges related to input value clusters. Can
+#' perform merging using values from a dictionary vector.
+#' @param clusters character vector
+#' @param keys_vect character vector
+#' @param vect character vector
+#' @param keys_vect_sub character vector
+#' @param vect_sub character vector
+#' @param keys_dict character vector
+#' @param dict character vector
+merge_clusters_dict <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict) {
+    .Call('refinr_merge_clusters_dict', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict)
 }
 
 #' Find the string that's most freqent in a vector.
 #'
-#' Given a cluster suitable for merging, find all instances within vectsub
+#' Given a cluster suitable for merging, find all instances within vect_sub
 #' that coorspond with that cluster and get the most freqently occuring
 #' value (this is basically using freq to choose the value from the original
 #' data that will be used as the template for all elements of a single cluster).
-#' eg, if we have a cluster value that coorespond with these values from the
+#' eg, if we have a cluster value that correspond with these values from the
 #' original data: c("Bob's Pizza", "bobs pizza", "Bob's Pizza"), then all those
 #' values would be edited to be "Bob's Pizza", since its the most frequent.
 #'
 #' @param clust character string
-#' @param keyssub character vector
-#' @param vectsub character vector
-most_freq <- function(clust, keyssub, vectsub) {
-    .Call('refinr_most_freq', PACKAGE = 'refinr', clust, keyssub, vectsub)
+#' @param keys_sub character vector
+#' @param vect_sub character vector
+most_freq <- function(clust, keys_sub, vect_sub) {
+    .Call('refinr_most_freq', PACKAGE = 'refinr', clust, keys_sub, vect_sub)
 }
 
