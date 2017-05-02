@@ -70,6 +70,10 @@ get_ngram_clusters <- function(one_gram_keys,
       .[!is.na(.)] %>%
       .[duplicated(.)] %>%
       unique
+    # If no duplicated keys exist, return NULL.
+    if (length(n_gram_keys_dups) == 0) {
+      return(NULL)
+    }
     clusters <- lapply(n_gram_keys_dups, function(x) {
       n_gram_keys[which(equality(n_gram_keys, x))] %>%
         .[!is.na(.)]
@@ -87,6 +91,10 @@ get_ngram_clusters <- function(one_gram_keys,
       .[!is.na(.)] %>%
       .[duplicated(.)] %>%
       unique
+    # If no duplicated keys exist, return NULL.
+    if (length(n_gram_keys_dups) == 0) {
+      return(NULL)
+    }
     initial_clust <- lapply(one_gram_keys_dups, function(x) {
       n_gram_keys[which(equality(one_gram_keys, x))] %>%
         .[!is.na(.)]

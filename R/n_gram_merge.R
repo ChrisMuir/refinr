@@ -112,6 +112,11 @@ n_gram_merge <- function(vect,
                                  edit_threshold = edit_threshold,
                                  edit_dist_weights)
 
+  # If no clusters were found, return vect unedited.
+  if (is.null(clusters)) {
+    return(vect)
+  }
+
   # Eliminate elements of clusters that are NA, then filter out repeating
   # values within each cluster.
   clusters <- clusters[vapply(clusters,
