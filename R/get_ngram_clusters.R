@@ -92,7 +92,7 @@ get_ngram_clusters <- function(one_gram_keys,
       .[duplicated(.)] %>%
       unique
     # If no duplicated keys exist, return NULL.
-    if (length(n_gram_keys_dups) == 0) {
+    if (length(one_gram_keys_dups) == 0) {
       return(NULL)
     }
     initial_clust <- lapply(one_gram_keys_dups, function(x) {
