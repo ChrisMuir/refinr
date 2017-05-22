@@ -83,23 +83,27 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   # elements of cluster for which each associated element of vect is already
   # identical (or identical to an element of dict). In those spots its
   # pointless to perform merging.
-  if (is.null(dict)) {
-    csize <- vapply(clusters, function(n) {
-      vect_sub[which(equality(keys_vect_sub, n))] %>%
-        unique %>%
-        length
-    },
-    integer(1),
-    USE.NAMES = FALSE)
+  if (all(duplicated(vect)) == FALSE) {
+    csize <- rep.int(2, length(clusters))
   } else {
-    csize <- vapply(clusters, function(n) {
-      c(vect_sub[which(equality(keys_vect_sub, n))],
-        dict[which(equality(keys_dict, n))]) %>%
-        unique %>%
-        length
-    },
-    integer(1),
-    USE.NAMES = FALSE)
+    if (is.null(dict)) {
+      csize <- vapply(clusters, function(n) {
+        vect_sub[which(equality(keys_vect_sub, n))] %>%
+          unique %>%
+          length
+      },
+      integer(1),
+      USE.NAMES = FALSE)
+    } else {
+      csize <- vapply(clusters, function(n) {
+        c(vect_sub[which(equality(keys_vect_sub, n))],
+          dict[which(equality(keys_dict, n))]) %>%
+          unique %>%
+          length
+      },
+      integer(1),
+      USE.NAMES = FALSE)
+    }
   }
 
   # Perform merging on all clusters with length greater than one.
