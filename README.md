@@ -2,6 +2,7 @@ refinr
 ========
 
 [![Travis-CI Build Status](https://travis-ci.org/ChrisMuir/refinr.svg?branch=master)](https://travis-ci.org/ChrisMuir/refinr)
+[![Coverage Status](https://img.shields.io/codecov/c/github/ChrisMuir/refinr/master.svg)](https://codecov.io/gh/ChrisMuir/refinr)
 
 R package implementation of two algorithms from the open source software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)). In addition, the function `n_gram_merge` uses approximate string matching applied to the ngram fingerprints to form clusters.
 
