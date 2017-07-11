@@ -72,6 +72,38 @@ n_gram_merge(x,
 
 For both `key_collision_merge` and `n_gram_merge`, the merge value for a given cluster will always be the value that appears the greatest number of times in the original vector (unless a dictionary vector is passed to `key_collision_merge` and the cluster includes a value from the dictionary vector).
 
+```r
+# Method/workflow for checking the results of the refinr processes
+
+library(dplyr)
+
+x <- c("Acme Pizza, Inc.", "Acme Pizzza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
+
+x_refin <- x %>%
+  refinr::key_collision_merge() %>%
+  refinr::n_gram_merge()
+
+# Create df for checking the results.
+inspect_results <- dplyr::data_frame(old = x, 
+                                     new = x_refin)
+
+# Add logical col comparing the refinr results to the original data for each 
+# observation.
+inspect_results$equal <- mapply(function(y, z) identical(y, z),
+                                inspect_results$old,
+                                inspect_results$new,
+                                USE.NAMES = FALSE)
+
+# Display only the values that were edited.
+inspect_results[inspect_results$equal == FALSE, c("old", "new")]
+
+# A tibble: 3 x 2
+                old                new
+              <chr>              <chr>
+1  Acme Pizza, Inc. ACME PIZZA COMPANY
+2 Acme Pizzza, Inc. ACME PIZZA COMPANY
+3    acme pizza LLC ACME PIZZA COMPANY
+```
 
 Notes
 -----
