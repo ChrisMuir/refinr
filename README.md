@@ -70,11 +70,8 @@ n_gram_merge(x,
 [1] "Acme Pizzazza LLC" "ACME PIZA COMPANY" "Acme Pizzazza LLC"
 ```
 
-For both `key_collision_merge` and `n_gram_merge`, the merge value for a given cluster will always be the value that appears the greatest number of times in the original vector (unless a dictionary vector is passed to `key_collision_merge` and the cluster includes a value from the dictionary vector).
-
+Method/workflow for checking the results of the refinr processes
 ```r
-# Method/workflow for checking the results of the refinr processes
-
 library(dplyr)
 
 x <- c("Acme Pizza, Inc.", "Acme Pizzza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
