@@ -78,7 +78,7 @@ get_ngram_clusters <- function(one_gram_keys,
       n_gram_keys[which(equality(n_gram_keys, x))] %>%
         .[!is.na(.)]
     }) %>%
-      .[sapply(., function(k) length(k) > 1)]
+      .[vapply(., length, integer(1), USE.NAMES = FALSE) > 1]
     return(clusters)
   } else {
     # If approximate string matching is enabled, then find all elements of
@@ -99,7 +99,7 @@ get_ngram_clusters <- function(one_gram_keys,
       n_gram_keys[which(equality(one_gram_keys, x))] %>%
         .[!is.na(.)]
     }) %>%
-      .[sapply(., function(k) length(k) > 1)]
+      .[vapply(., length, integer(1), USE.NAMES = FALSE) > 1]
 
     # For each element of initial_clust, do a stringdist matrix and analyze the
     # closest match for each element (so if theres a cluster of n_gram_keys

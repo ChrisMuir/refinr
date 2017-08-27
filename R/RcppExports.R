@@ -10,7 +10,7 @@
 #' @param lookupvect Character vector.
 #' @param charstring Character string.
 equality <- function(lookupvect, charstring) {
-    .Call('refinr_equality', PACKAGE = 'refinr', lookupvect, charstring)
+    .Call('_refinr_equality', PACKAGE = 'refinr', lookupvect, charstring)
 }
 
 #' Merge clusters of similar values.
@@ -22,7 +22,7 @@ equality <- function(lookupvect, charstring) {
 #' @param keys_vect_sub character vector
 #' @param vect_sub character vector
 merge_clusters <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub) {
-    .Call('refinr_merge_clusters', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub)
+    .Call('_refinr_merge_clusters', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub)
 }
 
 #' Function that performs all merges related to input value clusters. Can
@@ -35,7 +35,7 @@ merge_clusters <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub) {
 #' @param keys_dict character vector
 #' @param dict character vector
 merge_clusters_dict <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict) {
-    .Call('refinr_merge_clusters_dict', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict)
+    .Call('_refinr_merge_clusters_dict', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict)
 }
 
 #' Find the string that's most freqent in a vector.
@@ -52,6 +52,6 @@ merge_clusters_dict <- function(clusters, keys_vect, vect, keys_vect_sub, vect_s
 #' @param keys_sub character vector
 #' @param vect_sub character vector
 most_freq <- function(clust, keys_sub, vect_sub) {
-    .Call('refinr_most_freq', PACKAGE = 'refinr', clust, keys_sub, vect_sub)
+    .Call('_refinr_most_freq', PACKAGE = 'refinr', clust, keys_sub, vect_sub)
 }
 
