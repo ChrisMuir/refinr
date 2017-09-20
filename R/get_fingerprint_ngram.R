@@ -14,7 +14,7 @@
 #'   TRUE. Default value is TRUE.
 #'
 #' @return Ngram values of the input vector.
-#' @importFrom dplyr "%>%"
+#' @importFrom magrittr "%>%"
 #'
 #' @examples \dontrun{
 #' get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 1)
