@@ -45,7 +45,7 @@
 #'  other than 2.
 #'
 #' @return Character vector with similar values merged.
-#' @importFrom dplyr "%>%"
+#' @importFrom magrittr "%>%"
 #' @export
 #'
 #' @examples \dontrun{

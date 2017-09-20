@@ -11,7 +11,7 @@
 #'   TRUE. Default value is TRUE.
 #'
 #' @return Key collision value of the input string.
-#' @importFrom dplyr "%>%"
+#' @importFrom magrittr "%>%"
 #'
 #' @examples \dontrun{
 #' get_fingerprint_KC("Tom's Sports Equipment, Inc.")

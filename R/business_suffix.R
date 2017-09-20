@@ -20,7 +20,7 @@
 #'
 #' @return Character vector of business names, with business name suffixes
 #'   edited to be normalized.
-#' @importFrom dplyr "%>%"
+#' @importFrom magrittr "%>%"
 #'
 #' @examples \dontrun{
 #' business_suffix(c("Acme Inc", "Acme incorporated", "acme company"))

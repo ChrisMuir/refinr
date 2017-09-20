@@ -19,6 +19,7 @@
 #'   TRUE. Default value is TRUE.
 #'
 #' @return Character vector with similar values merged.
+#' @importFrom magrittr "%>%"
 #' @export
 #'
 #' @examples \dontrun{

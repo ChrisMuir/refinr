@@ -21,7 +21,7 @@
 #'   a numeric vector of length four, or NA.
 #'
 #' @return A list, each element of which is a cluster of similar values.
-#' @importFrom dplyr "%>%"
+#' @importFrom magrittr "%>%"
 #'
 #' @examples \dontrun{
 #' vect <- c("Acme Pizza, Inc.",
