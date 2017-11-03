@@ -4,10 +4,10 @@
 \alias{business_suffix}
 \title{Business name suffix normalization}
 \usage{
-business_suffix(string)
+business_suffix(vect)
 }
 \arguments{
-\item{string}{Character vector of business names.}
+\item{vect}{Character vector of business names.}
 }
 \value{
 Character vector of business names, with business name suffixes

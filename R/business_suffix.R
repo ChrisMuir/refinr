@@ -2,7 +2,7 @@
 #'
 #' Function that attempts to merge common business name suffixes within a
 #' character string.
-#' @param string Character vector of business names.
+#' @param vect Character vector of business names.
 #'
 #' @details NOTE: This function also edits all instances of the word "and" to
 #'   be "&". Here is a complete list of the edits this function will make:
@@ -26,10 +26,10 @@
 #' business_suffix(c("Acme Inc", "Acme incorporated", "acme company"))
 #' [1] "Acme Inc" "Acme inc" "acme co"
 #' }
-business_suffix <- function(string) {
-  stopifnot(is.character(string))
+business_suffix <- function(vect) {
+  stopifnot(is.character(vect))
 
-  string <- string %>%
+  vect %>%
     {gsub(" incorporated| incorporate", " inc", .)} %>%
     {gsub(" corporation| corporations", " corp", .)} %>%
     {gsub(" company| companys| companies", " co", .)} %>%
@@ -39,5 +39,4 @@ business_suffix <- function(string) {
     {gsub(" enterprises| enterprise", " ent", .)} %>%
     {gsub(" limited partnership", " lp", .)} %>%
     {gsub(" and ", " & ", .)}
-  return(string)
 }
