@@ -22,23 +22,23 @@ get_fingerprint_KC <- function(vect, bus_suffix) {
   stopifnot(is.logical(bus_suffix))
 
   if (bus_suffix) {
-    vect %>%
+    out <- vect %>%
       tolower %>%
       business_suffix %>%
       {gsub("[[:punct:]]", "", .)} %>%
       trimws %>%
       {gsub("\\s{2,}", " ", .)} %>%
       strsplit(., " ", fixed = TRUE) %>%
-      lapply(., function(x)
-        x[!x %in% c("inc", "corp", "co", "llc", "ltd", "div", "ent", "lp")]) %>%
+      lapply(., function(x) {
+        x[!x %in% c("inc", "corp", "co", "llc", "ltd", "div", "ent", "lp")]
+      }) %>%
       lapply(., sort) %>%
       lapply(., unique) %>%
       vapply(., paste, character(1), collapse = " ") %>%
-      iconv(., to = "ASCII//TRANSLIT") %>%
-      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x},
-             USE.NAMES = FALSE)
+      iconv(., to = "ASCII//TRANSLIT")
+    out[out == ""] <- NA_character_
   } else {
-    vect %>%
+    out <- vect %>%
       tolower %>%
       {gsub("[[:punct:]]", "", .)} %>%
       trimws %>%
@@ -47,8 +47,8 @@ get_fingerprint_KC <- function(vect, bus_suffix) {
       lapply(., sort) %>%
       lapply(., unique) %>%
       vapply(., paste, character(1), collapse = " ") %>%
-      iconv(., to = "ASCII//TRANSLIT") %>%
-      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x},
-             USE.NAMES = FALSE)
+      iconv(., to = "ASCII//TRANSLIT")
+    out[out == ""] <- NA_character_
   }
+  return(out)
 }
