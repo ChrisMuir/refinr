@@ -4,7 +4,7 @@
 \alias{get_fingerprint_ngram}
 \title{Get ngram fingerprints}
 \usage{
-get_fingerprint_ngram(vect, numgram, bus_suffix)
+get_fingerprint_ngram(vect, numgram = 2, bus_suffix)
 }
 \arguments{
 \item{vect}{Character vector.}
