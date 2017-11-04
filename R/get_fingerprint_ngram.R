@@ -22,7 +22,8 @@
 #' get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 2)
 #' [1] "eneqipmemsntomorpmpoqurtsespsstotsui"
 #' }
-get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix) {
+
+get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   stopifnot(is.character(vect))
   stopifnot(is.logical(bus_suffix))
 

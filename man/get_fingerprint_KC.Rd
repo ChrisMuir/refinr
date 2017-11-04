@@ -4,7 +4,7 @@
 \alias{get_fingerprint_KC}
 \title{Get key collision fingerprints}
 \usage{
-get_fingerprint_KC(vect, bus_suffix)
+get_fingerprint_KC(vect, bus_suffix = TRUE)
 }
 \arguments{
 \item{vect}{Character vector.}
