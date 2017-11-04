@@ -48,9 +48,9 @@
 #' @importFrom magrittr "%>%"
 #' @export
 #'
-#' @examples \dontrun{
+#' @examples
 #' # The performance of the approximate string matching can be ajusted using
-#' # parameter \code{edit_dist_weights}.
+#' # parameter 'edit_dist_weights'.
 #' x <- c("Acmme Pizza, Inc.",
 #'        "ACME PIZA COMPANY",
 #'        "Acme Pizzazza LLC")
@@ -59,20 +59,17 @@
 #'              numgram = 2,
 #'              edit_threshold = 1,
 #'              edit_dist_weights = c(d = 0.2, i = 1, s = 1, t = 1))
-#' [1] "Acmme Pizza, Inc." "ACME PIZA COMPANY" "ACME PIZA COMPANY"
 #'
 #' n_gram_merge(vect = x,
 #'              numgram = 2,
 #'              edit_threshold = 1,
 #'              edit_dist_weights = c(d = 1, i = 0.2, s = 1, t = 1))
-#' [1] "ACME PIZA COMPANY"   "ACME PIZA COMPANY"   "Acme Pizzazza LLC"
 #'
 #' n_gram_merge(vect = x,
 #'              numgram = 2,
 #'              edit_threshold = 1,
 #'              edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
-#' [1] "ACME PIZA COMPANY" "ACME PIZA COMPANY" "ACME PIZA COMPANY"
-#' }
+#'
 #' @useDynLib refinr
 #' @importFrom Rcpp sourceCpp
 n_gram_merge <- function(vect,

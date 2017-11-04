@@ -32,21 +32,14 @@ based on the key collision method, described here
 \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
 }
 \examples{
-\dontrun{
 x <- c("Acme Pizza, Inc.",
        "ACME PIZZA COMPANY",
        "pizza, acme llc",
        "Acme Pizza, Inc.")
-key_collision_merge(vect = x, bus_suffix = TRUE)
-[1] "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc."
+key_collision_merge(vect = x)
 
 # Add param "dict".
 dict <- c("Nicks Pizza", "acme PIZZA inc")
-x <- c("Acme Pizza, Inc.",
-       "ACME PIZZA COMPANY",
-       "pizza, acme llc",
-       "Acme Pizza, Inc.")
-key_collision_merge(vect = x, dict = dict, bus_suffix = TRUE)
-[1] "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc"
-}
+key_collision_merge(vect = x, dict = dict)
+
 }
