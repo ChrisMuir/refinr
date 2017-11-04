@@ -48,6 +48,7 @@
 #' [[2]]
 #' [[2]][[1]]
 #' [1] "bobsizobpispzazz" "bobsizobpispzazz"
+#'
 #' # In this exmaple, "Bobby's Pizza" is ignored because it does not have a
 #' # match.
 #' }
