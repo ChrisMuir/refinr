@@ -70,7 +70,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
       }, character(1), USE.NAMES = FALSE)
   }
 
-  # Get indices of vect that not NA again (NA's could have been introduced
+  # Get indices of vect that are not NA again (NA's could have been introduced
   # in the steps above).
   vect_non_na <- !is.na(vect)
 
