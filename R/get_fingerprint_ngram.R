@@ -22,91 +22,66 @@
 #' get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 2)
 #' [1] "eneqipmemsntomorpmpoqurtsespsstotsui"
 #' }
-get_fingerprint_ngram <- function(vect, numgram, bus_suffix) {
+get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix) {
   stopifnot(is.character(vect))
   stopifnot(is.logical(bus_suffix))
 
+  # Get indices of vect that are not NA.
+  vect_non_na <- !is.na(vect)
+
   if (bus_suffix) {
-    vect %>%
+    # Make initial transformations to all non-NA elements of vect. Remove all
+    # business suffix characters from each string.
+    vect[vect_non_na] <- vect[vect_non_na] %>%
       tolower %>%
       business_suffix %>%
       {gsub("\\b(inc|corp|co|llc|ltd|div|ent|lp)\\b", "", .)} %>%
       {gsub("[[:punct:]]|\\s", "", .)} %>%
 
-      sapply(., function(x) {
-        if (!is.na(x)) {
-          ngram::splitter(x, split.char = TRUE, split.space = FALSE)
-        } else {
-          NA
-        }}, USE.NAMES = FALSE) %>%
+      vapply(., function(x) {
+        ngram::splitter(x, split.char = TRUE, split.space = FALSE)
+      }, character(1), USE.NAMES = FALSE) %>%
 
-      sapply(., function(x) {
-        if (!is.na(x) && nchar(x) >= (numgram + (numgram - 1))) {
+      vapply(., function(x) {
+        if (nchar(x) >= (numgram + (numgram - 1))) {
           x
         } else {
-          NA
-        }}, USE.NAMES = FALSE) %>%
-
-      sapply(., function(x) {
-        if (!is.na(x)) {
-          ngram::ngram(x, n = numgram)
-        } else {
-          NA
-        }}, USE.NAMES = FALSE) %>%
-
-      lapply(., function(x) {
-        if (class(x) == "ngram") {
-          ngram::get.ngrams(x)
-        } else {
-          NA
-        }}) %>%
-
-      lapply(., sort) %>%
-      lapply(., unique) %>%
-      vapply(., paste, character(1), collapse = "") %>%
-      iconv(., to = "ASCII//TRANSLIT") %>%
-      {gsub("\\s", "", .)} %>%
-      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x},
-             USE.NAMES = FALSE)
+          NA_character_
+        }
+      }, character(1), USE.NAMES = FALSE)
   } else {
-    vect %>%
+    # Make initial transformations to all non-NA elements of vect. Spare all
+    # business suffix characters from each string.
+    vect[vect_non_na] <- vect[vect_non_na] %>%
       tolower %>%
       {gsub("[[:punct:]]|\\s", "", .)} %>%
 
-      sapply(., function(x) {
-        if (!is.na(x)) {
-          ngram::splitter(x, split.char = TRUE, split.space = FALSE)
-        } else {
-          NA
-        }}, USE.NAMES = FALSE) %>%
+      vapply(., function(x) {
+        ngram::splitter(x, split.char = TRUE, split.space = FALSE)
+      }, character(1), USE.NAMES = FALSE) %>%
 
-      sapply(., function(x) {
-        if (!is.na(x) && nchar(x) >= (numgram + (numgram - 1))) {
+      vapply(., function(x) {
+        if (nchar(x) >= (numgram + (numgram - 1))) {
           x
         } else {
-          NA
-        }}, USE.NAMES = FALSE) %>%
-
-      sapply(., function(x) {
-        if (!is.na(x)) {
-          ngram::ngram(x, n = numgram)
-        } else {
-          NA
-        }}, USE.NAMES = FALSE) %>%
-
-      lapply(., function(x) {
-        if (class(x) == "ngram") {
-          ngram::get.ngrams(x)
-        } else {
-          NA
-        }}) %>%
-
-      lapply(., sort) %>%
-      lapply(., unique) %>%
-      vapply(., paste, character(1), collapse = "") %>%
-      iconv(., to = "ASCII//TRANSLIT") %>%
-      {gsub("\\s", "", .)} %>%
-      sapply(., function(x) if (x == "" || is.na(x)) {NA} else {x},
-             USE.NAMES = FALSE)
+          NA_character_
+        }
+      }, character(1), USE.NAMES = FALSE)
   }
+
+  # Get indices of vect that not NA again (NA's could have been introduced
+  # in the steps above).
+  vect_non_na <- !is.na(vect)
+
+  # Make the rest of the transformations to vect.
+  vect[vect_non_na] <- vect[vect_non_na] %>%
+    lapply(., function(x) {
+      ngram::get.ngrams(ngram::ngram(x, n = numgram))
+    }) %>%
+    lapply(., sort) %>%
+    lapply(., unique) %>%
+    vapply(., paste, character(1), collapse = "") %>%
+    iconv(., to = "ASCII//TRANSLIT") %>%
+    {gsub("\\s", "", .)}
+  return(vect)
 }
