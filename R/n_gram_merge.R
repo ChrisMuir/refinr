@@ -114,12 +114,18 @@ n_gram_merge <- function(vect,
     return(vect)
   }
 
-  # Eliminate elements of clusters that are NA, then filter out repeating
-  # values within each cluster.
-  clusters <- clusters[vapply(clusters,
-                              function(x) any(!is.na(x)), logical(1))] %>%
-    lapply(., function(x) if (is.list(x)) {lapply(x, sort)} else {sort(x)}) %>%
-    lapply(., function(x) if (is.list(x)) {lapply(x, unique)} else {unique(x)})
+  # If approx string matching is being used, then eliminate elements of
+  # clusters that are NA, then filter out repeating values within each cluster.
+  if (!is.na(edit_threshold)) {
+    clusters <- clusters %>%
+      .[vapply(., function(x) any(!is.na(x)), logical(1))] %>%
+      lapply(., function(x) {
+        if (is.list(x)) {lapply(x, sort)} else {sort(x)}
+      }) %>%
+      lapply(., function(x) {
+        if (is.list(x)) {lapply(x, unique)} else {unique(x)}
+      })
+  }
 
   # For each cluster, make mass edits to the values of vect related to that
   # cluster.
