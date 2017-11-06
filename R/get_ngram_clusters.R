@@ -56,7 +56,7 @@ get_ngram_clusters <- function(one_gram_keys,
                                n_gram_keys,
                                edit_threshold = edit_threshold,
                                edit_dist_weights = edit_dist_weights) {
-  stopifnot(is.character(one_gram_keys))
+  stopifnot(is.character(one_gram_keys) || is.null(one_gram_keys))
   stopifnot(is.character(n_gram_keys))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
   stopifnot(is.numeric(edit_dist_weights) || is.na(edit_dist_weights))
@@ -74,13 +74,9 @@ get_ngram_clusters <- function(one_gram_keys,
     # If no duplicated keys exist, return NULL.
     if (length(n_gram_keys_dups) == 0) {
       return(NULL)
+    } else {
+      return(as.list(n_gram_keys_dups))
     }
-    clusters <- lapply(n_gram_keys_dups, function(x) {
-      n_gram_keys[which(equality(n_gram_keys, x))] %>%
-        .[!is.na(.)]
-    }) %>%
-      .[vapply(., length, integer(1), USE.NAMES = FALSE) > 1]
-    return(clusters)
   } else {
     # If approximate string matching is enabled, then find all elements of
     # n_gram_keys for which their associated one_gram_key has one or more
