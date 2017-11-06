@@ -100,7 +100,11 @@ n_gram_merge <- function(vect,
   ## Add code to handle input numgram == 1 (can skip "n_gram_keys" below, and
   ## should skip a number of steps later in the function as well).
   univect <- unique(vect)
-  one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix)
+  if (!is.na(edit_threshold)) {
+    one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix)
+  } else {
+    one_gram_keys <- NULL
+  }
   n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix)
 
   # Get clusters
