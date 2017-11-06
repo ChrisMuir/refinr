@@ -59,7 +59,7 @@ get_ngram_clusters <- function(one_gram_keys,
   stopifnot(is.character(one_gram_keys))
   stopifnot(is.character(n_gram_keys))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
-  stopifnot(is.numeric(edit_dist_weights))
+  stopifnot(is.numeric(edit_dist_weights) || is.na(edit_dist_weights))
 
   if (is.na(edit_threshold) || edit_threshold == 0) {
     # If approximate string matching is disabled (via param 'edit_threshold'),
