@@ -78,7 +78,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   # elements of cluster for which each associated element of vect is already
   # identical (or identical to an element of dict). In those spots its
   # pointless to perform merging.
-  if (all(duplicated(vect)) == FALSE) {
+  if (length(vect) == length(unique(vect))) {
     csize <- rep.int(2, length(clusters))
   } else {
     if (is.null(dict)) {
