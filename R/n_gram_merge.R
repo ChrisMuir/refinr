@@ -95,7 +95,8 @@ n_gram_merge <- function(vect,
          "is not NA")
   }
 
-  # Get ngram == 1 keys for all records.
+  # If approx string matching is being used, then get ngram == 1 keys for all
+  # records.
   ## TODO:  ----
   ## Add code to handle input numgram == 1 (can skip "n_gram_keys" below, and
   ## should skip a number of steps later in the function as well).
@@ -105,6 +106,7 @@ n_gram_merge <- function(vect,
   } else {
     one_gram_keys <- NULL
   }
+  # Get ngram == numgram keys for all records.
   n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix)
 
   # Get clusters
@@ -137,16 +139,32 @@ n_gram_merge <- function(vect,
     for (i in seq_len(length(clusters))) {
       if (is.list(clusters[[i]])) {
         for (k in clusters[[i]]) {
-          ng_ids <- which(n_gram_keys %in% unlist(k, FALSE, FALSE))
-          vect_ids <- which(vect %in% univect[ng_ids])
-          vect[vect_ids] <- names(sort(table(vect[vect_ids]),
-                                       decreasing = TRUE)[1])
+          k <- unlist(k, FALSE, FALSE)
+          if (length(k) > 1) {
+            vect <- merge_ngram_clusters_vector(k,
+                                               n_gram_keys,
+                                               univect,
+                                               vect)
+          } else {
+            vect <- merge_ngram_clusters_string(k,
+                                               n_gram_keys,
+                                               univect,
+                                               vect)
+          }
         }
       } else {
-        ng_ids <- which(n_gram_keys %in% clusters[[i]])
-        vect_ids <- which(vect %in% univect[ng_ids])
-        vect[vect_ids] <- names(sort(table(vect[vect_ids]),
-                                     decreasing = TRUE)[1])
+        k <- clusters[[i]]
+        if (length(k) > 1) {
+          vect <- merge_ngram_clusters_vector(k,
+                                             n_gram_keys,
+                                             univect,
+                                             vect)
+        } else {
+          vect <- merge_ngram_clusters_string(k,
+                                             n_gram_keys,
+                                             univect,
+                                             vect)
+        }
       }
     }
   }

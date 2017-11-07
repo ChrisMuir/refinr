@@ -11,11 +11,11 @@ using namespace Rcpp;
 //' @param keys_vect_sub character vector
 //' @param vect_sub character vector
 // [[Rcpp::export]]
-CharacterVector merge_clusters(CharacterVector clusters,
-                               CharacterVector keys_vect,
-                               CharacterVector vect,
-                               CharacterVector keys_vect_sub,
-                               CharacterVector vect_sub) {
+CharacterVector merge_KC_clusters(CharacterVector clusters,
+                                  CharacterVector keys_vect,
+                                  CharacterVector vect,
+                                  CharacterVector keys_vect_sub,
+                                  CharacterVector vect_sub) {
   int clust_len = clusters.size();
   int keys_sub_len = keys_vect_sub.size();
   int keys_len = keys_vect.size();

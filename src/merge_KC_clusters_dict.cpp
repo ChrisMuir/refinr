@@ -12,13 +12,13 @@ using namespace Rcpp;
 //' @param keys_dict character vector
 //' @param dict character vector
 // [[Rcpp::export]]
-CharacterVector merge_clusters_dict(CharacterVector clusters,
-                                    CharacterVector keys_vect,
-                                    CharacterVector vect,
-                                    CharacterVector keys_vect_sub,
-                                    CharacterVector vect_sub,
-                                    CharacterVector keys_dict,
-                                    CharacterVector dict) {
+CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
+                                       CharacterVector keys_vect,
+                                       CharacterVector vect,
+                                       CharacterVector keys_vect_sub,
+                                       CharacterVector vect_sub,
+                                       CharacterVector keys_dict,
+                                       CharacterVector dict) {
   int clust_len = clusters.size();
   int keys_vect_sub_len = keys_vect_sub.size();
   int keys_vect_len = keys_vect.size();

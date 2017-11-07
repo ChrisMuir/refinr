@@ -105,10 +105,12 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   if (any(csize > 1)) {
     clusters <- clusters[which(csize > 1)]
     if (is.null(dict)) {
-      output <- merge_clusters(clusters, keys_vect, vect, keys_vect_sub, vect_sub)
+      output <- merge_KC_clusters(clusters, keys_vect, vect, keys_vect_sub,
+                                  vect_sub)
     } else {
-      output <- merge_clusters_dict(clusters, keys_vect, vect, keys_vect_sub,
-                                    vect_sub, keys_dict, dict)
+      output <- merge_KC_clusters_dict(clusters, keys_vect, vect,
+                                       keys_vect_sub, vect_sub, keys_dict,
+                                       dict)
     }
   } else {
     return(vect)

@@ -21,8 +21,8 @@ equality <- function(lookupvect, charstring) {
 #' @param vect character vector
 #' @param keys_vect_sub character vector
 #' @param vect_sub character vector
-merge_clusters <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub) {
-    .Call('_refinr_merge_clusters', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub)
+merge_KC_clusters <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub) {
+    .Call('_refinr_merge_KC_clusters', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub)
 }
 
 #' Function that performs all merges related to input value clusters. Can
@@ -34,8 +34,36 @@ merge_clusters <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub) {
 #' @param vect_sub character vector
 #' @param keys_dict character vector
 #' @param dict character vector
-merge_clusters_dict <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict) {
-    .Call('_refinr_merge_clusters_dict', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict)
+merge_KC_clusters_dict <- function(clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict) {
+    .Call('_refinr_merge_KC_clusters_dict', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict)
+}
+
+#' Merge values related to a cluster of length 1
+#'
+#' Function that performs all merges related to a single cluster, given that
+#' the input cluster is a string (char vector of length 1). Values within
+#' arg vect that are related to the cluster string are edited/merged, return
+#' is the edited char vector "vect".
+#' @param cluster character string
+#' @param n_gram_keys character vector
+#' @param univect character vector
+#' @param vect character vector
+merge_ngram_clusters_string <- function(cluster, n_gram_keys, univect, vect) {
+    .Call('_refinr_merge_ngram_clusters_string', PACKAGE = 'refinr', cluster, n_gram_keys, univect, vect)
+}
+
+#' Merge values related to a cluster of length > 1
+#'
+#' Function that performs all merges related to a single cluster, given that
+#' the input cluster is a char vector with length greater than one. Values
+#' within arg vect that are related to the cluster are edited/merged, returnm
+#' is the edited char vector "vect".
+#' @param cluster character vector
+#' @param n_gram_keys character vector
+#' @param univect character vector
+#' @param vect character vector
+merge_ngram_clusters_vector <- function(cluster, n_gram_keys, univect, vect) {
+    .Call('_refinr_merge_ngram_clusters_vector', PACKAGE = 'refinr', cluster, n_gram_keys, univect, vect)
 }
 
 #' Find the string that's most freqent in a vector.
