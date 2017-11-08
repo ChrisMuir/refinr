@@ -112,7 +112,7 @@ n_gram_merge <- function(vect,
   # Get clusters
   clusters <- get_ngram_clusters(one_gram_keys,
                                  n_gram_keys,
-                                 edit_threshold = edit_threshold,
+                                 edit_threshold,
                                  edit_dist_weights)
 
   # If no clusters were found, return vect unedited.

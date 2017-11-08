@@ -8,11 +8,11 @@
 #' @param vect Character vector of items for which you want similar values
 #'   merged and edited to be identical.
 #' @param dict Character vector, meant to act as a dictionary during the
-#'   merging process. If any items within \code{vect} have a match in dict, then
-#'   those items will always be edited to be identical to their match in dict.
-#'   Optional param, and default value is NULL. If no dictionary is passed,
-#'   then clusters will be created and merged within \code{vect} without the aid
-#'   of dictionary values.
+#'   merging process. If any items within \code{vect} have a match in dict,
+#'   then those items will always be edited to be identical to their match in
+#'   dict. Optional param, and default value is NULL. If no dictionary is
+#'   passed, then clusters will be created and merged within \code{vect}
+#'   without the aid of dictionary values.
 #' @param bus_suffix Logical indicating whether the merging of records should
 #'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
 #'   working with a vector of business names it's recommended to set this to

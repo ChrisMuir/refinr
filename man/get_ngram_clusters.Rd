@@ -4,8 +4,8 @@
 \alias{get_ngram_clusters}
 \title{Get ngram clusters}
 \usage{
-get_ngram_clusters(one_gram_keys, n_gram_keys,
-  edit_threshold = edit_threshold, edit_dist_weights = edit_dist_weights)
+get_ngram_clusters(one_gram_keys, n_gram_keys, edit_threshold,
+  edit_dist_weights)
 }
 \arguments{
 \item{one_gram_keys}{Character vector of ngram fingerprints for which n
@@ -53,7 +53,10 @@ n_gram_keys <- get_fingerprint_ngram(univect,
 get_ngram_clusters(one_gram_keys,
                    n_gram_keys,
                    edit_threshold = 1,
-                   edit_dist_weights = c(d = 0.33, i = 0.33, s = 1, t = 0.5))
+                   edit_dist_weights = c(d = 0.33,
+                                         i = 0.33,
+                                         s = 1,
+                                         t = 0.5))
 [[1]]
 [[1]][[1]]
 [1] "accmepizmepizazz" "accmepizmepizazz"

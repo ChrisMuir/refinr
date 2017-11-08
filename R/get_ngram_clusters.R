@@ -39,7 +39,10 @@
 #' get_ngram_clusters(one_gram_keys,
 #'                    n_gram_keys,
 #'                    edit_threshold = 1,
-#'                    edit_dist_weights = c(d = 0.33, i = 0.33, s = 1, t = 0.5))
+#'                    edit_dist_weights = c(d = 0.33,
+#'                                          i = 0.33,
+#'                                          s = 1,
+#'                                          t = 0.5))
 #' [[1]]
 #' [[1]][[1]]
 #' [1] "accmepizmepizazz" "accmepizmepizazz"
@@ -54,8 +57,8 @@
 #' }
 get_ngram_clusters <- function(one_gram_keys,
                                n_gram_keys,
-                               edit_threshold = edit_threshold,
-                               edit_dist_weights = edit_dist_weights) {
+                               edit_threshold,
+                               edit_dist_weights) {
   stopifnot(is.character(one_gram_keys) || is.null(one_gram_keys))
   stopifnot(is.character(n_gram_keys))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
@@ -119,22 +122,28 @@ get_ngram_clusters <- function(one_gram_keys,
     clusters <- lapply(seq_len(length(distmatrices)), function(i) {
       # For each row of distmatrices[[i]], get the min value present. If none
       # are below 1, then function will return NA and move to the next iter.
-      lows <- vapply(seq_len(nrow(distmatrices[[i]])), function(x)
-        min(distmatrices[[i]][x, -x]), numeric(1))
+      lows <- vapply(seq_len(nrow(distmatrices[[i]])), function(x) {
+        min(distmatrices[[i]][x, -x])
+      }, numeric(1))
       if (any(lows < edit_threshold)) {
         # ID whether or not any of the rows of distmatrices[[i]] have more than
         # one cluster match (ie a min value that repeats within any given row).
-        olap <- vapply(seq_len(length(lows)), function(x)
-          if (lows[x] > edit_threshold) {return(0)}
-          else {sum(distmatrices[[i]][x, -x] == lows[x])}, numeric(1))
+        olap <- vapply(seq_len(length(lows)), function(x) {
+          if (lows[x] > edit_threshold) {
+            return(0)
+          } else {
+            sum(distmatrices[[i]][x, -x] == lows[x])
+          }
+        }, numeric(1))
         # If any rows of distmatrices[[i]] have a min edit distance that
         # repeats, then code below will generate the clusters, and then
         # eliminate pair-wise clusters that appear in any clusters of length
         # greater than 2.
         if (any(olap > 1)) {
           # Generate clusters.
-          clust <- lapply(which(lows < edit_threshold), function(x)
-            initial_clust[[i]][which(distmatrices[[i]][x, ] < edit_threshold)]) %>%
+          clust <- lapply(which(lows < edit_threshold), function(x) {
+            initial_clust[[i]][which(distmatrices[[i]][x, ] < edit_threshold)]
+          }) %>%
             unique
           # ID the cluster(s) that have the longest length.
           maxclust <- which.max(vapply(clust, length, numeric(1)))
@@ -143,20 +152,22 @@ get_ngram_clusters <- function(one_gram_keys,
           # indicating which clusters to keep (pair-wise clusters that appear
           # in longer clusters are not kept).
           clust_bool <- vapply(clust, function(k) {
-            if (any(vapply(
-              clust[maxclust], function(x) all(x %in% k), logical(1)))) {
+            if (any(
+              vapply(clust[maxclust], function(x) all(x %in% k), logical(1))
+            )) {
               TRUE
             } else {
-              all(vapply(clust[maxclust], function(x) !all(k %in% x),
-                         logical(1)))
+              all(
+                vapply(clust[maxclust], function(x) !all(k %in% x), logical(1))
+              )
             }
           }, logical(1))
           return(clust[clust_bool])
         } else {
           return(
-            lapply(which(lows < edit_threshold), function(x)
-              initial_clust[[i]][which(distmatrices[[i]][x, ] < edit_threshold)]) %>%
-              unique
+            lapply(which(lows < edit_threshold), function(x) {
+              initial_clust[[i]][which(distmatrices[[i]][x, ] < edit_threshold)]
+            }) %>% unique
           )
         }
       } else {
