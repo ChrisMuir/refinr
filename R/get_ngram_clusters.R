@@ -96,7 +96,7 @@ get_ngram_clusters <- function(one_gram_keys,
       return(NULL)
     }
     initial_clust <- lapply(one_gram_keys_dups, function(x) {
-      n_gram_keys[which(equality(one_gram_keys, x))] %>%
+      n_gram_keys[equality(one_gram_keys, x)] %>%
         .[!is.na(.)]
     }) %>%
       .[vapply(., length, integer(1), USE.NAMES = FALSE) > 1]
@@ -142,7 +142,7 @@ get_ngram_clusters <- function(one_gram_keys,
         if (any(olap > 1)) {
           # Generate clusters.
           clust <- lapply(which(lows < edit_threshold), function(x) {
-            initial_clust[[i]][which(distmatrices[[i]][x, ] < edit_threshold)]
+            initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
           }) %>%
             unique
           # ID the cluster(s) that have the longest length.
@@ -166,7 +166,7 @@ get_ngram_clusters <- function(one_gram_keys,
         } else {
           return(
             lapply(which(lows < edit_threshold), function(x) {
-              initial_clust[[i]][which(distmatrices[[i]][x, ] < edit_threshold)]
+              initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
             }) %>% unique
           )
         }
