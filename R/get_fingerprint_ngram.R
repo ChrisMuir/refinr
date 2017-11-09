@@ -79,7 +79,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
     lapply(., function(x) {
       ngram::get.ngrams(ngram::ngram(x, n = numgram))
     }) %>%
-    lapply(., sort) %>%
+    lapply(., function(x) x[sort.list(x)]) %>%
     lapply(., unique) %>%
     vapply(., paste, character(1), collapse = "") %>%
     iconv(., to = "ASCII//TRANSLIT") %>%

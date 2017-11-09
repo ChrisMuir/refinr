@@ -126,7 +126,12 @@ n_gram_merge <- function(vect,
     clusters <- clusters %>%
       .[vapply(., function(x) any(!is.na(x)), logical(1))] %>%
       lapply(., function(x) {
-        if (is.list(x)) {lapply(x, sort)} else {sort(x)}
+        if (is.list(x)) {
+          lapply(x, function(k) k[sort.list(k)])
+        } else {
+          sort(x)
+          x[sort.list(x)]
+        }
       }) %>%
       lapply(., function(x) {
         if (is.list(x)) {lapply(x, unique)} else {unique(x)}
