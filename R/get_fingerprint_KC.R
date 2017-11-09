@@ -30,7 +30,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
       {gsub("\\s{2,}", " ", .)} %>%
       strsplit(., " ", fixed = TRUE) %>%
       lapply(., function(x) {
-        x[!x %in% c("inc", "corp", "co", "llc", "ltd", "div", "ent", "lp")]
+        x[!any(x == c("inc", "corp", "co", "llc", "ltd", "div", "ent", "lp"))]
       }) %>%
       lapply(., sort) %>%
       lapply(., unique) %>%
