@@ -5,21 +5,9 @@
 
 using namespace Rcpp;
 
-// equality
-LogicalVector equality(CharacterVector lookupvect, String charstring);
-RcppExport SEXP _refinr_equality(SEXP lookupvectSEXP, SEXP charstringSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type lookupvect(lookupvectSEXP);
-    Rcpp::traits::input_parameter< String >::type charstring(charstringSEXP);
-    rcpp_result_gen = Rcpp::wrap(equality(lookupvect, charstring));
-    return rcpp_result_gen;
-END_RCPP
-}
-// merge_KC_clusters
-CharacterVector merge_KC_clusters(CharacterVector clusters, CharacterVector keys_vect, CharacterVector vect, CharacterVector keys_vect_sub, CharacterVector vect_sub);
-RcppExport SEXP _refinr_merge_KC_clusters(SEXP clustersSEXP, SEXP keys_vectSEXP, SEXP vectSEXP, SEXP keys_vect_subSEXP, SEXP vect_subSEXP) {
+// merge_KC_clusters_no_dict
+CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters, CharacterVector keys_vect, CharacterVector vect, CharacterVector keys_vect_sub, CharacterVector vect_sub);
+RcppExport SEXP _refinr_merge_KC_clusters_no_dict(SEXP clustersSEXP, SEXP keys_vectSEXP, SEXP vectSEXP, SEXP keys_vect_subSEXP, SEXP vect_subSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,7 +16,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type keys_vect_sub(keys_vect_subSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type vect_sub(vect_subSEXP);
-    rcpp_result_gen = Rcpp::wrap(merge_KC_clusters(clusters, keys_vect, vect, keys_vect_sub, vect_sub));
+    rcpp_result_gen = Rcpp::wrap(merge_KC_clusters_no_dict(clusters, keys_vect, vect, keys_vect_sub, vect_sub));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -90,14 +78,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// equality
+LogicalVector equality(CharacterVector lookupvect, String charstring);
+RcppExport SEXP _refinr_equality(SEXP lookupvectSEXP, SEXP charstringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type lookupvect(lookupvectSEXP);
+    Rcpp::traits::input_parameter< String >::type charstring(charstringSEXP);
+    rcpp_result_gen = Rcpp::wrap(equality(lookupvect, charstring));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_duplicated
+LogicalVector cpp_duplicated(CharacterVector vect);
+RcppExport SEXP _refinr_cpp_duplicated(SEXP vectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_duplicated(vect));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_refinr_equality", (DL_FUNC) &_refinr_equality, 2},
-    {"_refinr_merge_KC_clusters", (DL_FUNC) &_refinr_merge_KC_clusters, 5},
+    {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 5},
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 7},
     {"_refinr_merge_ngram_clusters_string", (DL_FUNC) &_refinr_merge_ngram_clusters_string, 4},
     {"_refinr_merge_ngram_clusters_vector", (DL_FUNC) &_refinr_merge_ngram_clusters_vector, 4},
     {"_refinr_most_freq", (DL_FUNC) &_refinr_most_freq, 3},
+    {"_refinr_equality", (DL_FUNC) &_refinr_equality, 2},
+    {"_refinr_cpp_duplicated", (DL_FUNC) &_refinr_cpp_duplicated, 1},
     {NULL, NULL, 0}
 };
 
