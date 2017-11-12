@@ -28,13 +28,6 @@ test_that("similar vals, output lengths are correct", {
 
   vect_ng <- n_gram_merge(vect,
                           edit_dist_weights = c(d = 1,
-                                                i = 0.2,
-                                                s = 1,
-                                                t = 1))
-  expect_equal(length(unique(vect_ng)), 3)
-
-  vect_ng <- n_gram_merge(vect,
-                          edit_dist_weights = c(d = 1,
                                                 i = 1,
                                                 s = 0.1,
                                                 t = 0.1))
