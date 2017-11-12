@@ -127,9 +127,9 @@ n_gram_merge <- function(vect,
       .[vapply(., function(x) any(!is.na(x)), logical(1))] %>%
       lapply(., function(x) {
         if (is.list(x)) {
-          lapply(x, function(k) k[sort.list(k)])
+          lapply(x, cpp_sort)
         } else {
-          x[sort.list(x)]
+          cpp_sort(x)
         }
       }) %>%
       lapply(., function(x) {

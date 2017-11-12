@@ -63,3 +63,11 @@ LogicalVector cpp_duplicated(CharacterVector vect) {
 CharacterVector cpp_unique(CharacterVector vect) {
   return unique(vect);
 }
+
+
+// cpp version of R function sort()
+// [[Rcpp::export]]
+CharacterVector cpp_sort(CharacterVector vect) {
+  return clone(vect).sort();
+}
+
