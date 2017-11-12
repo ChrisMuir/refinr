@@ -68,7 +68,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
 
   # Create subsets of vect and keys_vect based on which elements of each contain
   # at least one duplicate.
-  vect_sub <- vect[which(keys_vect %in% clusters)]
+  vect_sub <- vect[keys_vect %in% clusters]
   keys_vect_sub <- keys_vect[keys_vect %in% clusters]
 
   # If dict is NULL, for each element of clusters, get the number of unique
@@ -87,8 +87,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
           cpp_unique %>%
           length
       },
-      integer(1),
-      USE.NAMES = FALSE)
+      integer(1), USE.NAMES = FALSE)
     } else {
       csize <- vapply(clusters, function(n) {
         c(vect_sub[equality(keys_vect_sub, n)],
@@ -96,24 +95,21 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
           cpp_unique %>%
           length
       },
-      integer(1),
-      USE.NAMES = FALSE)
+      integer(1), USE.NAMES = FALSE)
     }
   }
 
   # Perform merging on all clusters with length greater than one.
   if (any(csize > 1)) {
-    clusters <- clusters[which(csize > 1)]
+    clusters <- clusters[csize > 1]
     if (is.null(dict)) {
-      output <- merge_KC_clusters_no_dict(clusters, keys_vect, vect,
-                                          keys_vect_sub,vect_sub)
+      vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect,
+                                        keys_vect_sub,vect_sub)
     } else {
-      output <- merge_KC_clusters_dict(clusters, keys_vect, vect,
-                                       keys_vect_sub, vect_sub, keys_dict,
-                                       dict)
+      vect <- merge_KC_clusters_dict(clusters, keys_vect, vect,
+                                     keys_vect_sub, vect_sub, keys_dict,
+                                     dict)
     }
-  } else {
-    return(vect)
   }
-  return(output)
+  return(vect)
 }
