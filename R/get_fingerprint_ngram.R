@@ -87,7 +87,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   } else if (numgram == 1) {
     # Else if numgram == 1, use base R to get char unigrams.
     vect[vect_non_na] <- vect[vect_non_na] %>%
-      strsplit(., " ") %>%
+      strsplit(., " ", fixed = TRUE) %>%
       lapply(., cpp_unique) %>%
       lapply(., cpp_sort) %>%
       vapply(., paste, character(1), collapse = "") %>%
