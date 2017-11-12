@@ -126,14 +126,7 @@ n_gram_merge <- function(vect,
     clusters <- clusters %>%
       .[vapply(., function(x) any(!is.na(x)), logical(1))] %>%
       lapply(., function(x) {
-        if (is.list(x)) {
-          lapply(x, cpp_sort)
-        } else {
-          cpp_sort(x)
-        }
-      }) %>%
-      lapply(., function(x) {
-        if (is.list(x)) {lapply(x, cpp_unique)} else {cpp_unique(x)}
+        lapply(x, function(k) cpp_sort(cpp_unique(k)))
       })
   }
 
@@ -146,28 +139,28 @@ n_gram_merge <- function(vect,
           k <- unlist(k, FALSE, FALSE)
           if (length(k) > 1) {
             vect <- merge_ngram_clusters_vector(k,
-                                               n_gram_keys,
-                                               univect,
-                                               vect)
+                                                n_gram_keys,
+                                                univect,
+                                                vect)
           } else {
             vect <- merge_ngram_clusters_string(k,
-                                               n_gram_keys,
-                                               univect,
-                                               vect)
+                                                n_gram_keys,
+                                                univect,
+                                                vect)
           }
         }
       } else {
         k <- clusters[[i]]
         if (length(k) > 1) {
           vect <- merge_ngram_clusters_vector(k,
-                                             n_gram_keys,
-                                             univect,
-                                             vect)
+                                              n_gram_keys,
+                                              univect,
+                                              vect)
         } else {
           vect <- merge_ngram_clusters_string(k,
-                                             n_gram_keys,
-                                             univect,
-                                             vect)
+                                              n_gram_keys,
+                                              univect,
+                                              vect)
         }
       }
     }
