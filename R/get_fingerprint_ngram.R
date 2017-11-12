@@ -74,15 +74,27 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   # in the steps above).
   vect_non_na <- !is.na(vect)
 
-  # Make the rest of the transformations to vect.
-  vect[vect_non_na] <- vect[vect_non_na] %>%
-    lapply(., function(x) {
-      ngram::get.ngrams(ngram::ngram(x, n = numgram))
-    }) %>%
-    lapply(., function(x) x[sort.list(x)]) %>%
-    lapply(., unique) %>%
-    vapply(., paste, character(1), collapse = "") %>%
-    iconv(., to = "ASCII//TRANSLIT") %>%
-    {gsub("\\s", "", .)}
+  if (numgram > 1) {
+    # If numgram > 1, use the ngram pkg to get char grams.
+    vect[vect_non_na] <- vect[vect_non_na] %>%
+      lapply(., function(x) {
+        ngram::get.ngrams(ngram::ngram(x, n = numgram))
+      }) %>%
+      lapply(., function(x) x[sort.list(x)]) %>%
+      lapply(., unique) %>%
+      vapply(., paste, character(1), collapse = "") %>%
+      iconv(., to = "ASCII//TRANSLIT") %>%
+      {gsub("\\s", "", .)}
+  } else if (numgram == 1) {
+    # Else if numgram == 1, use base R to get char unigrams.
+    vect[vect_non_na] <- vect[vect_non_na] %>%
+      strsplit(., " ") %>%
+      lapply(., unique) %>%
+      lapply(., function(x) x[sort.list(x)]) %>%
+      #lapply(., unique) %>%
+      vapply(., paste, character(1), collapse = "") %>%
+      iconv(., to = "ASCII//TRANSLIT") %>%
+      {gsub("\\s", "", .)}
+  }
   return(vect)
 }
