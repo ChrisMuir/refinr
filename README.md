@@ -28,7 +28,6 @@ Example Usage
 
 ```r
 x <- c("Acme Pizza, Inc.", "Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
-
 key_collision_merge(x)
 #> [1] "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc."
 ```
@@ -37,7 +36,6 @@ A dictionary char vector can also be passed to `key_collision_merge`, that will 
 ```r
 x <- c("Acme Pizza, Inc.", "Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
 dict <- c("Nicks Pizza", "acme PIZZA inc")
-
 key_collision_merge(x, dict)
 #> [1] "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc"
 ```
@@ -45,18 +43,15 @@ key_collision_merge(x, dict)
 `n_gram_merge` can be used to merge similar values that contain slight spelling differences.
 ```r
 x <- c("Acmme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
-
 n_gram_merge(x, edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
 #> [1] "ACME PIZA COMPANY" "ACME PIZA COMPANY" "ACME PIZA COMPANY"
 
-
 # The performance of the approximate string matching can be ajusted using parameter edit_dist_weights.
-
 n_gram_merge(x, edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1))
 #> [1] "Acme Pizzazza LLC" "ACME PIZA COMPANY" "Acme Pizzazza LLC"
 ```
 
-Method/workflow for checking the results of the refinr processes
+Method/workflow for checking the results of the refinr processes (this is useful for larger vectors).
 ```r
 library(dplyr)
 
