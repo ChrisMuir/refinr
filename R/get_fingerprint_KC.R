@@ -26,7 +26,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
       tolower %>%
       business_suffix %>%
       {gsub("[[:punct:]]", "", .)} %>%
-      trimws %>%
+      cpp_trimws %>%
       {gsub("\\s{2,}", " ", .)} %>%
       strsplit(., " ", fixed = TRUE) %>%
       lapply(., function(x) {
@@ -41,7 +41,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
     out <- vect %>%
       tolower %>%
       {gsub("[[:punct:]]", "", .)} %>%
-      trimws %>%
+      cpp_trimws %>%
       {gsub("\\s{2,}", " ", .)} %>%
       strsplit(., " ", fixed = TRUE) %>%
       lapply(., cpp_sort) %>%

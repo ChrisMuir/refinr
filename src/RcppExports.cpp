@@ -123,6 +123,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_trimws
+CharacterVector cpp_trimws(CharacterVector vect);
+RcppExport SEXP _refinr_cpp_trimws(SEXP vectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_trimws(vect));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 5},
@@ -134,6 +145,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_cpp_duplicated", (DL_FUNC) &_refinr_cpp_duplicated, 1},
     {"_refinr_cpp_unique", (DL_FUNC) &_refinr_cpp_unique, 1},
     {"_refinr_cpp_sort", (DL_FUNC) &_refinr_cpp_sort, 1},
+    {"_refinr_cpp_trimws", (DL_FUNC) &_refinr_cpp_trimws, 1},
     {NULL, NULL, 0}
 };
 
