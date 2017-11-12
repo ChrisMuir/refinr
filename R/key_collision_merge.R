@@ -40,7 +40,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
 
   # If dict is not NULL, get unique values of dict.
   if (!is.null(dict)) {
-    dict <- unique(dict)
+    dict <- cpp_unique(dict)
   }
 
   # Apply func get_fingerprint_KC to the input vector, generating a vector
@@ -57,12 +57,12 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   # 2. At least one matching value within key_dict.
   if (is.null(dict)) {
     clusters <- keys_vect[cpp_duplicated(keys_vect)] %>%
-      unique %>%
+      cpp_unique %>%
       .[!is.na(.)]
   } else {
     clusters <- keys_vect[Reduce("|", list(keys_vect %in% keys_dict,
                                            cpp_duplicated(keys_vect)))] %>%
-      unique %>%
+      cpp_unique %>%
       .[!is.na(.)]
   }
 
@@ -78,13 +78,13 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   # elements of cluster for which each associated element of vect is already
   # identical (or identical to an element of dict). In those spots its
   # pointless to perform merging.
-  if (length(vect) == length(unique(vect))) {
+  if (length(vect) == length(cpp_unique(vect))) {
     csize <- rep.int(2, length(clusters))
   } else {
     if (is.null(dict)) {
       csize <- vapply(clusters, function(n) {
         vect_sub[equality(keys_vect_sub, n)] %>%
-          unique %>%
+          cpp_unique %>%
           length
       },
       integer(1),
@@ -93,7 +93,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
       csize <- vapply(clusters, function(n) {
         c(vect_sub[equality(keys_vect_sub, n)],
           dict[equality(keys_dict, n)]) %>%
-          unique %>%
+          cpp_unique %>%
           length
       },
       integer(1),

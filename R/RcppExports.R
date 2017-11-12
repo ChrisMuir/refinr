@@ -29,3 +29,7 @@ cpp_duplicated <- function(vect) {
     .Call('_refinr_cpp_duplicated', PACKAGE = 'refinr', vect)
 }
 
+cpp_unique <- function(vect) {
+    .Call('_refinr_cpp_unique', PACKAGE = 'refinr', vect)
+}
+
