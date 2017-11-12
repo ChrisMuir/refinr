@@ -84,7 +84,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
     if (is.null(dict)) {
       csize <- vapply(clusters, function(n) {
         vect_sub[equality(keys_vect_sub, n)] %>%
-          cpp_unique %>%
+          unique %>%
           length
       },
       integer(1), USE.NAMES = FALSE)
@@ -92,7 +92,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
       csize <- vapply(clusters, function(n) {
         c(vect_sub[equality(keys_vect_sub, n)],
           dict[equality(keys_dict, n)]) %>%
-          cpp_unique %>%
+          unique %>%
           length
       },
       integer(1), USE.NAMES = FALSE)

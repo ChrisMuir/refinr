@@ -32,8 +32,8 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
       lapply(., function(x) {
         x[!x %in% c("inc", "corp", "co", "llc", "ltd", "div", "ent", "lp")]
       }) %>%
-      lapply(., cpp_unique) %>%
-      lapply(., cpp_sort) %>%
+      lapply(., unique) %>%
+      lapply(., function(x) x[sort.list(x)]) %>%
       vapply(., paste, character(1), collapse = " ") %>%
       iconv(., to = "ASCII//TRANSLIT")
     out[out == ""] <- NA_character_
@@ -44,8 +44,8 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
       cpp_trimws %>%
       {gsub("\\s{2,}", " ", .)} %>%
       strsplit(., " ", fixed = TRUE) %>%
-      lapply(., cpp_sort) %>%
-      lapply(., cpp_unique) %>%
+      lapply(., unique) %>%
+      lapply(., function(x) x[sort.list(x)]) %>%
       vapply(., paste, character(1), collapse = " ") %>%
       iconv(., to = "ASCII//TRANSLIT")
     out[out == ""] <- NA_character_

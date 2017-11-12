@@ -65,13 +65,6 @@ CharacterVector cpp_unique(CharacterVector vect) {
 }
 
 
-// cpp version of R function sort()
-// [[Rcpp::export]]
-CharacterVector cpp_sort(CharacterVector vect) {
-  return clone(vect).sort();
-}
-
-
 // cpp version of R function trimws()
 // [[Rcpp::export]]
 CharacterVector cpp_trimws(CharacterVector vect) {
