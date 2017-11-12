@@ -27,16 +27,14 @@
 #' [1] "Acme Inc" "Acme inc" "acme co"
 #' }
 business_suffix <- function(vect) {
-  stopifnot(is.character(vect))
-
   vect %>%
     {gsub(" incorporated| incorporate", " inc", .)} %>%
     {gsub(" corporation| corporations", " corp", .)} %>%
     {gsub(" company| companys| companies", " co", .)} %>%
-    {gsub(" limited liability company", " llc", .)} %>%
+    {gsub(" limited liability co", " llc", ., fixed = TRUE)} %>%
     {gsub(" limited$", " ltd", .)} %>%
     {gsub(" division| divisions", " div", .)} %>%
     {gsub(" enterprises| enterprise", " ent", .)} %>%
-    {gsub(" limited partnership", " lp", .)} %>%
-    {gsub(" and ", " & ", .)}
+    {gsub(" limited partnership", " lp", ., fixed = TRUE)} %>%
+    {gsub(" and ", " & ", ., fixed = TRUE)}
 }
