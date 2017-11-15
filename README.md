@@ -7,7 +7,7 @@ refinr
 
 R package implementation of two algorithms from the open source software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)). In addition, the function `n_gram_merge` uses approximate string matching applied to the ngram fingerprints to form clusters.
 
-This package is built using [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) for approximate string matching, [ngram](https://cran.r-project.org/web/packages/ngram/index.html) for string tokenization, and [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) to allow for a handful of functions written in C++ for faster performance.
+This package is built using [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) for approximate string matching, [ngram](https://cran.r-project.org/web/packages/ngram/index.html) for string tokenization, and [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) to allow for functions written in C++ for faster performance.
 
 The clustering is also designed to be insensitive to common business name suffixes, i.e. "inc", "llc", "co", etc. This feature can be turned on/off using function parameter `bus_suffix`.
 
