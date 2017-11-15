@@ -2,6 +2,43 @@
 #include"refinr_header.h"
 using namespace Rcpp;
 
+// For each element of clusters, get the number of unique values within vect
+// associated with that cluster.
+// [[Rcpp::export]]
+IntegerVector get_clust_size_no_dict(CharacterVector clusters,
+                                     CharacterVector vect,
+                                     CharacterVector keys) {
+  int clust_len = clusters.size();
+  IntegerVector out(clust_len);
+
+  for(int i = 0; i < clust_len; ++i) {
+    CharacterVector curr_vect = vect[equality(keys, clusters[i])];
+    out[i] = unique(curr_vect).size();
+  }
+  return out;
+}
+
+
+// For each element of clusters, get the number of unique values within both
+// vect and dict associated with that cluster.
+// [[Rcpp::export]]
+IntegerVector get_clust_size_dict(CharacterVector clusters,
+                                  CharacterVector vect,
+                                  CharacterVector keys_vect,
+                                  CharacterVector dict,
+                                  CharacterVector keys_dict) {
+  int clust_len = clusters.size();
+  IntegerVector out(clust_len);
+
+  for(int i = 0; i < clust_len; ++i) {
+    CharacterVector curr_vect = vect[equality(keys_vect, clusters[i])];
+    CharacterVector curr_dict = dict[equality(keys_dict, clusters[i])];
+    out[i] = unique(curr_vect).size() + unique(curr_dict).size();
+  }
+  return out;
+}
+
+
 // Given a cluster suitable for merging, find all instances within vect_sub
 // that coorspond with that cluster and get the most freqently occuring
 // value (this is basically using freq to choose the value from the original

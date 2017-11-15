@@ -65,6 +65,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_clust_size_no_dict
+IntegerVector get_clust_size_no_dict(CharacterVector clusters, CharacterVector vect, CharacterVector keys);
+RcppExport SEXP _refinr_get_clust_size_no_dict(SEXP clustersSEXP, SEXP vectSEXP, SEXP keysSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type keys(keysSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_clust_size_no_dict(clusters, vect, keys));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_clust_size_dict
+IntegerVector get_clust_size_dict(CharacterVector clusters, CharacterVector vect, CharacterVector keys_vect, CharacterVector dict, CharacterVector keys_dict);
+RcppExport SEXP _refinr_get_clust_size_dict(SEXP clustersSEXP, SEXP vectSEXP, SEXP keys_vectSEXP, SEXP dictSEXP, SEXP keys_dictSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type keys_vect(keys_vectSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type dict(dictSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type keys_dict(keys_dictSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_clust_size_dict(clusters, vect, keys_vect, dict, keys_dict));
+    return rcpp_result_gen;
+END_RCPP
+}
 // most_freq
 String most_freq(String clust, CharacterVector keys_sub, CharacterVector vect_sub);
 RcppExport SEXP _refinr_most_freq(SEXP clustSEXP, SEXP keys_subSEXP, SEXP vect_subSEXP) {
@@ -129,6 +157,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 7},
     {"_refinr_merge_ngram_clusters_string", (DL_FUNC) &_refinr_merge_ngram_clusters_string, 4},
     {"_refinr_merge_ngram_clusters_vector", (DL_FUNC) &_refinr_merge_ngram_clusters_vector, 4},
+    {"_refinr_get_clust_size_no_dict", (DL_FUNC) &_refinr_get_clust_size_no_dict, 3},
+    {"_refinr_get_clust_size_dict", (DL_FUNC) &_refinr_get_clust_size_dict, 5},
     {"_refinr_most_freq", (DL_FUNC) &_refinr_most_freq, 3},
     {"_refinr_equality", (DL_FUNC) &_refinr_equality, 2},
     {"_refinr_cpp_duplicated", (DL_FUNC) &_refinr_cpp_duplicated, 1},

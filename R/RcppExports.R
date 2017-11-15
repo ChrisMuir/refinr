@@ -17,6 +17,14 @@ merge_ngram_clusters_vector <- function(cluster, n_gram_keys, univect, vect) {
     .Call('_refinr_merge_ngram_clusters_vector', PACKAGE = 'refinr', cluster, n_gram_keys, univect, vect)
 }
 
+get_clust_size_no_dict <- function(clusters, vect, keys) {
+    .Call('_refinr_get_clust_size_no_dict', PACKAGE = 'refinr', clusters, vect, keys)
+}
+
+get_clust_size_dict <- function(clusters, vect, keys_vect, dict, keys_dict) {
+    .Call('_refinr_get_clust_size_dict', PACKAGE = 'refinr', clusters, vect, keys_vect, dict, keys_dict)
+}
+
 most_freq <- function(clust, keys_sub, vect_sub) {
     .Call('_refinr_most_freq', PACKAGE = 'refinr', clust, keys_sub, vect_sub)
 }

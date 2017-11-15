@@ -82,20 +82,10 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
     csize <- rep.int(2, length(clusters))
   } else {
     if (is.null(dict)) {
-      csize <- vapply(clusters, function(n) {
-        vect_sub[equality(keys_vect_sub, n)] %>%
-          unique %>%
-          length
-      },
-      integer(1), USE.NAMES = FALSE)
+      csize <- get_clust_size_no_dict(clusters, vect_sub, keys_vect_sub)
     } else {
-      csize <- vapply(clusters, function(n) {
-        c(vect_sub[equality(keys_vect_sub, n)],
-          dict[equality(keys_dict, n)]) %>%
-          unique %>%
-          length
-      },
-      integer(1), USE.NAMES = FALSE)
+      csize <- get_clust_size_dict(clusters, vect_sub, keys_vect_sub, dict,
+                                   keys_dict)
     }
   }
 
