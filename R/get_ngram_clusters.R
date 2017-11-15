@@ -96,11 +96,9 @@ get_ngram_clusters <- function(one_gram_keys,
   if (length(one_gram_keys_dups) == 0) {
     return(NULL)
   }
-  initial_clust <- lapply(one_gram_keys_dups, function(x) {
-    n_gram_keys[equality(one_gram_keys, x)] %>%
-      .[!is.na(.)]
-  }) %>%
-    .[vapply(., length, integer(1), USE.NAMES = FALSE) > 1]
+  initial_clust <- get_ngram_initial_clusters(n_gram_keys,
+                                              one_gram_keys,
+                                              one_gram_keys_dups)
 
   # For each element of initial_clust, do a stringdist matrix and analyze the
   # closest match for each element (so if theres a cluster of n_gram_keys
@@ -121,11 +119,13 @@ get_ngram_clusters <- function(one_gram_keys,
   # (matches must have a value below edit_threshold in order to be considered
   # a cluster suitable for merging).
   clusters <- lapply(seq_len(length(distmatrices)), function(i) {
+    # Get current matrix object.
+    curr_mat <- distmatrices[[i]]
     # For each row of distmatrices[[i]], get the min value present. If none
     # are below 1, then function will return NA and move to the next iter.
-    lows <- vapply(seq_len(nrow(distmatrices[[i]])), function(x) {
-      min(distmatrices[[i]][x, -x])
-    }, numeric(1))
+    lows <- vapply(seq_len(nrow(curr_mat)), function(x) {
+      min(curr_mat[x, -x])
+    }, numeric(1), USE.NAMES = FALSE)
     if (any(lows < edit_threshold)) {
       # ID whether or not any of the rows of distmatrices[[i]] have more than
       # one cluster match (ie a min value that repeats within any given row).
@@ -133,9 +133,9 @@ get_ngram_clusters <- function(one_gram_keys,
         if (lows[x] > edit_threshold) {
           return(0)
         } else {
-          sum(distmatrices[[i]][x, -x] == lows[x])
+          sum(curr_mat[x, -x] == lows[x])
         }
-      }, numeric(1))
+      }, numeric(1), USE.NAMES = FALSE)
       # If any rows of distmatrices[[i]] have a min edit distance that
       # repeats, then code below will generate the clusters, and then
       # eliminate pair-wise clusters that appear in any clusters of length
@@ -143,31 +143,34 @@ get_ngram_clusters <- function(one_gram_keys,
       if (any(olap > 1)) {
         # Generate clusters.
         clust <- lapply(which(lows < edit_threshold), function(x) {
-          initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
+          initial_clust[[i]][curr_mat[x, ] < edit_threshold]
         }) %>%
           unique
         # ID the cluster(s) that have the longest length.
-        maxclust <- which.max(vapply(clust, length, numeric(1)))
+        maxclust <- which.max(vapply(clust, length, numeric(1),
+                                     USE.NAMES = FALSE))
 
         # clust_bool is a logical vector with the same length as clust,
         # indicating which clusters to keep (pair-wise clusters that appear
         # in longer clusters are not kept).
         clust_bool <- vapply(clust, function(k) {
           if (any(
-            vapply(clust[maxclust], function(x) all(x %in% k), logical(1))
+            vapply(clust[maxclust], function(x) all(x %in% k), logical(1),
+                   USE.NAMES = FALSE)
           )) {
             TRUE
           } else {
             all(
-              vapply(clust[maxclust], function(x) !all(k %in% x), logical(1))
+              vapply(clust[maxclust], function(x) !all(k %in% x), logical(1),
+                     USE.NAMES = FALSE)
             )
           }
-        }, logical(1))
+        }, logical(1), USE.NAMES = FALSE)
         return(clust[clust_bool])
       } else {
         return(
           lapply(which(lows < edit_threshold), function(x) {
-            initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
+            initial_clust[[i]][curr_mat[x, ] < edit_threshold]
           }) %>% unique
         )
       }

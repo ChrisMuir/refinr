@@ -2,6 +2,34 @@
 #include"refinr_header.h"
 using namespace Rcpp;
 
+
+// Get initial ngram clusters.
+// For each string in unigram_dups, find indices in which that string appears
+// in unigram_keys, then use those indices to get a subset of ngram_keys. Add
+// the subset to List "out". After "out" is compiled, remove elements of the
+// list that have length less than 2.
+// [[Rcpp::export]]
+List get_ngram_initial_clusters(CharacterVector ngram_keys,
+                                CharacterVector unigram_keys,
+                                CharacterVector unigram_dups) {
+  int dups_len = unigram_dups.size();
+  LogicalVector clust_len_logical(dups_len);
+  List out(dups_len);
+
+  for(int i = 0; i < dups_len; ++i) {
+    CharacterVector clust = ngram_keys[equality(unigram_keys, unigram_dups[i])];
+    clust = clust[!is_na(clust)];
+    if(clust.size() > 1) {
+      clust_len_logical[i] = TRUE;
+    } else {
+      clust_len_logical[i] = FALSE;
+    }
+    out[i] = clust;
+  }
+  return out[clust_len_logical];
+}
+
+
 // For each element of clusters, get the number of unique values within vect
 // associated with that cluster.
 // [[Rcpp::export]]
