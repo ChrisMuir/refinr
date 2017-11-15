@@ -80,100 +80,100 @@ get_ngram_clusters <- function(one_gram_keys,
     } else {
       return(as.list(n_gram_keys_dups))
     }
-  } else {
-    # If approximate string matching is enabled, then find all elements of
-    # n_gram_keys for which their associated one_gram_key has one or more
-    # identical matches within the entire list of one_gram_keys. From that
-    # list, create clusters of n_gram_keys (groups that all have an identical
-    # one_gram_key), eliminate all NA's within each group, and eliminate all
-    # groups with length less than two.
-    one_gram_keys_dups <- one_gram_keys %>%
-      .[!is.na(.)] %>%
-      .[cpp_duplicated(.)] %>%
-      cpp_unique
-    # If no duplicated keys exist, return NULL.
-    if (length(one_gram_keys_dups) == 0) {
-      return(NULL)
-    }
-    initial_clust <- lapply(one_gram_keys_dups, function(x) {
-      n_gram_keys[equality(one_gram_keys, x)] %>%
-        .[!is.na(.)]
-    }) %>%
-      .[vapply(., length, integer(1), USE.NAMES = FALSE) > 1]
-
-    # For each element of initial_clust, do a stringdist matrix and analyze the
-    # closest match for each element (so if theres a cluster of n_gram_keys
-    # that has 5 elements, then item 1 and 4 may be the best matches for each
-    # other, items 2 and 3 may be best for each other, and item 5 may not have
-    # a good match in the group).
-    # First step, create a stringdistmatrix for every element of initial_clust.
-    distmatrices <- lapply(
-      initial_clust, function(x)
-        stringdist::stringdistmatrix(x,
-                                     weight = edit_dist_weights,
-                                     useBytes = TRUE) %>%
-        as.matrix %>%
-        `dimnames<-`(NULL))
-
-    # Next, for each element of distmatrices, create clusters of matches within
-    # the matrix, based on lowest numeric edit distance.
-    # (matches must have a value below edit_threshold in order to be considered
-    # a cluster suitable for merging).
-    clusters <- lapply(seq_len(length(distmatrices)), function(i) {
-      # For each row of distmatrices[[i]], get the min value present. If none
-      # are below 1, then function will return NA and move to the next iter.
-      lows <- vapply(seq_len(nrow(distmatrices[[i]])), function(x) {
-        min(distmatrices[[i]][x, -x])
-      }, numeric(1))
-      if (any(lows < edit_threshold)) {
-        # ID whether or not any of the rows of distmatrices[[i]] have more than
-        # one cluster match (ie a min value that repeats within any given row).
-        olap <- vapply(seq_len(length(lows)), function(x) {
-          if (lows[x] > edit_threshold) {
-            return(0)
-          } else {
-            sum(distmatrices[[i]][x, -x] == lows[x])
-          }
-        }, numeric(1))
-        # If any rows of distmatrices[[i]] have a min edit distance that
-        # repeats, then code below will generate the clusters, and then
-        # eliminate pair-wise clusters that appear in any clusters of length
-        # greater than 2.
-        if (any(olap > 1)) {
-          # Generate clusters.
-          clust <- lapply(which(lows < edit_threshold), function(x) {
-            initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
-          }) %>%
-            unique
-          # ID the cluster(s) that have the longest length.
-          maxclust <- which.max(vapply(clust, length, numeric(1)))
-
-          # clust_bool is a logical vector with the same length as clust,
-          # indicating which clusters to keep (pair-wise clusters that appear
-          # in longer clusters are not kept).
-          clust_bool <- vapply(clust, function(k) {
-            if (any(
-              vapply(clust[maxclust], function(x) all(x %in% k), logical(1))
-            )) {
-              TRUE
-            } else {
-              all(
-                vapply(clust[maxclust], function(x) !all(k %in% x), logical(1))
-              )
-            }
-          }, logical(1))
-          return(clust[clust_bool])
-        } else {
-          return(
-            lapply(which(lows < edit_threshold), function(x) {
-              initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
-            }) %>% unique
-          )
-        }
-      } else {
-        return(NA)
-      }
-    })
-    return(clusters)
   }
+
+  # If approximate string matching is enabled, then find all elements of
+  # n_gram_keys for which their associated one_gram_key has one or more
+  # identical matches within the entire list of one_gram_keys. From that
+  # list, create clusters of n_gram_keys (groups that all have an identical
+  # one_gram_key), eliminate all NA's within each group, and eliminate all
+  # groups with length less than two.
+  one_gram_keys_dups <- one_gram_keys %>%
+    .[!is.na(.)] %>%
+    .[cpp_duplicated(.)] %>%
+    cpp_unique
+  # If no duplicated keys exist, return NULL.
+  if (length(one_gram_keys_dups) == 0) {
+    return(NULL)
+  }
+  initial_clust <- lapply(one_gram_keys_dups, function(x) {
+    n_gram_keys[equality(one_gram_keys, x)] %>%
+      .[!is.na(.)]
+  }) %>%
+    .[vapply(., length, integer(1), USE.NAMES = FALSE) > 1]
+
+  # For each element of initial_clust, do a stringdist matrix and analyze the
+  # closest match for each element (so if theres a cluster of n_gram_keys
+  # that has 5 elements, then item 1 and 4 may be the best matches for each
+  # other, items 2 and 3 may be best for each other, and item 5 may not have
+  # a good match in the group).
+  # First step, create a stringdistmatrix for every element of initial_clust.
+  distmatrices <- lapply(
+    initial_clust, function(x)
+      stringdist::stringdistmatrix(x,
+                                   weight = edit_dist_weights,
+                                   useBytes = TRUE) %>%
+      as.matrix %>%
+      `dimnames<-`(NULL))
+
+  # Next, for each element of distmatrices, create clusters of matches within
+  # the matrix, based on lowest numeric edit distance.
+  # (matches must have a value below edit_threshold in order to be considered
+  # a cluster suitable for merging).
+  clusters <- lapply(seq_len(length(distmatrices)), function(i) {
+    # For each row of distmatrices[[i]], get the min value present. If none
+    # are below 1, then function will return NA and move to the next iter.
+    lows <- vapply(seq_len(nrow(distmatrices[[i]])), function(x) {
+      min(distmatrices[[i]][x, -x])
+    }, numeric(1))
+    if (any(lows < edit_threshold)) {
+      # ID whether or not any of the rows of distmatrices[[i]] have more than
+      # one cluster match (ie a min value that repeats within any given row).
+      olap <- vapply(seq_len(length(lows)), function(x) {
+        if (lows[x] > edit_threshold) {
+          return(0)
+        } else {
+          sum(distmatrices[[i]][x, -x] == lows[x])
+        }
+      }, numeric(1))
+      # If any rows of distmatrices[[i]] have a min edit distance that
+      # repeats, then code below will generate the clusters, and then
+      # eliminate pair-wise clusters that appear in any clusters of length
+      # greater than 2.
+      if (any(olap > 1)) {
+        # Generate clusters.
+        clust <- lapply(which(lows < edit_threshold), function(x) {
+          initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
+        }) %>%
+          unique
+        # ID the cluster(s) that have the longest length.
+        maxclust <- which.max(vapply(clust, length, numeric(1)))
+
+        # clust_bool is a logical vector with the same length as clust,
+        # indicating which clusters to keep (pair-wise clusters that appear
+        # in longer clusters are not kept).
+        clust_bool <- vapply(clust, function(k) {
+          if (any(
+            vapply(clust[maxclust], function(x) all(x %in% k), logical(1))
+          )) {
+            TRUE
+          } else {
+            all(
+              vapply(clust[maxclust], function(x) !all(k %in% x), logical(1))
+            )
+          }
+        }, logical(1))
+        return(clust[clust_bool])
+      } else {
+        return(
+          lapply(which(lows < edit_threshold), function(x) {
+            initial_clust[[i]][distmatrices[[i]][x, ] < edit_threshold]
+          }) %>% unique
+        )
+      }
+    } else {
+      return(NA)
+    }
+  })
+  return(clusters)
 }
