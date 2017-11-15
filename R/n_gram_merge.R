@@ -100,7 +100,7 @@ n_gram_merge <- function(vect,
   ## TODO:  ----
   ## Add code to handle input numgram == 1 (can skip "n_gram_keys" below, and
   ## should skip a number of steps later in the function as well).
-  univect <- cpp_unique(vect)
+  univect <- cpp_unique(vect[!is.na(vect)])
   if (!is.na(edit_threshold)) {
     one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix)
   } else {

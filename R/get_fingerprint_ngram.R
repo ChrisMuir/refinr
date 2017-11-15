@@ -27,13 +27,10 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   stopifnot(is.character(vect))
   stopifnot(is.logical(bus_suffix))
 
-  # Get indices of vect that are not NA.
-  vect_non_na <- !is.na(vect)
-
   if (bus_suffix) {
     # Make initial transformations to all non-NA elements of vect. Remove all
     # business suffix characters from each string.
-    vect[vect_non_na] <- vect[vect_non_na] %>%
+    vect <- vect %>%
       tolower %>%
       business_suffix %>%
       {gsub("\\b(inc|corp|co|llc|ltd|div|ent|lp)\\b", "", .)} %>%
@@ -53,7 +50,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   } else {
     # Make initial transformations to all non-NA elements of vect. Spare all
     # business suffix characters from each string.
-    vect[vect_non_na] <- vect[vect_non_na] %>%
+    vect <- vect %>%
       tolower %>%
       {gsub("[[:punct:]]|\\s", "", .)} %>%
 
