@@ -17,6 +17,10 @@ merge_ngram_clusters_vector <- function(cluster, n_gram_keys, univect, vect) {
     .Call('_refinr_merge_ngram_clusters_vector', PACKAGE = 'refinr', cluster, n_gram_keys, univect, vect)
 }
 
+remove_strings <- function(input, removes) {
+    .Call('_refinr_remove_strings', PACKAGE = 'refinr', input, removes)
+}
+
 get_ngram_initial_clusters <- function(ngram_keys, unigram_keys, unigram_dups) {
     .Call('_refinr_get_ngram_initial_clusters', PACKAGE = 'refinr', ngram_keys, unigram_keys, unigram_dups)
 }

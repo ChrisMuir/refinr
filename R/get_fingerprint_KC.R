@@ -27,11 +27,10 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
       business_suffix %>%
       {gsub("[[:punct:]]", "", .)} %>%
       cpp_trimws %>%
-      {gsub("\\s{2,}", " ", .)} %>%
+      {gsub("\\s+", " ", .)} %>%
       strsplit(., " ", fixed = TRUE) %>%
-      lapply(., function(x) {
-        x[!x %in% c("inc", "corp", "co", "llc", "ltd", "div", "ent", "lp")]
-      }) %>%
+      remove_strings(
+        c("inc", "corp", "co", "llc", "ltd", "div", "ent", "lp")) %>%
       lapply(., unique) %>%
       lapply(., function(x) x[sort.list(x)]) %>%
       vapply(., paste, character(1), collapse = " ") %>%
@@ -42,7 +41,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
       tolower %>%
       {gsub("[[:punct:]]", "", .)} %>%
       cpp_trimws %>%
-      {gsub("\\s{2,}", " ", .)} %>%
+      {gsub("\\s+", " ", .)} %>%
       strsplit(., " ", fixed = TRUE) %>%
       lapply(., unique) %>%
       lapply(., function(x) x[sort.list(x)]) %>%

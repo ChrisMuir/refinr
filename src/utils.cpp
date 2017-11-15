@@ -3,6 +3,27 @@
 using namespace Rcpp;
 
 
+// Given a list of character vectors, for each vector, remove any strings that
+// appear in input vector "removes".
+// [[Rcpp::export]]
+List remove_strings(List input, CharacterVector removes) {
+  int input_len = input.size();
+  List out(input_len);
+
+  for(int i = 0; i < input_len; ++i) {
+    CharacterVector curr_vect = input[i];
+    int curr_vect_len = curr_vect.size();
+    LogicalVector curr_vect_matches(curr_vect_len);
+    for(int j = 0; j < curr_vect_len; ++j) {
+      LogicalVector matches = equality(removes, curr_vect[j]);
+      curr_vect_matches[j] = is_false(any(matches == TRUE));
+    }
+    out[i] = curr_vect[curr_vect_matches];
+  }
+  return out;
+}
+
+
 // Get initial ngram clusters.
 // For each string in unigram_dups, find indices in which that string appears
 // in unigram_keys, then use those indices to get a subset of ngram_keys. Add
