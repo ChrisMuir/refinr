@@ -3,6 +3,28 @@
 using namespace Rcpp;
 
 
+// Given a list of character vectors, return a list of the same length
+// containing the unique values of eacch vector.
+// [[Rcpp::export]]
+List cpp_list_unique(List input, bool sort_vals) {
+  int input_len = input.size();
+  List out(input_len);
+
+  if(sort_vals) {
+    for(int i = 0; i < input_len; ++i) {
+      CharacterVector curr_vect = input[i];
+      out[i] = unique(curr_vect).sort();
+    }
+  } else {
+    for(int i = 0; i < input_len; ++i) {
+      CharacterVector curr_vect = input[i];
+      out[i] = unique(curr_vect);
+    }
+  }
+  return out;
+}
+
+
 // Given a list of character vectors, for each vector, remove any strings that
 // appear in input vector "removes".
 // [[Rcpp::export]]

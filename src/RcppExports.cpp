@@ -65,6 +65,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_list_unique
+List cpp_list_unique(List input, bool sort_vals);
+RcppExport SEXP _refinr_cpp_list_unique(SEXP inputSEXP, SEXP sort_valsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< bool >::type sort_vals(sort_valsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_list_unique(input, sort_vals));
+    return rcpp_result_gen;
+END_RCPP
+}
 // remove_strings
 List remove_strings(List input, CharacterVector removes);
 RcppExport SEXP _refinr_remove_strings(SEXP inputSEXP, SEXP removesSEXP) {
@@ -182,6 +194,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 7},
     {"_refinr_merge_ngram_clusters_string", (DL_FUNC) &_refinr_merge_ngram_clusters_string, 4},
     {"_refinr_merge_ngram_clusters_vector", (DL_FUNC) &_refinr_merge_ngram_clusters_vector, 4},
+    {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
     {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},
     {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},
     {"_refinr_get_clust_size_no_dict", (DL_FUNC) &_refinr_get_clust_size_no_dict, 3},

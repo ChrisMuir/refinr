@@ -77,7 +77,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
       lapply(., function(x) {
         ngram::get.ngrams(ngram::ngram(x, n = numgram))
       }) %>%
-      lapply(., function(x) x[sort.list(x)]) %>%
+      cpp_list_unique(sort_vals = TRUE) %>%
       vapply(., paste, character(1), collapse = "") %>%
       iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)}
@@ -85,8 +85,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
     # Else if numgram == 1, use base R to get char unigrams.
     vect[vect_non_na] <- vect[vect_non_na] %>%
       strsplit(., " ", fixed = TRUE) %>%
-      lapply(., unique) %>%
-      lapply(., function(x) x[sort.list(x)]) %>%
+      cpp_list_unique(sort_vals = TRUE) %>%
       vapply(., paste, character(1), collapse = "") %>%
       iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)}
