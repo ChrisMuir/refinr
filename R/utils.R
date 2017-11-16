@@ -20,12 +20,9 @@
 #'
 #' @return Character vector of business names, with business name suffixes
 #'   edited to be normalized.
+#' @noRd
 #' @importFrom magrittr "%>%"
 #'
-#' @examples \dontrun{
-#' business_suffix(c("Acme Inc", "Acme incorporated", "acme company"))
-#' [1] "Acme Inc" "Acme inc" "acme co"
-#' }
 business_suffix <- function(vect) {
   vect %>%
     {gsub(" incorporated| incorporate", " inc", .)} %>%
@@ -37,4 +34,28 @@ business_suffix <- function(vect) {
     {gsub(" enterprises| enterprise", " ent", .)} %>%
     {gsub(" limited partnership", " lp", ., fixed = TRUE)} %>%
     {gsub(" and ", " & ", ., fixed = TRUE)}
+}
+
+
+#' Char Splitter
+#' For each element of an input character vector, insert a single space
+#' between each char. This function is meant to mimic function ngram::splitter,
+#' but is faster do to fewer input checks.
+#'
+#' @param vect character vector.
+#' @param numgram_thres numeric value, after the splitting, any string that
+#'  has length less than this number will be replaced with NA_character_.
+#'
+#' @return character vector
+#' @noRd
+char_splitter <- function(vect, numgram_thres) {
+  # For each value of vect, insert spaces between each char.
+  vapply(vect, function(x) {
+    x <- paste0(strsplit(x, split = "")[[1]], collapse = " ")
+    if (nchar(x) >= numgram_thres) {
+      x
+    } else {
+      NA_character_
+    }
+  }, character(1), USE.NAMES = FALSE)
 }

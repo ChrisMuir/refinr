@@ -27,6 +27,8 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   stopifnot(is.character(vect))
   stopifnot(is.logical(bus_suffix))
 
+  numgram_thres <- numgram + (numgram - 1)
+
   if (bus_suffix) {
     # Make initial transformations to all non-NA elements of vect. Remove all
     # business suffix characters from each string.
@@ -35,36 +37,14 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
       business_suffix %>%
       {gsub("\\b(inc|corp|co|llc|ltd|div|ent|lp)\\b", "", .)} %>%
       {gsub("[[:punct:]]|\\s", "", .)} %>%
-
-      vapply(., function(x) {
-        ngram::splitter(x, split.char = TRUE, split.space = FALSE)
-      }, character(1), USE.NAMES = FALSE) %>%
-
-      vapply(., function(x) {
-        if (nchar(x) >= (numgram + (numgram - 1))) {
-          x
-        } else {
-          NA_character_
-        }
-      }, character(1), USE.NAMES = FALSE)
+      char_splitter(numgram_thres)
   } else {
     # Make initial transformations to all non-NA elements of vect. Spare all
     # business suffix characters from each string.
     vect <- vect %>%
       tolower %>%
       {gsub("[[:punct:]]|\\s", "", .)} %>%
-
-      vapply(., function(x) {
-        ngram::splitter(x, split.char = TRUE, split.space = FALSE)
-      }, character(1), USE.NAMES = FALSE) %>%
-
-      vapply(., function(x) {
-        if (nchar(x) >= (numgram + (numgram - 1))) {
-          x
-        } else {
-          NA_character_
-        }
-      }, character(1), USE.NAMES = FALSE)
+      char_splitter(numgram_thres)
   }
 
   # Get indices of vect that are not NA again (NA's could have been introduced
