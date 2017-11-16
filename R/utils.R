@@ -51,7 +51,7 @@ business_suffix <- function(vect) {
 char_splitter <- function(vect, numgram_thres) {
   # For each value of vect, insert spaces between each char.
   vapply(vect, function(x) {
-    x <- paste0(strsplit(x, split = "")[[1]], collapse = " ")
+    x <- paste0(strsplit(x, split = "", fixed = TRUE)[[1]], collapse = " ")
     if (nchar(x) >= numgram_thres) {
       x
     } else {
