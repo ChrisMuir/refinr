@@ -37,20 +37,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// merge_ngram_clusters_string
-CharacterVector merge_ngram_clusters_string(String cluster, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
-RcppExport SEXP _refinr_merge_ngram_clusters_string(SEXP clusterSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type cluster(clusterSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    rcpp_result_gen = Rcpp::wrap(merge_ngram_clusters_string(cluster, n_gram_keys, univect, vect));
-    return rcpp_result_gen;
-END_RCPP
-}
 // merge_ngram_clusters_vector
 CharacterVector merge_ngram_clusters_vector(CharacterVector cluster, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
 RcppExport SEXP _refinr_merge_ngram_clusters_vector(SEXP clusterSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
@@ -62,6 +48,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
     rcpp_result_gen = Rcpp::wrap(merge_ngram_clusters_vector(cluster, n_gram_keys, univect, vect));
+    return rcpp_result_gen;
+END_RCPP
+}
+// merge_ngram_clusters_string
+CharacterVector merge_ngram_clusters_string(String cluster, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
+RcppExport SEXP _refinr_merge_ngram_clusters_string(SEXP clusterSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type cluster(clusterSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    rcpp_result_gen = Rcpp::wrap(merge_ngram_clusters_string(cluster, n_gram_keys, univect, vect));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -192,8 +192,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 5},
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 7},
-    {"_refinr_merge_ngram_clusters_string", (DL_FUNC) &_refinr_merge_ngram_clusters_string, 4},
     {"_refinr_merge_ngram_clusters_vector", (DL_FUNC) &_refinr_merge_ngram_clusters_vector, 4},
+    {"_refinr_merge_ngram_clusters_string", (DL_FUNC) &_refinr_merge_ngram_clusters_string, 4},
     {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
     {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},
     {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},

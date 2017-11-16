@@ -130,38 +130,17 @@ n_gram_merge <- function(vect,
       })
   }
 
+  # flatten the clusters list object.
+  clusters <- flatten_list(clusters)
+
   # For each cluster, make mass edits to the values of vect related to that
   # cluster.
   if (length(clusters) > 0) {
-    for (i in seq_len(length(clusters))) {
-      if (is.list(clusters[[i]])) {
-        for (k in clusters[[i]]) {
-          k <- unlist(k, FALSE, FALSE)
-          if (length(k) > 1) {
-            vect <- merge_ngram_clusters_vector(k,
-                                                n_gram_keys,
-                                                univect,
-                                                vect)
-          } else {
-            vect <- merge_ngram_clusters_string(k,
-                                                n_gram_keys,
-                                                univect,
-                                                vect)
-          }
-        }
+    for (i in clusters) {
+      if (length(i) > 1) {
+        vect <- merge_ngram_clusters_vector(i, n_gram_keys, univect, vect)
       } else {
-        k <- clusters[[i]]
-        if (length(k) > 1) {
-          vect <- merge_ngram_clusters_vector(k,
-                                              n_gram_keys,
-                                              univect,
-                                              vect)
-        } else {
-          vect <- merge_ngram_clusters_string(k,
-                                              n_gram_keys,
-                                              univect,
-                                              vect)
-        }
+        vect <- merge_ngram_clusters_string(i, n_gram_keys, univect, vect)
       }
     }
   }
