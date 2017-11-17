@@ -121,17 +121,11 @@ IntegerVector get_clust_size_dict(CharacterVector clusters,
 String most_freq(String clust,
                  CharacterVector keys_sub,
                  CharacterVector vect_sub) {
-  int keys_sub_len = keys_sub.size();
-  LogicalVector match_bool(keys_sub_len);
-  CharacterVector vect_sub_clust;
+  LogicalVector match_bool = equality(keys_sub, clust);
+  CharacterVector vect_sub_clust = vect_sub[match_bool];
 
-  match_bool = equality(keys_sub, clust);
-  vect_sub_clust = vect_sub[match_bool];
-
-  CharacterVector univect;
-  CharacterVector freq;
-  univect = Rcpp::wrap( sort_unique( vect_sub_clust ));
-  freq = Rcpp::wrap( table( vect_sub_clust ));
+  CharacterVector univect = sort_unique(vect_sub_clust);
+  CharacterVector freq = Rcpp::wrap(table(vect_sub_clust));
   int freq_len = freq.size();
   IntegerVector freq_int(freq_len);
   for(int i = 0; i < freq_len; ++i) {

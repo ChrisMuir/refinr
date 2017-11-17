@@ -9,12 +9,8 @@ merge_KC_clusters_dict <- function(clusters, keys_vect, vect, keys_vect_sub, vec
     .Call('_refinr_merge_KC_clusters_dict', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict)
 }
 
-merge_ngram_clusters_vector <- function(cluster, n_gram_keys, univect, vect) {
-    .Call('_refinr_merge_ngram_clusters_vector', PACKAGE = 'refinr', cluster, n_gram_keys, univect, vect)
-}
-
-merge_ngram_clusters_string <- function(cluster, n_gram_keys, univect, vect) {
-    .Call('_refinr_merge_ngram_clusters_string', PACKAGE = 'refinr', cluster, n_gram_keys, univect, vect)
+merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
+    .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
 }
 
 cpp_list_unique <- function(input, sort_vals) {

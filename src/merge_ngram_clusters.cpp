@@ -3,148 +3,71 @@
 using namespace Rcpp;
 
 
-// Merge values related to a cluster of length > 1
-//
-// Function that performs all merges related to a single cluster, given that
-// the input cluster is a char vector with length greater than one. Values
-// within arg vect that are related to the cluster are edited/merged, returnm
-// is the edited char vector "vect".
+// Iterate over all clusters, make mass edits related to each cluster.
 // [[Rcpp::export]]
-CharacterVector merge_ngram_clusters_vector(CharacterVector cluster,
-                                            CharacterVector n_gram_keys,
-                                            CharacterVector univect,
-                                            CharacterVector vect) {
+CharacterVector merge_ngram_clusters(List clusters,
+                                     CharacterVector n_gram_keys,
+                                     CharacterVector univect,
+                                     CharacterVector vect) {
+  int clusters_len = clusters.size();
   int vect_len = vect.size();
+  int n_gram_keys_len = n_gram_keys.size();
   CharacterVector output = clone(vect);
 
-  // Get indices of elements of n_gram_keys that are found in cluster, as obj
-  // "ng_idx".
-  int clust_len = cluster.size();
-  int n_gram_keys_len = n_gram_keys.size();
-  LogicalVector ng_idx(n_gram_keys_len);
-  for(int i = 0; i < clust_len; ++i) {
-    LogicalVector clust_match_bool(n_gram_keys_len);
-    clust_match_bool = equality(n_gram_keys, cluster[i]);
-    ng_idx = ng_idx | clust_match_bool;
-  }
-  // If there is no intersection between n_gram_keys and cluster, return vect
-  // unedited.
-  if (sum(ng_idx) == 0 ) {
-    return vect;
-  }
+  for(int i = 0; i < clusters_len; ++i) {
+    CharacterVector curr_clust = clusters[i];
+    int curr_clust_len = curr_clust.size();
 
-  // Get indices of elements of vect that are found in vector univect[ng_idx],
-  // as obj "vect_idx".
-  CharacterVector univect_sub(sum(ng_idx));
-  univect_sub = univect[ng_idx];
-  int univect_sub_len = univect_sub.size();
-  LogicalVector vect_idx(vect_len);
-  for(int i = 0; i < univect_sub_len; ++i) {
-    LogicalVector vect_match_bool(vect_len);
-    vect_match_bool = equality(vect, univect_sub[i]);
-    vect_idx = vect_idx | vect_match_bool;
-  }
-  // If there is no intersection between univect[nq_idx] and vect, return vect
-  // unedited.
-  if (sum(vect_idx) == 0 ) {
-    return vect;
-  }
+    // Get indices of elements of n_gram_keys that are found in cluster, as obj
+    // "ng_idx".
+    LogicalVector ng_idx(n_gram_keys_len);
 
-  // Find the string that appears most frequently in vector vect[vect_idx], as
-  // obj "most_freq_string". Edit all elements of vect[vect_idx] to be equal
-  // to string "most_freq_string".
-  CharacterVector vect_sub(sum(vect_idx));
-  vect_sub = vect[vect_idx];
-  String most_freq_string(1);
-
-  CharacterVector uni_vect_sub;
-  CharacterVector freq;
-  uni_vect_sub = Rcpp::wrap( sort_unique( vect_sub ));
-  freq = Rcpp::wrap( table( vect_sub ));
-  int freq_len = freq.size();
-  IntegerVector freq_int(freq_len);
-  for(int i = 0; i < freq_len; ++i) {
-    freq_int[i] = atoi(freq[i]);
-  }
-  most_freq_string = uni_vect_sub[which_max(freq_int)];
-
-  for(int n = 0; n < vect_len; ++n) {
-    if ( vect_idx[n] ) {
-      output[n] = most_freq_string;
+    for(int n = 0; n < curr_clust_len; ++n) {
+      LogicalVector clust_match_bool = equality(n_gram_keys, curr_clust[n]);
+      ng_idx = ng_idx | clust_match_bool;
     }
-  }
-  return output;
-}
 
+    // If there is no intersection between n_gram_keys and curr_clust, stop
+    // the current iteration and move on to the next element of clusters.
+    if(is_false(any(ng_idx == TRUE))) {
+      continue;
+    }
 
-// Merge values related to a cluster of length 1
-//
-// Function that performs all merges related to a single cluster, given that
-// the input cluster is a string (char vector of length 1). Values within
-// arg vect that are related to the cluster string are edited/merged, return
-// is the edited char vector "vect".
-// [[Rcpp::export]]
-CharacterVector merge_ngram_clusters_string(String cluster,
-                                            CharacterVector n_gram_keys,
-                                            CharacterVector univect,
-                                            CharacterVector vect) {
-  int vect_len = vect.size();
-  CharacterVector output = clone(vect);
+    // Get indices of elements of vect that are found in vector univect[ng_idx],
+    // as obj "vect_idx".
+    CharacterVector univect_sub = univect[ng_idx];
+    int univect_sub_len = univect_sub.size();
+    LogicalVector vect_idx(vect_len);
 
-  // Get indices of elements of n_gram_keys that match cluster, as obj
-  // "ng_idx".
-  int n_gram_keys_len = n_gram_keys.size();
-  LogicalVector ng_idx(n_gram_keys_len);
-  ng_idx = equality(n_gram_keys, cluster);
-  // If cluster is not found in n_gram_keys, return vect unedited.
-  if (sum(ng_idx) == 0 ) {
-    return vect;
-  }
-
-  // Get indices of elements of vect that are found in vector univect[ng_idx],
-  // as obj "vect_idx".
-  CharacterVector univect_sub(sum(ng_idx));
-  univect_sub = univect[ng_idx];
-  int univect_sub_len = univect_sub.size();
-  LogicalVector vect_idx(vect_len);
-  if ( univect_sub_len == 1 ) {
-    String univect_sub_str(1);
-    univect_sub_str = univect_sub[1];
-    vect_idx = equality(vect, univect_sub_str);
-  } else {
-    for(int i = 0; i < univect_sub_len; ++i) {
-      LogicalVector vect_match_bool(vect_len);
-      vect_match_bool = equality(vect, univect_sub[i]);
+    for(int n = 0; n < univect_sub_len; ++n) {
+      LogicalVector vect_match_bool = equality(vect, univect_sub[n]);
       vect_idx = vect_idx | vect_match_bool;
     }
-  }
-  // If there is no intersection between vectors univect[nq_idx] and vect,
-  // return vect unedited.
-  if (sum(vect_idx) == 0 ) {
-    return vect;
-  }
 
-  // Find the string that appears most frequently in vector vect[vect_idx], as
-  // obj "most_freq_string". Edit all elements of vect[vect_idx] to be equal
-  // to string "most_freq_string".
-  CharacterVector vect_sub(sum(vect_idx));
-  vect_sub = vect[vect_idx];
-  String most_freq_string(1);
+    // If there is no intersection between univect[nq_idx] and vect, stop the
+    // current iteration and move on to the next element of clusters.
+    if (is_false(any(vect_idx == TRUE))) {
+      continue;
+    }
 
-  CharacterVector uni_vect_sub;
-  CharacterVector freq;
-  uni_vect_sub = Rcpp::wrap( sort_unique( vect_sub ));
-  freq = Rcpp::wrap( table( vect_sub ));
-  int freq_len = freq.size();
-  IntegerVector freq_int(freq_len);
-  for(int i = 0; i < freq_len; ++i) {
-    freq_int[i] = atoi(freq[i]);
-  }
-  most_freq_string = uni_vect_sub[which_max(freq_int)];
+    // Find the string that appears most frequently in vector vect[vect_idx], as
+    // obj "most_freq_string". Edit all elements of vect[vect_idx] to be equal
+    // to string "most_freq_string".
+    CharacterVector vect_sub = vect[vect_idx];
+    CharacterVector uni_vect_sub = sort_unique(vect_sub);
+    CharacterVector freq = Rcpp::wrap(table(vect_sub));
+    int freq_len = freq.size();
+    IntegerVector freq_int(freq_len);
+    for(int n = 0; n < freq_len; ++n) {
+      freq_int[n] = atoi(freq[n]);
+    }
+    String most_freq_string = uni_vect_sub[which_max(freq_int)];
 
-  for(int n = 0; n < vect_len; ++n) {
-    if ( vect_idx[n] ) {
-      output[n] = most_freq_string;
+    // Make mass edits to vect.
+    for(int n = 0; n < vect_len; ++n) {
+      if(vect_idx[n]) {
+        output[n] = most_freq_string;
+      }
     }
   }
   return output;
