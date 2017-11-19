@@ -37,82 +37,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// merge_ngram_clusters
-CharacterVector merge_ngram_clusters(List clusters, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
-RcppExport SEXP _refinr_merge_ngram_clusters(SEXP clustersSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type clusters(clustersSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    rcpp_result_gen = Rcpp::wrap(merge_ngram_clusters(clusters, n_gram_keys, univect, vect));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cpp_in
-LogicalVector cpp_in(CharacterVector x, CharacterVector y);
-RcppExport SEXP _refinr_cpp_in(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_in(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// filter_initial_clusters
-List filter_initial_clusters(List distmatrices, double edit_threshold, List clusters);
-RcppExport SEXP _refinr_filter_initial_clusters(SEXP distmatricesSEXP, SEXP edit_thresholdSEXP, SEXP clustersSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type distmatrices(distmatricesSEXP);
-    Rcpp::traits::input_parameter< double >::type edit_threshold(edit_thresholdSEXP);
-    Rcpp::traits::input_parameter< List >::type clusters(clustersSEXP);
-    rcpp_result_gen = Rcpp::wrap(filter_initial_clusters(distmatrices, edit_threshold, clusters));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cpp_list_unique
-List cpp_list_unique(List input, bool sort_vals);
-RcppExport SEXP _refinr_cpp_list_unique(SEXP inputSEXP, SEXP sort_valsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< bool >::type sort_vals(sort_valsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_list_unique(input, sort_vals));
-    return rcpp_result_gen;
-END_RCPP
-}
-// remove_strings
-List remove_strings(List input, CharacterVector removes);
-RcppExport SEXP _refinr_remove_strings(SEXP inputSEXP, SEXP removesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type removes(removesSEXP);
-    rcpp_result_gen = Rcpp::wrap(remove_strings(input, removes));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_ngram_initial_clusters
-List get_ngram_initial_clusters(CharacterVector ngram_keys, CharacterVector unigram_keys, CharacterVector unigram_dups);
-RcppExport SEXP _refinr_get_ngram_initial_clusters(SEXP ngram_keysSEXP, SEXP unigram_keysSEXP, SEXP unigram_dupsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type ngram_keys(ngram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type unigram_keys(unigram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type unigram_dups(unigram_dupsSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_ngram_initial_clusters(ngram_keys, unigram_keys, unigram_dups));
-    return rcpp_result_gen;
-END_RCPP
-}
 // get_clust_size_no_dict
 IntegerVector get_clust_size_no_dict(CharacterVector clusters, CharacterVector vect, CharacterVector keys);
 RcppExport SEXP _refinr_get_clust_size_no_dict(SEXP clustersSEXP, SEXP vectSEXP, SEXP keysSEXP) {
@@ -151,6 +75,82 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< CharacterVector >::type keys_sub(keys_subSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type vect_sub(vect_subSEXP);
     rcpp_result_gen = Rcpp::wrap(most_freq(clust, keys_sub, vect_sub));
+    return rcpp_result_gen;
+END_RCPP
+}
+// merge_ngram_clusters
+CharacterVector merge_ngram_clusters(List clusters, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
+RcppExport SEXP _refinr_merge_ngram_clusters(SEXP clustersSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    rcpp_result_gen = Rcpp::wrap(merge_ngram_clusters(clusters, n_gram_keys, univect, vect));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_ngram_initial_clusters
+List get_ngram_initial_clusters(CharacterVector ngram_keys, CharacterVector unigram_keys, CharacterVector unigram_dups);
+RcppExport SEXP _refinr_get_ngram_initial_clusters(SEXP ngram_keysSEXP, SEXP unigram_keysSEXP, SEXP unigram_dupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type ngram_keys(ngram_keysSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type unigram_keys(unigram_keysSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type unigram_dups(unigram_dupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_ngram_initial_clusters(ngram_keys, unigram_keys, unigram_dups));
+    return rcpp_result_gen;
+END_RCPP
+}
+// filter_initial_clusters
+List filter_initial_clusters(List distmatrices, double edit_threshold, List clusters);
+RcppExport SEXP _refinr_filter_initial_clusters(SEXP distmatricesSEXP, SEXP edit_thresholdSEXP, SEXP clustersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type distmatrices(distmatricesSEXP);
+    Rcpp::traits::input_parameter< double >::type edit_threshold(edit_thresholdSEXP);
+    Rcpp::traits::input_parameter< List >::type clusters(clustersSEXP);
+    rcpp_result_gen = Rcpp::wrap(filter_initial_clusters(distmatrices, edit_threshold, clusters));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_in
+LogicalVector cpp_in(CharacterVector x, CharacterVector y);
+RcppExport SEXP _refinr_cpp_in(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_in(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_list_unique
+List cpp_list_unique(List input, bool sort_vals);
+RcppExport SEXP _refinr_cpp_list_unique(SEXP inputSEXP, SEXP sort_valsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< bool >::type sort_vals(sort_valsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_list_unique(input, sort_vals));
+    return rcpp_result_gen;
+END_RCPP
+}
+// remove_strings
+List remove_strings(List input, CharacterVector removes);
+RcppExport SEXP _refinr_remove_strings(SEXP inputSEXP, SEXP removesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type removes(removesSEXP);
+    rcpp_result_gen = Rcpp::wrap(remove_strings(input, removes));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -203,15 +203,15 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 5},
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 7},
-    {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},
-    {"_refinr_cpp_in", (DL_FUNC) &_refinr_cpp_in, 2},
-    {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},
-    {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
-    {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},
-    {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},
     {"_refinr_get_clust_size_no_dict", (DL_FUNC) &_refinr_get_clust_size_no_dict, 3},
     {"_refinr_get_clust_size_dict", (DL_FUNC) &_refinr_get_clust_size_dict, 5},
     {"_refinr_most_freq", (DL_FUNC) &_refinr_most_freq, 3},
+    {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},
+    {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},
+    {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},
+    {"_refinr_cpp_in", (DL_FUNC) &_refinr_cpp_in, 2},
+    {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
+    {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},
     {"_refinr_equality", (DL_FUNC) &_refinr_equality, 2},
     {"_refinr_cpp_duplicated", (DL_FUNC) &_refinr_cpp_duplicated, 1},
     {"_refinr_cpp_unique", (DL_FUNC) &_refinr_cpp_unique, 1},

@@ -9,30 +9,6 @@ merge_KC_clusters_dict <- function(clusters, keys_vect, vect, keys_vect_sub, vec
     .Call('_refinr_merge_KC_clusters_dict', PACKAGE = 'refinr', clusters, keys_vect, vect, keys_vect_sub, vect_sub, keys_dict, dict)
 }
 
-merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
-    .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
-}
-
-cpp_in <- function(x, y) {
-    .Call('_refinr_cpp_in', PACKAGE = 'refinr', x, y)
-}
-
-filter_initial_clusters <- function(distmatrices, edit_threshold, clusters) {
-    .Call('_refinr_filter_initial_clusters', PACKAGE = 'refinr', distmatrices, edit_threshold, clusters)
-}
-
-cpp_list_unique <- function(input, sort_vals) {
-    .Call('_refinr_cpp_list_unique', PACKAGE = 'refinr', input, sort_vals)
-}
-
-remove_strings <- function(input, removes) {
-    .Call('_refinr_remove_strings', PACKAGE = 'refinr', input, removes)
-}
-
-get_ngram_initial_clusters <- function(ngram_keys, unigram_keys, unigram_dups) {
-    .Call('_refinr_get_ngram_initial_clusters', PACKAGE = 'refinr', ngram_keys, unigram_keys, unigram_dups)
-}
-
 get_clust_size_no_dict <- function(clusters, vect, keys) {
     .Call('_refinr_get_clust_size_no_dict', PACKAGE = 'refinr', clusters, vect, keys)
 }
@@ -43,6 +19,30 @@ get_clust_size_dict <- function(clusters, vect, keys_vect, dict, keys_dict) {
 
 most_freq <- function(clust, keys_sub, vect_sub) {
     .Call('_refinr_most_freq', PACKAGE = 'refinr', clust, keys_sub, vect_sub)
+}
+
+merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
+    .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
+}
+
+get_ngram_initial_clusters <- function(ngram_keys, unigram_keys, unigram_dups) {
+    .Call('_refinr_get_ngram_initial_clusters', PACKAGE = 'refinr', ngram_keys, unigram_keys, unigram_dups)
+}
+
+filter_initial_clusters <- function(distmatrices, edit_threshold, clusters) {
+    .Call('_refinr_filter_initial_clusters', PACKAGE = 'refinr', distmatrices, edit_threshold, clusters)
+}
+
+cpp_in <- function(x, y) {
+    .Call('_refinr_cpp_in', PACKAGE = 'refinr', x, y)
+}
+
+cpp_list_unique <- function(input, sort_vals) {
+    .Call('_refinr_cpp_list_unique', PACKAGE = 'refinr', input, sort_vals)
+}
+
+remove_strings <- function(input, removes) {
+    .Call('_refinr_remove_strings', PACKAGE = 'refinr', input, removes)
 }
 
 equality <- function(lookupvect, charstring) {
