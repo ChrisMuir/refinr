@@ -6,21 +6,22 @@
 using namespace Rcpp;
 
 // merge_KC_clusters_no_dict
-CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters, CharacterVector keys_vect, CharacterVector vect);
-RcppExport SEXP _refinr_merge_KC_clusters_no_dict(SEXP clustersSEXP, SEXP keys_vectSEXP, SEXP vectSEXP) {
+CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters, CharacterVector keys_vect, CharacterVector vect, LogicalVector keys_in_clusters);
+RcppExport SEXP _refinr_merge_KC_clusters_no_dict(SEXP clustersSEXP, SEXP keys_vectSEXP, SEXP vectSEXP, SEXP keys_in_clustersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type clusters(clustersSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type keys_vect(keys_vectSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    rcpp_result_gen = Rcpp::wrap(merge_KC_clusters_no_dict(clusters, keys_vect, vect));
+    Rcpp::traits::input_parameter< LogicalVector >::type keys_in_clusters(keys_in_clustersSEXP);
+    rcpp_result_gen = Rcpp::wrap(merge_KC_clusters_no_dict(clusters, keys_vect, vect, keys_in_clusters));
     return rcpp_result_gen;
 END_RCPP
 }
 // merge_KC_clusters_dict
-CharacterVector merge_KC_clusters_dict(CharacterVector clusters, CharacterVector keys_vect, CharacterVector vect, CharacterVector keys_dict, CharacterVector dict);
-RcppExport SEXP _refinr_merge_KC_clusters_dict(SEXP clustersSEXP, SEXP keys_vectSEXP, SEXP vectSEXP, SEXP keys_dictSEXP, SEXP dictSEXP) {
+CharacterVector merge_KC_clusters_dict(CharacterVector clusters, CharacterVector keys_vect, CharacterVector vect, CharacterVector keys_dict, CharacterVector dict, LogicalVector keys_in_clusters);
+RcppExport SEXP _refinr_merge_KC_clusters_dict(SEXP clustersSEXP, SEXP keys_vectSEXP, SEXP vectSEXP, SEXP keys_dictSEXP, SEXP dictSEXP, SEXP keys_in_clustersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,7 +30,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type keys_dict(keys_dictSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type dict(dictSEXP);
-    rcpp_result_gen = Rcpp::wrap(merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict));
+    Rcpp::traits::input_parameter< LogicalVector >::type keys_in_clusters(keys_in_clustersSEXP);
+    rcpp_result_gen = Rcpp::wrap(merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict, keys_in_clusters));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -192,8 +194,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 3},
-    {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 5},
+    {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 4},
+    {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 6},
     {"_refinr_most_freq", (DL_FUNC) &_refinr_most_freq, 3},
     {"_refinr_get_KC_initial_clusters", (DL_FUNC) &_refinr_get_KC_initial_clusters, 2},
     {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},

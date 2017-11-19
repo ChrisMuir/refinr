@@ -59,10 +59,12 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
 
   # For each cluster, make mass edits to the values of vect related to that
   # cluster.
+  keys_in_clusters <- keys_vect %in% clusters
   if (is.null(dict)) {
-    vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect)
+    vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect, keys_in_clusters)
   } else {
-    vect <- merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict)
+    vect <- merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict,
+                                   keys_in_clusters)
   }
   return(vect)
 }

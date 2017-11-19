@@ -8,14 +8,14 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
                                           CharacterVector keys_vect,
-                                          CharacterVector vect) {
+                                          CharacterVector vect,
+                                          LogicalVector keys_in_clusters) {
   int clust_len = clusters.size();
   int keys_len = keys_vect.size();
   CharacterVector output = clone(vect);
 
   // Create subsets of vect and keys_vect based on which elements of each
   // contain at least one duplicate.
-  LogicalVector keys_in_clusters = cpp_in(keys_vect, clusters);
   CharacterVector vect_sub = vect[keys_in_clusters];
   CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
 
@@ -57,7 +57,8 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
                                        CharacterVector keys_vect,
                                        CharacterVector vect,
                                        CharacterVector keys_dict,
-                                       CharacterVector dict) {
+                                       CharacterVector dict,
+                                       LogicalVector keys_in_clusters) {
   int clust_len = clusters.size();
   int keys_vect_len = keys_vect.size();
   int keys_dict_len = keys_dict.size();
@@ -65,7 +66,6 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
 
   // Create subsets of vect and keys_vect based on which elements of each
   // contain at least one duplicate.
-  LogicalVector keys_in_clusters = cpp_in(keys_vect, clusters);
   CharacterVector vect_sub = vect[keys_in_clusters];
   CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
 
