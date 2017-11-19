@@ -13,6 +13,14 @@ merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
     .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
 }
 
+cpp_in <- function(x, y) {
+    .Call('_refinr_cpp_in', PACKAGE = 'refinr', x, y)
+}
+
+filter_initial_clusters <- function(distmatrices, edit_threshold, clusters) {
+    .Call('_refinr_filter_initial_clusters', PACKAGE = 'refinr', distmatrices, edit_threshold, clusters)
+}
+
 cpp_list_unique <- function(input, sort_vals) {
     .Call('_refinr_cpp_list_unique', PACKAGE = 'refinr', input, sort_vals)
 }

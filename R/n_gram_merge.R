@@ -120,18 +120,20 @@ n_gram_merge <- function(vect,
     return(vect)
   }
 
-  # If approx string matching is being used, then eliminate elements of
-  # clusters that are NA, then filter out repeating values within each cluster.
+  # If approx string matching is being used, then:
+  # 1. Eliminate elements of clusters that are NA.
+  # 2. Filter out repeating values within each cluster.
+  # 3. Flatten nested lists so that each element of clusters is a char vector.
+  # 4. Get unique elements of the overall list.
   if (!is.na(edit_threshold)) {
     clusters <- clusters %>%
       .[vapply(., function(x) any(!is.na(x)), logical(1))] %>%
       lapply(., function(x) {
         cpp_list_unique(x, sort_vals = TRUE)
-      })
+      }) %>%
+      flatten_list %>%
+      unique
   }
-
-  # flatten the clusters list object.
-  clusters <- flatten_list(clusters)
 
   # For each cluster, make mass edits to the values of vect related to that
   # cluster.
