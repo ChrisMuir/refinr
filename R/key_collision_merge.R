@@ -39,17 +39,13 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   stopifnot(is.logical(bus_suffix))
 
   # If dict is not NULL, get unique values of dict.
-  if (!is.null(dict)) {
-    dict <- cpp_unique(dict)
-  }
+  if (!is.null(dict)) dict <- cpp_unique(dict)
 
   # Apply func get_fingerprint_KC to the input vector, generating a vector
   # of key values. If dict is not NULL, get vector of key values for dict as
   # well.
   keys_vect <- get_fingerprint_KC(vect, bus_suffix)
-  if (!is.null(dict)) {
-    keys_dict <- get_fingerprint_KC(dict, bus_suffix)
-  }
+  if (!is.null(dict)) keys_dict <- get_fingerprint_KC(dict, bus_suffix)
 
   # If dict is NULL, get vector of all key values that have at least one
   # duplicate within keys. Otherwise, get all key_vect values that have:
@@ -68,8 +64,9 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
 
   # Create subsets of vect and keys_vect based on which elements of each contain
   # at least one duplicate.
-  vect_sub <- vect[keys_vect %in% clusters]
-  keys_vect_sub <- keys_vect[keys_vect %in% clusters]
+  keys_in_clusters <- keys_vect %in% clusters
+  vect_sub <- vect[keys_in_clusters]
+  keys_vect_sub <- keys_vect[keys_in_clusters]
 
   # If dict is NULL, for each element of clusters, get the number of unique
   # values within vect associated with that cluster. Otherwise, for each

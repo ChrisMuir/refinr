@@ -40,7 +40,7 @@ business_suffix <- function(vect) {
 #' Char Splitter
 #' For each element of an input character vector, insert a single space
 #' between each char. This function is meant to mimic function ngram::splitter,
-#' but is faster do to fewer input checks.
+#' but is faster due to fewer input checks.
 #'
 #' @param vect character vector.
 #' @param numgram_thres numeric value, after the splitting, any string that
@@ -74,7 +74,7 @@ flatten_list <- function(list_obj) {
   out <- c(list_obj[!more_lists], unlist(list_obj[more_lists], FALSE, FALSE))
   if(sum(more_lists)){
     Recall(out)
-  }else{
+  } else {
     return(out)
   }
 }

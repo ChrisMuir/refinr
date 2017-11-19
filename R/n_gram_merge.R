@@ -72,20 +72,15 @@
 #'
 #' @useDynLib refinr
 #' @importFrom Rcpp sourceCpp
-n_gram_merge <- function(vect,
-                         numgram = 2,
-                         edit_threshold = 1,
-                         edit_dist_weights = c(d = 0.33,
-                                               i = 0.33,
-                                               s = 1,
+n_gram_merge <- function(vect, numgram = 2, edit_threshold = 1,
+                         edit_dist_weights = c(d = 0.33, i = 0.33, s = 1,
                                                t = 0.5),
                          bus_suffix = TRUE) {
   stopifnot(is.character(vect))
   stopifnot(is.numeric(numgram))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
   stopifnot(is.logical(bus_suffix))
-  if (!is.na(edit_dist_weights) &&
-      !is.numeric(edit_dist_weights) &&
+  if (!is.na(edit_dist_weights) && !is.numeric(edit_dist_weights) &&
       length(edit_dist_weights) != 4) {
     stop("param 'edit_dist_weights' must be either a numeric vector with ",
          "length four, or NA")
@@ -110,15 +105,11 @@ n_gram_merge <- function(vect,
   n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix)
 
   # Get clusters
-  clusters <- get_ngram_clusters(one_gram_keys,
-                                 n_gram_keys,
-                                 edit_threshold,
+  clusters <- get_ngram_clusters(one_gram_keys, n_gram_keys, edit_threshold,
                                  edit_dist_weights)
 
   # If no clusters were found, return vect unedited.
-  if (is.null(clusters)) {
-    return(vect)
-  }
+  if (is.null(clusters)) return(vect)
 
   # If approx string matching is being used, then:
   # 1. Eliminate elements of clusters that are NA.
@@ -128,9 +119,7 @@ n_gram_merge <- function(vect,
   if (!is.na(edit_threshold)) {
     clusters <- clusters %>%
       .[vapply(., function(x) any(!is.na(x)), logical(1))] %>%
-      lapply(., function(x) {
-        cpp_list_unique(x, sort_vals = TRUE)
-      }) %>%
+      lapply(., function(x) cpp_list_unique(x, sort_vals = TRUE)) %>%
       flatten_list %>%
       unique
   }

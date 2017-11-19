@@ -54,9 +54,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   if (numgram > 1) {
     # If numgram > 1, use the ngram pkg to get char grams.
     vect[vect_non_na] <- vect[vect_non_na] %>%
-      lapply(., function(x) {
-        ngram::get.ngrams(ngram::ngram(x, n = numgram))
-      }) %>%
+      lapply(., function(x) ngram::get.ngrams(ngram::ngram(x, n=numgram))) %>%
       cpp_list_unique(sort_vals = TRUE) %>%
       vapply(., paste, character(1), collapse = "") %>%
       iconv(., to = "ASCII//TRANSLIT") %>%
