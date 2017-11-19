@@ -60,41 +60,12 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
       .[!is.na(.)]
   }
 
-  # Create subsets of vect and keys_vect based on which elements of each contain
-  # at least one duplicate.
-  keys_in_clusters <- keys_vect %in% clusters
-  vect_sub <- vect[keys_in_clusters]
-  keys_vect_sub <- keys_vect[keys_in_clusters]
-
-  # If dict is NULL, for each element of clusters, get the number of unique
-  # values within vect associated with that cluster. Otherwise, for each
-  # element of clusters, get the number of unique values across both vect AND
-  # dict associated with that cluster. Idea is to skip the merging step for all
-  # elements of cluster for which each associated element of vect is already
-  # identical (or identical to an element of dict). In those spots its
-  # pointless to perform merging.
-  if (length(vect) == length(cpp_unique(vect))) {
-    csize <- rep.int(2, length(clusters))
+  # For each cluster, make mass edits to the values of vect related to that
+  # cluster.
+  if (is.null(dict)) {
+    vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect)
   } else {
-    if (is.null(dict)) {
-      csize <- get_clust_size_no_dict(clusters, vect_sub, keys_vect_sub)
-    } else {
-      csize <- get_clust_size_dict(clusters, vect_sub, keys_vect_sub, dict,
-                                   keys_dict)
-    }
-  }
-
-  # Perform merging on all clusters with length greater than one.
-  if (any(csize > 1)) {
-    clusters <- clusters[csize > 1]
-    if (is.null(dict)) {
-      vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect,
-                                        keys_vect_sub,vect_sub)
-    } else {
-      vect <- merge_KC_clusters_dict(clusters, keys_vect, vect,
-                                     keys_vect_sub, vect_sub, keys_dict,
-                                     dict)
-    }
+    vect <- merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict)
   }
   return(vect)
 }
