@@ -143,3 +143,20 @@ String most_freq(String clust,
   }
   return univect[which_max(freq_int)];
 }
+
+
+// Given a reference dictionary was passed to func key_collision_merge(),
+// generate intial clusters.
+// [[Rcpp::export]]
+CharacterVector get_KC_initial_clusters(CharacterVector keys_vect,
+                                        CharacterVector keys_dict) {
+  // Create logical vector.
+  LogicalVector vect_bool = duplicated(keys_vect);
+  LogicalVector dict_bool = cpp_in(keys_vect, keys_dict);
+  LogicalVector all_bool = vect_bool | dict_bool;
+
+  keys_vect = keys_vect[all_bool];
+  keys_vect = keys_vect[!is_na(keys_vect)];
+
+  return unique(keys_vect);
+}

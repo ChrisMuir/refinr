@@ -13,6 +13,10 @@ most_freq <- function(clust, keys_sub, vect_sub) {
     .Call('_refinr_most_freq', PACKAGE = 'refinr', clust, keys_sub, vect_sub)
 }
 
+get_KC_initial_clusters <- function(keys_vect, keys_dict) {
+    .Call('_refinr_get_KC_initial_clusters', PACKAGE = 'refinr', keys_vect, keys_dict)
+}
+
 merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
     .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
 }
