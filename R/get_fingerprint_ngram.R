@@ -24,11 +24,7 @@
 #' }
 
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
-  stopifnot(is.character(vect))
-  stopifnot(is.logical(bus_suffix))
-
   numgram_thres <- numgram + (numgram - 1)
-
   if (bus_suffix) {
     # Make initial transformations to all non-NA elements of vect. Remove all
     # business suffix characters from each string.
@@ -50,7 +46,6 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
   # Get indices of vect that are not NA again (NA's could have been introduced
   # in the steps above).
   vect_non_na <- !is.na(vect)
-
   if (numgram > 1) {
     # If numgram > 1, use the ngram pkg to get char grams.
     vect[vect_non_na] <- vect[vect_non_na] %>%

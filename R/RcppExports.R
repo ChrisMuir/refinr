@@ -33,6 +33,10 @@ filter_initial_clusters <- function(distmatrices, edit_threshold, clusters) {
     .Call('_refinr_filter_initial_clusters', PACKAGE = 'refinr', distmatrices, edit_threshold, clusters)
 }
 
+cpp_get_key_dups <- function(input) {
+    .Call('_refinr_cpp_get_key_dups', PACKAGE = 'refinr', input)
+}
+
 cpp_in <- function(x, y) {
     .Call('_refinr_cpp_in', PACKAGE = 'refinr', x, y)
 }

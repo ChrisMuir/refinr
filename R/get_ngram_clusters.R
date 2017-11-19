@@ -59,19 +59,13 @@ get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
                                edit_dist_weights) {
   stopifnot(is.character(one_gram_keys) || is.null(one_gram_keys))
   stopifnot(is.character(n_gram_keys))
-  stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
-  stopifnot(is.numeric(edit_dist_weights) || is.na(edit_dist_weights))
-
   if (is.na(edit_threshold) || edit_threshold == 0) {
     # If approximate string matching is disabled (via param 'edit_threshold'),
     # then find all elements of n_gram_keys that have one or more identical
     # matches. From that list, create clusters of n_gram_keys (groups that all
     # have an identical n_gram_key), eliminate all NA's within each group, and
     # eliminate all groups with length less than two, then return clusters.
-    n_gram_keys_dups <- n_gram_keys %>%
-      .[!is.na(.)] %>%
-      .[cpp_duplicated(.)] %>%
-      cpp_unique
+    n_gram_keys_dups <- cpp_get_key_dups(n_gram_keys)
     # If no duplicated keys exist, return NULL.
     if (length(n_gram_keys_dups) == 0) {
       return(NULL)
@@ -86,10 +80,7 @@ get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
   # list, create clusters of n_gram_keys (groups that all have an identical
   # one_gram_key), eliminate all NA's within each group, and eliminate all
   # groups with length less than two.
-  one_gram_keys_dups <- one_gram_keys %>%
-    .[!is.na(.)] %>%
-    .[cpp_duplicated(.)] %>%
-    cpp_unique
+  one_gram_keys_dups <- cpp_get_key_dups(one_gram_keys)
   # If no duplicated keys exist, return NULL.
   if (length(one_gram_keys_dups) == 0) return(NULL)
   # Get initial clusters.

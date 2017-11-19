@@ -6,6 +6,17 @@ using namespace Rcpp;
 // within c++ functions, some are used in both.
 
 
+// Function takes a character vector as input. Removes NA's, and returns only
+// values that have a duplicate.
+// [[Rcpp::export]]
+CharacterVector cpp_get_key_dups(CharacterVector input) {
+  input = input[!is_na(input)];
+  input = input[duplicated(input)];
+  input = unique(input);
+  return input;
+}
+
+
 // Meant to mimic the R func %in%. Wrote it because I kept having
 // "warning: comparison between signed and unsigned integer expressions [-Wsign-compare]"
 // compile issues related to the Rcpp sugar function in().

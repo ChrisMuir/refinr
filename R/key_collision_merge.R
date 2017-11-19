@@ -52,9 +52,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   # 1. At least one duplicate within key_vect, AND/OR
   # 2. At least one matching value within key_dict.
   if (is.null(dict)) {
-    clusters <- keys_vect[cpp_duplicated(keys_vect)] %>%
-      cpp_unique %>%
-      .[!is.na(.)]
+    clusters <- cpp_get_key_dups(keys_vect)
   } else {
     clusters <- keys_vect[Reduce("|", list(keys_vect %in% keys_dict,
                                            cpp_duplicated(keys_vect)))] %>%

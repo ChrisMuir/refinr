@@ -118,6 +118,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_get_key_dups
+CharacterVector cpp_get_key_dups(CharacterVector input);
+RcppExport SEXP _refinr_cpp_get_key_dups(SEXP inputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type input(inputSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_get_key_dups(input));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_in
 LogicalVector cpp_in(CharacterVector x, CharacterVector y);
 RcppExport SEXP _refinr_cpp_in(SEXP xSEXP, SEXP ySEXP) {
@@ -209,6 +220,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},
     {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},
     {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},
+    {"_refinr_cpp_get_key_dups", (DL_FUNC) &_refinr_cpp_get_key_dups, 1},
     {"_refinr_cpp_in", (DL_FUNC) &_refinr_cpp_in, 2},
     {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
     {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},
