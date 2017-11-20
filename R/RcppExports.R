@@ -25,6 +25,10 @@ filter_initial_clusters <- function(distmatrices, edit_threshold, clusters) {
     .Call('_refinr_filter_initial_clusters', PACKAGE = 'refinr', distmatrices, edit_threshold, clusters)
 }
 
+complete_intersect <- function(a, b) {
+    .Call('_refinr_complete_intersect', PACKAGE = 'refinr', a, b)
+}
+
 cpp_get_key_dups <- function(keys) {
     .Call('_refinr_cpp_get_key_dups', PACKAGE = 'refinr', keys)
 }

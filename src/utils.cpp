@@ -6,8 +6,18 @@ using namespace Rcpp;
 // within c++ functions, some are used in both.
 
 
-// Given a reference dictionary was passed to func key_collision_merge(),
-// generate intial clusters.
+// Input two char vectors (a and b), return TRUE if all of the elements of a
+// are found in b, otherwise return FALSE.
+// [[Rcpp::export]]
+bool complete_intersect(CharacterVector a, CharacterVector b) {
+  int a_len = a.size();
+  CharacterVector get_intersect = intersect(a, b);
+  return a_len == get_intersect.size();
+}
+
+
+// Input a char vector, subset to only include duplicated values, remove NA's,
+// and then get unique values. Return the subset.
 // [[Rcpp::export]]
 CharacterVector cpp_get_key_dups(CharacterVector keys) {
   // Create logical vector.

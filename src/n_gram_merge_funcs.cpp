@@ -172,7 +172,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
       // Check to see if terms is a complete subset of an existing cluster.
       if(n > 0) {
         for(int k = 0; k < n; ++k) {
-          if(is_true(all(cpp_in(terms, clust[k])))) {
+          if(complete_intersect(terms, clust[k])) {
             trim_idx[n] = FALSE;
             break;
           }
