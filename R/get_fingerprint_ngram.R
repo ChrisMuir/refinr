@@ -51,7 +51,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
     vect[vect_non_na] <- vect[vect_non_na] %>%
       lapply(., function(x) ngram::get.ngrams(ngram::ngram(x, n=numgram))) %>%
       cpp_list_unique(sort_vals = TRUE) %>%
-      vapply(., paste, character(1), collapse = "") %>%
+      cpp_paste_collapse_list %>%
       iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)}
   } else if (numgram == 1) {
@@ -59,7 +59,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
     vect[vect_non_na] <- vect[vect_non_na] %>%
       strsplit(., " ", fixed = TRUE) %>%
       cpp_list_unique(sort_vals = TRUE) %>%
-      vapply(., paste, character(1), collapse = "") %>%
+      cpp_paste_collapse_list %>%
       iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)}
   }

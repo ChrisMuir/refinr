@@ -6,6 +6,23 @@ using namespace Rcpp;
 // within c++ functions, some are used in both.
 
 
+// Input a list of character vectors, for each char vect apply func "collapse"
+// and append to a char vector output object. cpp sugar func "collage" is
+// equivelant to r func paste(char_vect, collapse = "").
+// [[Rcpp::export]]
+CharacterVector cpp_paste_collapse_list(List input) {
+  int input_len = input.size();
+  CharacterVector output(input_len);
+
+  for(int i = 0; i < input_len; ++i) {
+    CharacterVector curr_vect = input[i];
+    output[i] = collapse(curr_vect);
+  }
+
+  return output;
+}
+
+
 // Input two char vectors (a and b), return TRUE if all of the elements of a
 // are found in b, otherwise return FALSE.
 // [[Rcpp::export]]
