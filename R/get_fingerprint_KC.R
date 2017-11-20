@@ -18,9 +18,6 @@
 #' [1] "equipment sports toms"
 #' }
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE) {
-  stopifnot(is.character(vect))
-  stopifnot(is.logical(bus_suffix))
-
   if (bus_suffix) {
     out <- vect %>%
       tolower %>%
