@@ -54,7 +54,7 @@ key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
   if (is.null(dict)) {
     clusters <- cpp_get_key_dups(keys_vect)
   } else {
-    clusters <- get_KC_initial_clusters(keys_vect, keys_dict)
+    clusters <- cpp_get_key_dups(c(keys_vect, keys_dict))
   }
 
   # For each cluster, make mass edits to the values of vect related to that

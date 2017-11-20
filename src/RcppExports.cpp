@@ -48,18 +48,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_KC_initial_clusters
-CharacterVector get_KC_initial_clusters(CharacterVector keys_vect, CharacterVector keys_dict);
-RcppExport SEXP _refinr_get_KC_initial_clusters(SEXP keys_vectSEXP, SEXP keys_dictSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type keys_vect(keys_vectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type keys_dict(keys_dictSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_KC_initial_clusters(keys_vect, keys_dict));
-    return rcpp_result_gen;
-END_RCPP
-}
 // merge_ngram_clusters
 CharacterVector merge_ngram_clusters(List clusters, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
 RcppExport SEXP _refinr_merge_ngram_clusters(SEXP clustersSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
@@ -101,13 +89,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_get_key_dups
-CharacterVector cpp_get_key_dups(CharacterVector input);
-RcppExport SEXP _refinr_cpp_get_key_dups(SEXP inputSEXP) {
+CharacterVector cpp_get_key_dups(CharacterVector keys);
+RcppExport SEXP _refinr_cpp_get_key_dups(SEXP keysSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type input(inputSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_get_key_dups(input));
+    Rcpp::traits::input_parameter< CharacterVector >::type keys(keysSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_get_key_dups(keys));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -197,7 +185,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 4},
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 6},
     {"_refinr_most_freq", (DL_FUNC) &_refinr_most_freq, 3},
-    {"_refinr_get_KC_initial_clusters", (DL_FUNC) &_refinr_get_KC_initial_clusters, 2},
     {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},
     {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},
     {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},

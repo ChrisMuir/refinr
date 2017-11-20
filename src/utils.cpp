@@ -6,14 +6,18 @@ using namespace Rcpp;
 // within c++ functions, some are used in both.
 
 
-// Function takes a character vector as input. Removes NA's, and returns only
-// values that have a duplicate.
+// Given a reference dictionary was passed to func key_collision_merge(),
+// generate intial clusters.
 // [[Rcpp::export]]
-CharacterVector cpp_get_key_dups(CharacterVector input) {
-  input = input[!is_na(input)];
-  input = input[duplicated(input)];
-  input = unique(input);
-  return input;
+CharacterVector cpp_get_key_dups(CharacterVector keys) {
+  // Create logical vector.
+  LogicalVector keys_bool = duplicated(keys);
+
+  // Subset to only keep those that have a duplicate, remove, NA's, then
+  // return unique values.
+  keys = keys[keys_bool];
+  keys = keys[!is_na(keys)];
+  return unique(keys);
 }
 
 
