@@ -4,7 +4,8 @@
 \alias{get_fingerprint_ngram}
 \title{Get ngram fingerprints}
 \usage{
-get_fingerprint_ngram(vect, numgram = 2, bus_suffix = TRUE)
+get_fingerprint_ngram(vect, numgram = 2, bus_suffix = TRUE,
+  ignore_strings = NULL)
 }
 \arguments{
 \item{vect}{Character vector.}
@@ -14,8 +15,11 @@ will occupy each token (default value is 2).}
 
 \item{bus_suffix}{Logical indicating whether the merging of records should
 be insensitive to common business suffixes (TRUE) or not (FALSE). If
-working with a vector of business names it's recommended to set this to
-TRUE. Default value is TRUE.}
+input \code{vect} a vector of business names it's recommended to set this
+to TRUE. Default value is TRUE.}
+
+\item{ignore_strings}{Character vector, these strings will be ignored during
+the merging of values within \code{vect}. Default value is NULL.}
 }
 \value{
 Ngram values of the input vector.

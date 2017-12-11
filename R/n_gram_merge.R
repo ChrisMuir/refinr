@@ -27,8 +27,10 @@
 #'   a numeric vector of length four, or NA.
 #' @param bus_suffix Logical indicating whether the merging of records should
 #'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
-#'   working with a vector of business names it's recommended to set this to
-#'   TRUE. Default value is TRUE.
+#'   input \code{vect} a vector of business names it's recommended to set this
+#'   to TRUE. Default value is TRUE.
+#' @param ignore_strings Character vector, these strings will be ignored during
+#'   the merging of values within \code{vect}. Default value is NULL.
 #'
 #' @details Parameter \code{edit_dist_weights} are edit distance values that
 #'  get passed to the approximate string matching function
@@ -70,16 +72,24 @@
 #'              edit_threshold = 1,
 #'              edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
 #'
+#' # Use parameter 'ignore_strings' to ignore specific strings during merging
+#' # of values.
+#' x <- c("Bakersfield Highschool",
+#'        "BAKERSFIELD high",
+#'        "high school, bakersfield")
+#' n_gram_merge(x, ignore_strings = c("high", "school", "highschool"))
+#'
 #' @useDynLib refinr
 #' @importFrom Rcpp sourceCpp
 n_gram_merge <- function(vect, numgram = 2, edit_threshold = 1,
                          edit_dist_weights = c(d = 0.33, i = 0.33, s = 1,
                                                t = 0.5),
-                         bus_suffix = TRUE) {
+                         bus_suffix = TRUE, ignore_strings = NULL) {
   stopifnot(is.character(vect))
   stopifnot(is.numeric(numgram))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
   stopifnot(is.logical(bus_suffix))
+  stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
   if (!is.na(edit_dist_weights) && !is.numeric(edit_dist_weights) &&
       length(edit_dist_weights) != 4) {
     stop("param 'edit_dist_weights' must be either a numeric vector with ",
@@ -97,12 +107,14 @@ n_gram_merge <- function(vect, numgram = 2, edit_threshold = 1,
   ## should skip a number of steps later in the function as well).
   univect <- cpp_unique(vect[!is.na(vect)])
   if (!is.na(edit_threshold)) {
-    one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix)
+    one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix,
+                                           ignore_strings)
   } else {
     one_gram_keys <- NULL
   }
   # Get ngram == numgram keys for all records.
-  n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix)
+  n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix,
+                                       ignore_strings)
 
   # Get clusters
   clusters <- get_ngram_clusters(one_gram_keys, n_gram_keys, edit_threshold,

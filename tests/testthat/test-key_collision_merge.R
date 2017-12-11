@@ -24,6 +24,14 @@ test_that("param 'dict' having expected effect", {
   expect_equal(unique(key_collision_merge(vect, dict = dict, bus_suffix = TRUE)), dict[2])
 })
 
+vect <- c("Bakersfield Highschool", "BAKERSFIELD high", "high school, bakersfield")
+ignore_strings <- c("high", "school", "highschool")
+test_that("param 'ignore_strings' having expected effect", {
+  expect_equal(
+    unique(key_collision_merge(vect, ignore_strings = ignore_strings, bus_suffix = TRUE)),
+    vect[2]
+  )
+})
 
 ## Tests using valid and dissimilar input values.
 vect <- c("Acme Pizza, Inc.",

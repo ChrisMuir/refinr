@@ -6,7 +6,7 @@
 \usage{
 n_gram_merge(vect, numgram = 2, edit_threshold = 1,
   edit_dist_weights = c(d = 0.33, i = 0.33, s = 1, t = 0.5),
-  bus_suffix = TRUE)
+  bus_suffix = TRUE, ignore_strings = NULL)
 }
 \arguments{
 \item{vect}{Character vector of items for which you want similar values
@@ -31,8 +31,11 @@ a numeric vector of length four, or NA.}
 
 \item{bus_suffix}{Logical indicating whether the merging of records should
 be insensitive to common business suffixes (TRUE) or not (FALSE). If
-working with a vector of business names it's recommended to set this to
-TRUE. Default value is TRUE.}
+input \code{vect} a vector of business names it's recommended to set this
+to TRUE. Default value is TRUE.}
+
+\item{ignore_strings}{Character vector, these strings will be ignored during
+the merging of values within \code{vect}. Default value is NULL.}
 }
 \value{
 Character vector with similar values merged.
@@ -83,5 +86,12 @@ n_gram_merge(vect = x,
              numgram = 2,
              edit_threshold = 1,
              edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
+
+# Use parameter 'ignore_strings' to ignore specific strings during merging
+# of values.
+x <- c("Bakersfield Highschool",
+       "BAKERSFIELD high",
+       "high school, bakersfield")
+n_gram_merge(x, ignore_strings = c("high", "school", "highschool"))
 
 }

@@ -7,16 +7,18 @@
 #'
 #' @param vect Character vector of items for which you want similar values
 #'   merged and edited to be identical.
+#' @param bus_suffix Logical indicating whether the merging of records should
+#'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
+#'   input \code{vect} a vector of business names it's recommended to set this
+#'   to TRUE. Default value is TRUE.
+#' @param ignore_strings Character vector, these strings will be ignored during
+#'   the merging of values within \code{vect}. Default value is NULL.
 #' @param dict Character vector, meant to act as a dictionary during the
 #'   merging process. If any items within \code{vect} have a match in dict,
 #'   then those items will always be edited to be identical to their match in
 #'   dict. Optional param, and default value is NULL. If no dictionary is
 #'   passed, then clusters will be created and merged within \code{vect}
 #'   without the aid of dictionary values.
-#' @param bus_suffix Logical indicating whether the merging of records should
-#'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
-#'   working with a vector of business names it's recommended to set this to
-#'   TRUE. Default value is TRUE.
 #'
 #' @return Character vector with similar values merged.
 #' @importFrom magrittr "%>%"
@@ -29,23 +31,38 @@
 #'        "Acme Pizza, Inc.")
 #' key_collision_merge(vect = x)
 #'
-#' # Add param "dict".
-#' dict <- c("Nicks Pizza", "acme PIZZA inc")
-#' key_collision_merge(vect = x, dict = dict)
+#' # Use parameter "dict" to influence how clustered values are edited.
+#' key_collision_merge(vect = x, dict = c("Nicks Pizza", "acme PIZZA inc"))
 #'
-key_collision_merge <- function(vect, dict = NULL, bus_suffix = TRUE) {
+#' # Use parameter 'ignore_strings' to ignore specific strings during merging
+#' # of values.
+#' x <- c("Bakersfield Highschool",
+#'        "BAKERSFIELD high",
+#'        "high school, bakersfield")
+#' key_collision_merge(x, ignore_strings = c("high", "school", "highschool"))
+#'
+key_collision_merge <- function(vect, bus_suffix = TRUE, ignore_strings = NULL,
+                                dict = NULL) {
   stopifnot(is.character(vect))
-  stopifnot(is.null(dict) || is.character(dict))
   stopifnot(is.logical(bus_suffix))
+  stopifnot(is.null(dict) || is.character(dict))
+  stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
 
   # If dict is not NULL, get unique values of dict.
   if (!is.null(dict)) dict <- cpp_unique(dict)
 
+  # If ignore_strings is not NULL, make all values lower case then get uniques.
+  if (!is.null(ignore_strings)) {
+    ignore_strings <- unique(tolower(ignore_strings))
+  }
+
   # Apply func get_fingerprint_KC to the input vector, generating a vector
   # of key values. If dict is not NULL, get vector of key values for dict as
   # well.
-  keys_vect <- get_fingerprint_KC(vect, bus_suffix)
-  if (!is.null(dict)) keys_dict <- get_fingerprint_KC(dict, bus_suffix)
+  keys_vect <- get_fingerprint_KC(vect, bus_suffix, ignore_strings)
+  if (!is.null(dict)) {
+    keys_dict <- get_fingerprint_KC(dict, bus_suffix, ignore_strings)
+  }
 
   # If dict is NULL, get vector of all key values that have at least one
   # duplicate within keys. Otherwise, get all key_vect values that have:

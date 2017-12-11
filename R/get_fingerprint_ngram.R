@@ -10,8 +10,10 @@
 #'   will occupy each token (default value is 2).
 #' @param bus_suffix Logical indicating whether the merging of records should
 #'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
-#'   working with a vector of business names it's recommended to set this to
-#'   TRUE. Default value is TRUE.
+#'   input \code{vect} a vector of business names it's recommended to set this
+#'   to TRUE. Default value is TRUE.
+#' @param ignore_strings Character vector, these strings will be ignored during
+#'   the merging of values within \code{vect}. Default value is NULL.
 #'
 #' @return Ngram values of the input vector.
 #' @importFrom magrittr "%>%"
@@ -23,29 +25,52 @@
 #' [1] "eneqipmemsntomorpmpoqurtsespsstotsui"
 #' }
 
-get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
+get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
+                                  ignore_strings = NULL) {
+  # Get minimum char length of each string post tokenization.
   numgram_thres <- numgram + (numgram - 1)
+
+  # If "bus_suffix" is TRUE, make edits to variable "ignore_strings".
   if (bus_suffix) {
-    # Make initial transformations to all non-NA elements of vect. Remove all
-    # business suffix characters from each string.
+    if (!is.null(ignore_strings)) {
+      # If "ignore_strings" is not NULL, add common business suffix
+      # abbreviations to vector "ignore_strings".
+      ignore_strings <- c(ignore_strings,
+                          c("inc", "corp", "co", "llc", "ltd", "div", "ent",
+                            "lp"))
+    } else {
+      # If "ignore_strings" is NULL, initialize the variable with common
+      # business suffix abbreviations.
+      ignore_strings <- c("inc", "corp", "co", "llc", "ltd", "div", "ent",
+                          "lp")
+    }
+  }
+
+  if (!is.null(ignore_strings)) {
+    # Initial transformations given "ignore_strings" is not NULL.
+    #
+    # Use values in "ignore_strings" to create a regex of substrings to
+    # eliminate from each element of "vect" (also remove all punctuation
+    # and spaces).
+    regex <- paste0("\\b(",
+                    paste(ignore_strings, collapse = "|"),
+                    ")\\b|[[:punct:]]|\\s")
     vect <- vect %>%
       tolower %>%
       business_suffix %>%
-      {gsub("\\b(inc|corp|co|llc|ltd|div|ent|lp)\\b", "", .)} %>%
-      {gsub("[[:punct:]]|\\s", "", .)} %>%
+      {gsub(regex, "", .)} %>%
       char_splitter(numgram_thres)
   } else {
-    # Make initial transformations to all non-NA elements of vect. Spare all
-    # business suffix characters from each string.
+    # Initial transformations given "ignore_strings" is NULL.
     vect <- vect %>%
       tolower %>%
       {gsub("[[:punct:]]|\\s", "", .)} %>%
       char_splitter(numgram_thres)
   }
 
-  # Get indices of vect that are not NA again (NA's could have been introduced
-  # in the steps above).
+  # Get indices of vect that are not NA.
   vect_non_na <- !is.na(vect)
+
   if (numgram > 1) {
     # If numgram > 1, use the ngram pkg to get char grams.
     vect[vect_non_na] <- vect[vect_non_na] %>%
@@ -55,7 +80,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE) {
       iconv(., to = "ASCII//TRANSLIT") %>%
       {gsub("\\s", "", .)}
   } else if (numgram == 1) {
-    # Else if numgram == 1, use base R to get char unigrams.
+    # Else if numgram == 1, use strsplit to get char unigrams.
     vect[vect_non_na] <- vect[vect_non_na] %>%
       strsplit(., " ", fixed = TRUE) %>%
       cpp_list_unique(sort_vals = TRUE) %>%

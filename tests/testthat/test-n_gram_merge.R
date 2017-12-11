@@ -34,6 +34,15 @@ test_that("similar vals, output lengths are correct", {
   expect_equal(length(unique(vect_ng)), 4)
 })
 
+vect <- c("Bakersfield Highschool", "BAKERSFIELD high", "high school, bakersfield")
+ignore_strings <- c("high", "school", "highschool")
+test_that("param 'ignore_strings' having expected effect", {
+  expect_equal(
+    unique(n_gram_merge(vect, ignore_strings = ignore_strings, bus_suffix = TRUE)),
+    vect[2]
+  )
+})
+
 
 ## Tests using valid and dissimilar input values.
 vect <- c("Acme Pizza, Inc.",
