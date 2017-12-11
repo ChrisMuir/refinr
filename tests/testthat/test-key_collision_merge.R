@@ -33,18 +33,6 @@ test_that("param 'ignore_strings' having expected effect", {
   )
 })
 
-## Tests using valid and dissimilar input values.
-vect <- c("Acme Pizza, Inc.",
-          "Bob's Breakfast Diner",
-          "random_char_string",
-          "Cats are the best")
-vect_kc <- key_collision_merge(vect)
-
-test_that("non-similar vals, output lengths are correct", {
-  expect_equal(length(vect_kc), length(vect))
-})
-
-
 ## Tests using invalid input values.
 test_that("invalid input throws an error", {
   expect_error(key_collision_merge(c(1, 2, 3, 4)))
