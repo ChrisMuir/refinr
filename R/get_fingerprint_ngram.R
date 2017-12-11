@@ -30,17 +30,12 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
   # Get minimum char length of each string post tokenization.
   numgram_thres <- numgram + (numgram - 1)
 
-  # If "bus_suffix" is TRUE, make edits to variable "ignore_strings".
   if (bus_suffix) {
     if (!is.null(ignore_strings)) {
-      # If "ignore_strings" is not NULL, add common business suffix
-      # abbreviations to vector "ignore_strings".
       ignore_strings <- c(ignore_strings,
                           c("inc", "corp", "co", "llc", "ltd", "div", "ent",
                             "lp"))
     } else {
-      # If "ignore_strings" is NULL, initialize the variable with common
-      # business suffix abbreviations.
       ignore_strings <- c("inc", "corp", "co", "llc", "ltd", "div", "ent",
                           "lp")
     }
@@ -67,7 +62,6 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
       {gsub("[[:punct:]]|\\s", "", .)} %>%
       char_splitter(numgram_thres)
   }
-
   # Get indices of vect that are not NA.
   vect_non_na <- !is.na(vect)
 

@@ -22,33 +22,25 @@
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
   if (bus_suffix) {
-    # If "bus_suffix" is TRUE, make all values in "vect" lower case, then
-    # perform normalization of common business suffix strings.
     vect <- business_suffix(tolower(vect))
     if (!is.null(ignore_strings)) {
-      # If "ignore_strings" is not NULL, add common business suffix
-      # abbreviations to vector "ignore_strings".
       ignore_strings <- c(ignore_strings,
                           c("inc", "corp", "co", "llc", "ltd", "div", "ent",
                             "lp"))
     } else {
-      # If "ignore_strings" is NULL, initialize the variable with common
-      # business suffix abbreviations.
       ignore_strings <- c("inc", "corp", "co", "llc", "ltd", "div", "ent",
                           "lp")
     }
   } else {
-    # If bus_suffix is FALSE, make all values in "vect" lower case.
     vect <- tolower(vect)
   }
-
   # Perform initial transformations.
   vect <- vect %>%
     {gsub("[[:punct:]]", "", .)} %>%
     cpp_trimws %>%
     {gsub("\\s+", " ", .)} %>%
     strsplit(., " ", fixed = TRUE)
-  # If "ignore_strings" is not NULL, for each element of list "out", remove
+  # If "ignore_strings" is not NULL, for each element of list "vect", remove
   # any string that has a match within vector "ignore_strings".
   if (!is.null(ignore_strings)) vect <- remove_strings(vect, ignore_strings)
   # Final transformations, then return object "out".
