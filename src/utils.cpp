@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 
 // Input a list of character vectors, for each char vect apply func "collapse"
-// and append to a char vector output object. cpp sugar func "collage" is
+// and append to a char vector output object. Rcpp sugar func "collapse" is
 // equivelant to r func paste(char_vect, collapse = "").
 // [[Rcpp::export]]
 CharacterVector cpp_paste_collapse_list(List input) {
