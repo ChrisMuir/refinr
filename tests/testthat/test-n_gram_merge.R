@@ -34,6 +34,10 @@ test_that("similar vals, output lengths are correct", {
   expect_equal(length(unique(vect_ng)), 4)
 })
 
+test_that("param 'edit_threshold' set to NA having expected effect", {
+  expect_equal(length(unique(n_gram_merge(vect, edit_threshold = NA))), 5)
+})
+
 vect <- c("Bakersfield Highschool", "BAKERSFIELD high", "high school, bakersfield")
 ignore_strings <- c("high", "school", "highschool")
 test_that("param 'ignore_strings' having expected effect", {
@@ -42,6 +46,8 @@ test_that("param 'ignore_strings' having expected effect", {
     vect[2]
   )
 })
+
+
 
 
 ## Tests using valid and dissimilar input values.
