@@ -1,13 +1,7 @@
-#' Business name suffix normalization
 #' Function that attempts to merge common business name suffixes within a
 #' character string.
 #' @param vect Character vector.
-#'
-#' @return Character vector of business names, with business name suffixes
-#'   edited to be normalized.
 #' @noRd
-#' @importFrom magrittr "%>%"
-#'
 business_suffix <- function(vect) {
   vect %>%
     {gsub(" incorporated| incorporate", " inc", .)} %>%
@@ -21,19 +15,14 @@ business_suffix <- function(vect) {
     {gsub(" and ", " & ", ., fixed = TRUE)}
 }
 
-#' Char Splitter
 #' For each element of an input character vector, insert a single space
 #' between each char. This function is meant to mimic function ngram::splitter,
 #' but is faster due to fewer input checks.
-#'
 #' @param vect character vector.
 #' @param numgram_thres numeric value, after the splitting, any string that
 #'  has length less than this number will be replaced with NA_character_.
-#'
-#' @return character vector
 #' @noRd
 char_splitter <- function(vect, numgram_thres) {
-  # For each value of vect, insert spaces between each char.
   vapply(vect, function(x) {
     x <- paste0(strsplit(x, split = "", fixed = TRUE)[[1]], collapse = " ")
     if (nchar(x) >= numgram_thres) {
@@ -47,10 +36,7 @@ char_splitter <- function(vect, numgram_thres) {
 #' Flatten a nested list such that each character vector occupies its own
 #' element in the return list. Can handle lists that have inconsistent nesting
 #' levels.
-#'
 #' @param list_obj list object.
-#'
-#' @return flattened list object.
 #' @noRd
 flatten_list <- function(list_obj) {
   more_lists <- vapply(list_obj, is.list, logical(1), USE.NAMES = FALSE)
