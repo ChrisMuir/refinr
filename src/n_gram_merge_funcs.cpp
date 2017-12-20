@@ -218,3 +218,29 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
 
   return out;
 }
+
+
+// Takes a list of character vectors as input. Each char vector will be a
+// string that's been tokenized by individual char. This function iterates
+// over the list, for each char vector it will compile every available ngram
+// of length equal to arg numgram. Output is a list of ngrams as char vectors.
+// [[Rcpp::export]]
+List cpp_get_char_ngrams(List vects, int numgram) {
+  int vects_len = vects.size();
+  List out(vects_len);
+  int numgram_sub = numgram - 1;
+
+  for(int i = 0; i < vects_len; ++i) {
+    CharacterVector curr_vect = vects[i];
+    int curr_vect_len = curr_vect.size() - numgram_sub;
+    CharacterVector curr_out(curr_vect_len);
+    for(int j = 0; j < curr_vect_len; ++j) {
+      NumericVector idx(numgram);
+      idx = seq(j, j+numgram_sub);
+      CharacterVector curr_out_sub = curr_vect[idx];
+      curr_out[j] = collapse(curr_out_sub);
+    }
+    out[i] = curr_out;
+  }
+  return(out);
+}

@@ -88,6 +88,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_get_char_ngrams
+List cpp_get_char_ngrams(List vects, int numgram);
+RcppExport SEXP _refinr_cpp_get_char_ngrams(SEXP vectsSEXP, SEXP numgramSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type vects(vectsSEXP);
+    Rcpp::traits::input_parameter< int >::type numgram(numgramSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_get_char_ngrams(vects, numgram));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_paste_collapse_list
 CharacterVector cpp_paste_collapse_list(List input);
 RcppExport SEXP _refinr_cpp_paste_collapse_list(SEXP inputSEXP) {
@@ -211,6 +223,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},
     {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},
     {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},
+    {"_refinr_cpp_get_char_ngrams", (DL_FUNC) &_refinr_cpp_get_char_ngrams, 2},
     {"_refinr_cpp_paste_collapse_list", (DL_FUNC) &_refinr_cpp_paste_collapse_list, 1},
     {"_refinr_complete_intersect", (DL_FUNC) &_refinr_complete_intersect, 2},
     {"_refinr_cpp_get_key_dups", (DL_FUNC) &_refinr_cpp_get_key_dups, 1},

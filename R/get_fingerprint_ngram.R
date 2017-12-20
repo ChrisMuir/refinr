@@ -27,8 +27,6 @@
 
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
-  numgram <- numgram - 1
-
   # Compile variable ignore_strings.
   if (bus_suffix) {
     if (!is.null(ignore_strings)) {
@@ -61,13 +59,11 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
       {gsub("[[:punct:]]|\\s", "", .)}
   }
 
+  # Rest of the transformations. For each value in vect: get ngrams, filter by
+  # unique, sort alphabetically, paste back together, and normalize encoding.
+  vect <- strsplit(vect, "", fixed = TRUE)
+  if (numgram > 1) vect <- cpp_get_char_ngrams(vect, numgram = numgram)
   vect <- vect %>%
-    strsplit(., "", fixed = TRUE) %>%
-    lapply(., function(strings) {
-      vapply(seq_len(length(strings) - numgram), function(char) {
-        paste(strings[char:(char + numgram)], collapse = "")
-      }, character(1))
-    }) %>%
     cpp_list_unique(sort_vals = TRUE) %>%
     cpp_paste_collapse_list %>%
     iconv(., to = "ASCII//TRANSLIT")
