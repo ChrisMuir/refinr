@@ -1,6 +1,6 @@
 Package: refinr
 Title: Functions for Merging Similar Values within a Character Vector
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: person("Chris", "Muir", email = "chrismuirRVA@gmail.com", role = c("aut", "cre"))
 Description: These functions take a character vector as input, identify and 
   cluster similar values, and then merge clusters together so their values 
