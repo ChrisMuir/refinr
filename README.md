@@ -9,8 +9,6 @@ R package implementation of two algorithms from the open source software [OpenRe
 
 In addition, there are few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process. Examples of these features are all shown below.
 
-This package is built using [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) for approximate string matching, [ngram](https://cran.r-project.org/web/packages/ngram/index.html) for string tokenization, and [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) to allow for functions written in C++ for faster performance.
-
 Installation
 ------------
 

@@ -61,9 +61,6 @@ Parameter \code{edit_dist_weights} are edit distance values that
  \item s: substitution, default value is 1
  \item t: transposition, default value is 0.5
  }
-
- For parameter \code{numgram}, the function is unreliable for any values
- other than 2.
 }
 \examples{
 # The performance of the approximate string matching can be ajusted using

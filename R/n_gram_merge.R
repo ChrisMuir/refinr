@@ -43,9 +43,6 @@
 #'  \item t: transposition, default value is 0.5
 #'  }
 #'
-#'  For parameter \code{numgram}, the function is unreliable for any values
-#'  other than 2.
-#'
 #' @return Character vector with similar values merged.
 #' @importFrom magrittr "%>%"
 #' @export

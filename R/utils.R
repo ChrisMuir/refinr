@@ -13,22 +13,6 @@ business_suffix <- function(vect) {
     {gsub(" and ", " & ", ., fixed = TRUE)}
 }
 
-# For each element of an input character vector, insert a single space
-# between each char. This function is meant to mimic function ngram::splitter,
-# but is faster due to fewer input checks.
-# Arg numgram_thres is a numeric value. After the splitting, any string that
-# has length less than this number will be replaced with NA_character_.
-char_splitter <- function(vect, numgram_thres) {
-  vapply(vect, function(x) {
-    x <- paste0(strsplit(x, split = "", fixed = TRUE)[[1]], collapse = " ")
-    if (nchar(x) >= numgram_thres) {
-      x
-    } else {
-      NA_character_
-    }
-  }, character(1), USE.NAMES = FALSE)
-}
-
 # Flatten a nested list such that each character vector occupies its own
 # element in the return list. Can handle lists that have inconsistent nesting
 # levels.

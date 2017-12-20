@@ -27,9 +27,9 @@
 
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
-  # Get minimum char length of each string post tokenization.
-  numgram_thres <- numgram + (numgram - 1)
+  numgram <- numgram - 1
 
+  # Compile variable ignore_strings.
   if (bus_suffix) {
     if (!is.null(ignore_strings)) {
       ignore_strings <- c(ignore_strings,
@@ -53,34 +53,23 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
     vect <- vect %>%
       tolower %>%
       business_suffix %>%
-      {gsub(regex, "", .)} %>%
-      char_splitter(numgram_thres)
+      {gsub(regex, "", .)}
   } else {
     # Initial transformations given "ignore_strings" is NULL.
     vect <- vect %>%
       tolower %>%
-      {gsub("[[:punct:]]|\\s", "", .)} %>%
-      char_splitter(numgram_thres)
+      {gsub("[[:punct:]]|\\s", "", .)}
   }
-  # Get indices of vect that are not NA.
-  vect_non_na <- !is.na(vect)
 
-  if (numgram > 1) {
-    # If numgram > 1, use the ngram pkg to get char grams.
-    vect[vect_non_na] <- vect[vect_non_na] %>%
-      lapply(., function(x) ngram::get.ngrams(ngram::ngram(x, n=numgram))) %>%
-      cpp_list_unique(sort_vals = TRUE) %>%
-      cpp_paste_collapse_list %>%
-      iconv(., to = "ASCII//TRANSLIT") %>%
-      {gsub("\\s", "", .)}
-  } else if (numgram == 1) {
-    # Else if numgram == 1, use strsplit to get char unigrams.
-    vect[vect_non_na] <- vect[vect_non_na] %>%
-      strsplit(., " ", fixed = TRUE) %>%
-      cpp_list_unique(sort_vals = TRUE) %>%
-      cpp_paste_collapse_list %>%
-      iconv(., to = "ASCII//TRANSLIT") %>%
-      {gsub("\\s", "", .)}
-  }
+  vect <- vect %>%
+    strsplit(., "", fixed = TRUE) %>%
+    lapply(., function(strings) {
+      vapply(seq_len(length(strings) - numgram), function(char) {
+        paste(strings[char:(char + numgram)], collapse = "")
+      }, character(1))
+    }) %>%
+    cpp_list_unique(sort_vals = TRUE) %>%
+    cpp_paste_collapse_list %>%
+    iconv(., to = "ASCII//TRANSLIT")
   return(vect)
 }
