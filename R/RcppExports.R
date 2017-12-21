@@ -25,6 +25,10 @@ filter_initial_clusters <- function(distmatrices, edit_threshold, clusters) {
     .Call('_refinr_filter_initial_clusters', PACKAGE = 'refinr', distmatrices, edit_threshold, clusters)
 }
 
+char_ngram <- function(vects, numgram) {
+    .Call('_refinr_char_ngram', PACKAGE = 'refinr', vects, numgram)
+}
+
 cpp_get_char_ngrams <- function(vects, numgram) {
     .Call('_refinr_cpp_get_char_ngrams', PACKAGE = 'refinr', vects, numgram)
 }

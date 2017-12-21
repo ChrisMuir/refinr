@@ -225,7 +225,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
 // over the list, for each char vector it will compile every available ngram
 // of length equal to arg numgram. Output is a list of ngrams as char vectors.
 // [[Rcpp::export]]
-List cpp_get_char_ngrams(List vects, int numgram) {
+List char_ngram(List vects, int numgram) {
   int vects_len = vects.size();
   List out(vects_len);
   int numgram_sub = numgram - 1;
@@ -242,5 +242,30 @@ List cpp_get_char_ngrams(List vects, int numgram) {
     }
     out[i] = curr_out;
   }
+  return(out);
+}
+
+
+//
+// [[Rcpp::export]]
+CharacterVector cpp_get_char_ngrams(List vects, int numgram) {
+  List vects_mod = clone(vects);
+  int vects_len = vects.size();
+  CharacterVector out(vects_len);
+
+  // Get character ngrams for each element of vects.
+  if(numgram > 1) {
+    vects_mod = char_ngram(vects_mod, numgram);
+  }
+
+  // For each element of vects, reduce values down to uniques, then sort
+  // values alphabetically.
+  vects_mod = cpp_list_unique(vects_mod, TRUE);
+
+  // For each element of vects, combine all ngram strings into a single string,
+  // equivelant to calling r func paste(char_vect, collapse = "") on each
+  // element of vects.
+  out = cpp_paste_collapse_list(vects_mod);
+
   return(out);
 }
