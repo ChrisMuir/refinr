@@ -26,8 +26,5 @@ each element. For more details on key collision, see
 \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
 }
 \examples{
-\dontrun{
-get_fingerprint_KC("Tom's Sports Equipment, Inc.")
-[1] "equipment sports toms"
-}
+refinr:::get_fingerprint_KC("Tom's Sports Equipment, Inc.")
 }

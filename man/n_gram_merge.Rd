@@ -77,12 +77,7 @@ n_gram_merge(vect = x,
 n_gram_merge(vect = x,
              numgram = 2,
              edit_threshold = 1,
-             edit_dist_weights = c(d = 1, i = 0.2, s = 1, t = 1))
-
-n_gram_merge(vect = x,
-             numgram = 2,
-             edit_threshold = 1,
-             edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
+             edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1))
 
 # Use parameter 'ignore_strings' to ignore specific strings during merging
 # of values.

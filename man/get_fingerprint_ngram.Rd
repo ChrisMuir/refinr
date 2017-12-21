@@ -31,10 +31,6 @@ For more details on ngram fingerprinting, see
 \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
 }
 \examples{
-\dontrun{
-get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 1)
-[1] "eimnopqrstu"
-get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 2)
-[1] "eneqipmemsntomorpmpoqurtsespsstotsui"
-}
+refinr:::get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 1)
+refinr:::get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 2)
 }

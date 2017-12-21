@@ -18,12 +18,9 @@
 #' @return Ngram values of the input vector.
 #' @importFrom magrittr "%>%"
 #'
-#' @examples \dontrun{
-#' get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 1)
-#' [1] "eimnopqrstu"
-#' get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 2)
-#' [1] "eneqipmemsntomorpmpoqurtsespsstotsui"
-#' }
+#' @examples
+#' refinr:::get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 1)
+#' refinr:::get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 2)
 
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {

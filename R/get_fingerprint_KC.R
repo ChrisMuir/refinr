@@ -15,10 +15,9 @@
 #' @return Key collision value of the input string.
 #' @importFrom magrittr "%>%"
 #'
-#' @examples \dontrun{
-#' get_fingerprint_KC("Tom's Sports Equipment, Inc.")
-#' [1] "equipment sports toms"
-#' }
+#' @examples
+#' refinr:::get_fingerprint_KC("Tom's Sports Equipment, Inc.")
+
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
   if (bus_suffix) {
