@@ -21,7 +21,6 @@
 #'   without the aid of dictionary values.
 #'
 #' @return Character vector with similar values merged.
-#' @importFrom magrittr "%>%"
 #' @export
 #'
 #' @examples

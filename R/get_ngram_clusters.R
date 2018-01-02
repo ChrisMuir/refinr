@@ -21,7 +21,6 @@
 #'   a numeric vector of length four, or NA.
 #'
 #' @return A list, each element of which is a cluster of similar values.
-#' @importFrom magrittr "%>%"
 #'
 #' @examples
 #' vect <- c("Acme Pizza, Inc.",
