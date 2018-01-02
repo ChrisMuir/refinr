@@ -13,7 +13,6 @@
 #'   the merging of values within \code{vect}. Default value is NULL.
 #'
 #' @return Key collision value of the input string.
-#' @importFrom magrittr "%>%"
 #'
 #' @examples
 #' refinr:::get_fingerprint_KC("Tom's Sports Equipment, Inc.")
@@ -35,10 +34,9 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   }
   # Perform initial transformations.
   vect <- vect %>%
-    {gsub("[[:punct:]]", "", .)} %>%
-    cpp_trimws %>%
-    {gsub("\\s+", " ", .)} %>%
-    strsplit(., " ", fixed = TRUE)
+    gsub("[[:punct:]]", "", ., perl = TRUE) %>%
+    cpp_trimws_left %>%
+    strsplit(., "\\s+", perl = TRUE)
   # If "ignore_strings" is not NULL, for each element of list "vect", remove
   # any string that has a match within vector "ignore_strings".
   if (!is.null(ignore_strings)) vect <- remove_strings(vect, ignore_strings)

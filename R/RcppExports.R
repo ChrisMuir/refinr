@@ -69,7 +69,7 @@ cpp_unique <- function(vect) {
     .Call('_refinr_cpp_unique', PACKAGE = 'refinr', vect)
 }
 
-cpp_trimws <- function(vect) {
-    .Call('_refinr_cpp_trimws', PACKAGE = 'refinr', vect)
+cpp_trimws_left <- function(vect) {
+    .Call('_refinr_cpp_trimws_left', PACKAGE = 'refinr', vect)
 }
 

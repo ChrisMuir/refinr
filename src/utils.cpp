@@ -140,6 +140,6 @@ CharacterVector cpp_unique(CharacterVector vect) {
 
 // cpp version of R function trimws()
 // [[Rcpp::export]]
-CharacterVector cpp_trimws(CharacterVector vect) {
-  return trimws(vect);
+CharacterVector cpp_trimws_left(CharacterVector vect) {
+  return trimws(vect, "left");
 }

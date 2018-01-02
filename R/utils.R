@@ -2,13 +2,13 @@
 # character string.
 business_suffix <- function(vect) {
   vect %>%
-    {gsub(" incorporated| incorporate", " inc", .)} %>%
-    {gsub(" corporation| corporations", " corp", .)} %>%
-    {gsub(" company| companys| companies", " co", .)} %>%
+    {gsub(" incorporated| incorporate", " inc", ., perl = TRUE)} %>%
+    {gsub(" corporation| corporations", " corp", ., perl = TRUE)} %>%
+    {gsub(" company| companys| companies", " co", ., perl = TRUE)} %>%
     {gsub(" limited liability co", " llc", ., fixed = TRUE)} %>%
-    {gsub(" limited$", " ltd", .)} %>%
-    {gsub(" division| divisions", " div", .)} %>%
-    {gsub(" enterprises| enterprise", " ent", .)} %>%
+    {gsub(" limited$", " ltd", ., perl = TRUE)} %>%
+    {gsub(" division| divisions", " div", ., perl = TRUE)} %>%
+    {gsub(" enterprises| enterprise", " ent", ., perl = TRUE)} %>%
     {gsub(" limited partnership", " lp", ., fixed = TRUE)} %>%
     {gsub(" and ", " & ", ., fixed = TRUE)}
 }

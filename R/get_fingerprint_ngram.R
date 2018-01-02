@@ -16,7 +16,6 @@
 #'   the merging of values within \code{vect}. Default value is NULL.
 #'
 #' @return Ngram values of the input vector.
-#' @importFrom magrittr "%>%"
 #'
 #' @examples
 #' refinr:::get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 1)
@@ -48,12 +47,12 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
     vect <- vect %>%
       tolower %>%
       business_suffix %>%
-      {gsub(regex, "", .)}
+      {gsub(regex, "", ., perl = TRUE)}
   } else {
     # Initial transformations given "ignore_strings" is NULL.
     vect <- vect %>%
       tolower %>%
-      {gsub("[[:punct:]]|\\s", "", .)}
+      {gsub("[[:punct:]]|\\s", "", ., perl = TRUE)}
   }
 
   # Rest of the transformations. For each value in vect: get ngrams, filter by
