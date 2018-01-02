@@ -36,9 +36,7 @@ based on the key collision method, described here
 \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
 }
 \examples{
-x <- c("Acme Pizza, Inc.",
-       "ACME PIZZA COMPANY",
-       "pizza, acme llc",
+x <- c("Acme Pizza, Inc.", "ACME PIZZA COMPANY", "pizza, acme llc",
        "Acme Pizza, Inc.")
 key_collision_merge(vect = x)
 
@@ -47,8 +45,7 @@ key_collision_merge(vect = x, dict = c("Nicks Pizza", "acme PIZZA inc"))
 
 # Use parameter 'ignore_strings' to ignore specific strings during merging
 # of values.
-x <- c("Bakersfield Highschool",
-       "BAKERSFIELD high",
+x <- c("Bakersfield Highschool", "BAKERSFIELD high",
        "high school, bakersfield")
 key_collision_merge(x, ignore_strings = c("high", "school", "highschool"))
 

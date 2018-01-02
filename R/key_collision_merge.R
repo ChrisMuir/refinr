@@ -24,9 +24,7 @@
 #' @export
 #'
 #' @examples
-#' x <- c("Acme Pizza, Inc.",
-#'        "ACME PIZZA COMPANY",
-#'        "pizza, acme llc",
+#' x <- c("Acme Pizza, Inc.", "ACME PIZZA COMPANY", "pizza, acme llc",
 #'        "Acme Pizza, Inc.")
 #' key_collision_merge(vect = x)
 #'
@@ -35,8 +33,7 @@
 #'
 #' # Use parameter 'ignore_strings' to ignore specific strings during merging
 #' # of values.
-#' x <- c("Bakersfield Highschool",
-#'        "BAKERSFIELD high",
+#' x <- c("Bakersfield Highschool", "BAKERSFIELD high",
 #'        "high school, bakersfield")
 #' key_collision_merge(x, ignore_strings = c("high", "school", "highschool"))
 #'
@@ -55,9 +52,8 @@ key_collision_merge <- function(vect, bus_suffix = TRUE, ignore_strings = NULL,
     ignore_strings <- unique(tolower(ignore_strings))
   }
 
-  # Apply func get_fingerprint_KC to the input vector, generating a vector
-  # of key values. If dict is not NULL, get vector of key values for dict as
-  # well.
+  # Get vector of key values. If dict is not NULL, get vector of key values
+  # for dict as well.
   keys_vect <- get_fingerprint_KC(vect, bus_suffix, ignore_strings)
   if (!is.null(dict)) {
     keys_dict <- get_fingerprint_KC(dict, bus_suffix, ignore_strings)
@@ -77,7 +73,8 @@ key_collision_merge <- function(vect, bus_suffix = TRUE, ignore_strings = NULL,
   # cluster.
   keys_in_clusters <- keys_vect %in% clusters
   if (is.null(dict)) {
-    vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect, keys_in_clusters)
+    vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect,
+                                      keys_in_clusters)
   } else {
     vect <- merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict,
                                    keys_in_clusters)

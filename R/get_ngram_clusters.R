@@ -34,12 +34,7 @@ get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
   initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys,
                                               one_gram_keys_dups)
 
-  # For each element of initial_clust, do a stringdist matrix and analyze the
-  # closest match for each element (so if theres a cluster of n_gram_keys
-  # that has 5 elements, then item 1 and 4 may be the best matches for each
-  # other, items 2 and 3 may be best for each other, and item 5 may not have
-  # a good match in the group).
-  # First step, create a stringdistmatrix for every element of initial_clust.
+  # Create a stringdistmatrix for every element of initial_clust.
   distmatrices <- lapply(initial_clust, function(x) {
     stringdist::stringdistmatrix(x, weight = edit_dist_weights,
                                  useBytes = TRUE) %>%
@@ -47,10 +42,9 @@ get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
       `dimnames<-`(NULL)
   })
 
-  # Next, for each matrix in distmatrices, create clusters of matches within
-  # the matrix, based on lowest numeric edit distance (matches must have a
-  # value below edit_threshold in order to be considered a cluster suitable
-  # for merging).
+  # For each matrix in distmatrices, create clusters of matches within the
+  # matrix, based on lowest numeric edit distance (matches must have a value
+  # below edit_threshold in order to be considered suitable for merging).
   clusters <- filter_initial_clusters(distmatrices, edit_threshold,
                                       initial_clust)
   return(clusters)

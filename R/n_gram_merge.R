@@ -47,28 +47,20 @@
 #' @export
 #'
 #' @examples
+#' x <- c("Acme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
+#'
+#' n_gram_merge(vect = x)
+#'
 #' # The performance of the approximate string matching can be ajusted using
 #' # parameter 'edit_dist_weights'.
-#' x <- c("Acmme Pizza, Inc.",
-#'        "ACME PIZA COMPANY",
-#'        "Acme Pizzazza LLC")
-#'
 #' n_gram_merge(vect = x,
-#'              numgram = 2,
-#'              edit_threshold = 1,
-#'              edit_dist_weights = c(d = 0.2, i = 1, s = 1, t = 1))
-#'
-#' n_gram_merge(vect = x,
-#'              numgram = 2,
-#'              edit_threshold = 1,
-#'              edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1))
+#'              edit_dist_weights = c(d = 0.4, i = 1, s = 1, t = 1))
 #'
 #' # Use parameter 'ignore_strings' to ignore specific strings during merging
 #' # of values.
-#' x <- c("Bakersfield Highschool",
-#'        "BAKERSFIELD high",
+#' x <- c("Bakersfield Highschool", "BAKERSFIELD high",
 #'        "high school, bakersfield")
-#' n_gram_merge(x, ignore_strings = c("high", "school", "highschool"))
+#' n_gram_merge(vect = x, ignore_strings = c("high", "school", "highschool"))
 #'
 #' @useDynLib refinr
 #' @importFrom Rcpp sourceCpp
