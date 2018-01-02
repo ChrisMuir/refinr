@@ -13,8 +13,7 @@ n_gram_merge(vect, numgram = 2, edit_threshold = 1,
 merged.}
 
 \item{numgram}{Numeric value indicating the number of characters that
-will occupy each token. Default value is 2. This parameter gets passed
-along to the function \code{\link[ngram]{ngram}}.}
+will occupy each ngram token. Default value is 2.}
 
 \item{edit_threshold}{Numeric value indicating the threshold at which a
 merge is performed, based on the sum of the edit values derived from
@@ -26,7 +25,7 @@ merging will be based on strings that have identical ngram fingerprints.}
 the four edit operations (see details below), for the purpose of
 approximate string matching. Default values are
 c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
-to the function \code{\link[stringdist]{stringdistmatrix}}. Must be either
+to the \code{\link{stringdist}} function. Must be either
 a numeric vector of length four, or NA.}
 
 \item{bus_suffix}{Logical indicating whether the merging of records should
@@ -47,14 +46,14 @@ process, the first is clustering values based on their ngram fingerprint
 method, described here
 \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
 The second step is merging values based on approximate string matching of
-the ngram fingerprints, using the \code{\link[stringdist]{stringdistmatrix}}
-function from the package \code{\link{stringdist}}.
+the ngram fingerprints, using the \code{stringdistmatrix} function from the
+package \code{\link{stringdist}}.
 }
 \details{
 Parameter \code{edit_dist_weights} are edit distance values that
- get passed to the approximate string matching function
- \code{\link[stringdist]{stringdistmatrix}}. The param takes four arguments,
- each one is a specific type of edit, with default penalty value.
+ get passed to the \code{\link{stringdist}} edit distance function. The
+ param takes four arguments, each one is a specific type of edit, with
+ default penalty value.
  \itemize{
  \item d: Deletion, default value is 0.33
  \item i: Insertion, default value is 0.33
