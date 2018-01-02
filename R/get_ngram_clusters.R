@@ -1,41 +1,7 @@
-#' Get ngram clusters
-#'
 #' Create clusters of similar values based on the ngram fingerprints of those
-#' values. For more info on ngram fingerprinting, see
-#' \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
-#' @param one_gram_keys Character vector of ngram fingerprints for which n
-#'   equals one.
-#' @param n_gram_keys Character vector of ngram fingerprints for which n is
-#'   a user defined numeric value passed as a parameter to function
-#'   \code{\link{n_gram_merge}}.
-#' @param edit_threshold Numeric value indicating the threshold at which a
-#'   merge is performed, based on the sum of the edit values derived from
-#'   param \code{edit_dist_weights}. Default value is 1. If this parameter is
-#'   set to 0 or NA, then no approximate string matching will be done, and all
-#'   merging will be based on strings that have identical ngram fingerprints.
-#' @param edit_dist_weights Numeric vector indicating the weights to assign to
-#'   the four edit operations (see details below), for the purpose of
-#'   approximate string matching. Default values are
-#'   c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
-#'   to the function \code{\link[stringdist]{stringdistmatrix}}. Must be either
-#'   a numeric vector of length four, or NA.
+#' values.
 #'
-#' @return A list, each element of which is a cluster of similar values.
-#'
-#' @examples
-#' vect <- c("Acme Pizza, Inc.",
-#'           "ACME PIZZA COMPANY",
-#'           "Bob's Pizza",
-#'           "bobs pizza, llc.",
-#'           "Bobby's Pizza")
-#' one_gram_keys <- refinr:::get_fingerprint_ngram(vect, numgram = 1)
-#' n_gram_keys <- refinr:::get_fingerprint_ngram(vect, numgram = 2)
-#' refinr:::get_ngram_clusters(one_gram_keys, n_gram_keys, edit_threshold = 1,
-#'                             edit_dist_weights = c(d = 0.33,
-#'                                                   i = 0.33,
-#'                                                   s = 1,
-#'                                                   t = 0.5))
-
+#' @noRd
 get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
                                edit_dist_weights) {
   stopifnot(is.character(one_gram_keys) || is.null(one_gram_keys))

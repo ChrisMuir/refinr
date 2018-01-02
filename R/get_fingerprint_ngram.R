@@ -1,26 +1,7 @@
-#' Get ngram fingerprints
-#'
 #' Given a character vector as input, get the ngram fingerprint value for each
 #' element of the input.
-#' For more details on ngram fingerprinting, see
-#' \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
 #'
-#' @param vect Character vector.
-#' @param numgram Numeric value indicating the number of characters that
-#'   will occupy each token (default value is 2).
-#' @param bus_suffix Logical indicating whether the merging of records should
-#'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
-#'   input \code{vect} a vector of business names it's recommended to set this
-#'   to TRUE. Default value is TRUE.
-#' @param ignore_strings Character vector, these strings will be ignored during
-#'   the merging of values within \code{vect}. Default value is NULL.
-#'
-#' @return Ngram values of the input vector.
-#'
-#' @examples
-#' refinr:::get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 1)
-#' refinr:::get_fingerprint_ngram("Tom's Sports Equipment, Inc.", numgram = 2)
-
+#'@noRd
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
   # Compile variable ignore_strings.

@@ -1,22 +1,6 @@
-#' Get key collision fingerprints
-#'
 #' Given a character vector as input, get the key collision fingerprint for
-#' each element. For more details on key collision, see
-#' \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
-#'
-#' @param vect Character vector.
-#' @param bus_suffix Logical indicating whether the merging of records should
-#'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
-#'   input \code{vect} a vector of business names it's recommended to set this
-#'   to TRUE. Default value is TRUE.
-#' @param ignore_strings Character vector, these strings will be ignored during
-#'   the merging of values within \code{vect}. Default value is NULL.
-#'
-#' @return Key collision value of the input string.
-#'
-#' @examples
-#' refinr:::get_fingerprint_KC("Tom's Sports Equipment, Inc.")
-
+#' each element.
+#' @noRd
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
   if (bus_suffix) {
