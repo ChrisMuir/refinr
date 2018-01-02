@@ -16,7 +16,11 @@ CharacterVector cpp_paste_collapse_list(List input) {
 
   for(int i = 0; i < input_len; ++i) {
     CharacterVector curr_vect = input[i];
-    output[i] = collapse(curr_vect);
+    if(is_false(all(is_na(curr_vect)))) {
+      output[i] = collapse(curr_vect);
+    } else {
+      output[i] = NA_STRING;
+    }
   }
 
   return output;

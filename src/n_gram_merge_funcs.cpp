@@ -233,6 +233,10 @@ List char_ngram(List vects, int numgram) {
   for(int i = 0; i < vects_len; ++i) {
     CharacterVector curr_vect = vects[i];
     int curr_vect_len = curr_vect.size() - numgram_sub;
+    if(curr_vect_len <= 0) {
+      out[i] = NA_STRING;
+      continue;
+    }
     CharacterVector curr_out(curr_vect_len);
     for(int j = 0; j < curr_vect_len; ++j) {
       NumericVector idx(numgram);
