@@ -43,7 +43,6 @@
 #'  }
 #'
 #' @return Character vector with similar values merged.
-#' @importFrom magrittr "%>%"
 #' @export
 #'
 #' @examples
@@ -112,11 +111,11 @@ n_gram_merge <- function(vect, numgram = 2, edit_threshold = 1,
   # 3. Flatten nested lists so that each element of clusters is a char vector.
   # 4. Get unique elements of the overall list.
   if (!is.na(edit_threshold)) {
-    clusters <- clusters %>%
-      .[vapply(., function(x) any(!is.na(x)), logical(1))] %>%
-      lapply(., function(x) cpp_list_unique(x, sort_vals = TRUE)) %>%
-      flatten_list %>%
-      unique
+    clusters <- clusters[vapply(clusters, function(x)
+      any(!is.na(x)), logical(1))]
+    clusters <- lapply(clusters, function(x)
+      cpp_list_unique(x, sort_vals = TRUE))
+    clusters <- unique(flatten_list(clusters))
   }
 
   # For each cluster, make mass edits to the values of vect related to that

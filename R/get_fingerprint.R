@@ -17,18 +17,15 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
     vect <- tolower(vect)
   }
   # Perform initial transformations.
-  vect <- vect %>%
-    gsub("[[:punct:]]", "", ., perl = TRUE) %>%
-    cpp_trimws_left %>%
-    strsplit(., "\\s+", perl = TRUE)
+  vect <- gsub("[[:punct:]]", "", vect, perl = TRUE)
+  vect <- strsplit(cpp_trimws_left(vect), "\\s+", perl = TRUE)
   # If "ignore_strings" is not NULL, for each element of list "vect", remove
   # any string that has a match within vector "ignore_strings".
   if (!is.null(ignore_strings)) vect <- remove_strings(vect, ignore_strings)
   # Final transformations, then return object "out".
-  vect <- vect %>%
-    cpp_list_unique(sort_vals = TRUE) %>%
-    vapply(., paste, character(1), collapse = " ") %>%
-    iconv(., to = "ASCII//TRANSLIT")
+  vect <- cpp_list_unique(vect, sort_vals = TRUE)
+  vect <- vapply(vect, paste, character(1), collapse = " ")
+  vect <- iconv(vect, to = "ASCII//TRANSLIT")
   vect[vect == ""] <- NA_character_
   return(vect)
 }
@@ -60,22 +57,17 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
     regex <- paste0("\\b(",
                     paste(ignore_strings, collapse = "|"),
                     ")\\b|[[:punct:]]|\\s")
-    vect <- vect %>%
-      tolower %>%
-      business_suffix %>%
-      {gsub(regex, "", ., perl = TRUE)}
+    vect <- business_suffix(tolower(vect))
+    vect <- gsub(regex, "", vect, perl = TRUE)
   } else {
     # Initial transformations given "ignore_strings" is NULL.
-    vect <- vect %>%
-      tolower %>%
-      {gsub("[[:punct:]]|\\s", "", ., perl = TRUE)}
+    gsub("[[:punct:]]|\\s", "", tolower(vect), perl = TRUE)
   }
 
   # Rest of the transformations. For each value in vect: get ngrams, filter by
   # unique, sort alphabetically, paste back together, and normalize encoding.
-  vect <- vect %>%
-    strsplit("", fixed = TRUE) %>%
-    cpp_get_char_ngrams(numgram = numgram) %>%
-    iconv(to = "ASCII//TRANSLIT")
+  vect <- strsplit(vect, "", fixed = TRUE)
+  vect <- cpp_get_char_ngrams(vect, numgram = numgram)
+  vect <- iconv(vect, to = "ASCII//TRANSLIT")
   return(vect)
 }

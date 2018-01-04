@@ -36,10 +36,12 @@ get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
 
   # Create a stringdistmatrix for every element of initial_clust.
   distmatrices <- lapply(initial_clust, function(x) {
-    stringdist::stringdistmatrix(x, weight = edit_dist_weights,
-                                 useBytes = TRUE) %>%
-      as.matrix %>%
-      `dimnames<-`(NULL)
+    x <- as.matrix(
+      stringdist::stringdistmatrix(x, weight = edit_dist_weights,
+                                      useBytes = TRUE)
+    )
+    dimnames(x) <- NULL
+    x
   })
 
   # For each matrix in distmatrices, create clusters of matches within the
