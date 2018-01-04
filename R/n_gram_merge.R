@@ -52,7 +52,7 @@
 #' n_gram_merge(vect = x)
 #'
 #' # The performance of the approximate string matching can be ajusted using
-#' # parameter 'edit_dist_weights'.
+#' # parameters 'edit_dist_weights' or 'edit_threshold'
 #' n_gram_merge(vect = x,
 #'              edit_dist_weights = c(d = 0.4, i = 1, s = 1, t = 1))
 #'
@@ -78,6 +78,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     stop("param 'edit_dist_weights' must be either a numeric vector with ",
          "length four, or NA", call. = FALSE)
   }
+  if (!is.na(edit_threshold) && edit_threshold == 0) edit_threshold <- NA
   if (!is.na(edit_threshold) && is.na(edit_dist_weights)) {
     stop("param 'edit_dist_weights' must not be NA if 'edit_threshold' ",
          "is not NA", call. = FALSE)
@@ -99,12 +100,46 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix,
                                        ignore_strings)
 
-  # Get clusters
-  clusters <- get_ngram_clusters(one_gram_keys, n_gram_keys, edit_threshold,
-                                 edit_dist_weights, ...)
+  ## Get clusters.
+  if (is.na(edit_threshold)) {
+    # If approximate string matching is disabled (via param 'edit_threshold'),
+    # then find all elements of n_gram_keys that have one or more identical
+    # matches. From that list, create clusters of n_gram_keys (groups that all
+    # have an identical n_gram_key), eliminate all NA's within each group, and
+    # eliminate all groups with length less than two, then return clusters.
+    n_gram_keys_dups <- cpp_get_key_dups(n_gram_keys)
+    # If no duplicated keys exist, return vect unedited.
+    if (length(n_gram_keys_dups) == 0) return(vect)
+    clusters <- as.list(n_gram_keys_dups)
+  } else {
+    # If approximate string matching is enabled, then find all elements of
+    # n_gram_keys for which their associated one_gram_key has one or more
+    # identical matches within the entire list of one_gram_keys. From that
+    # list, create clusters of n_gram_keys (groups that all have an identical
+    # one_gram_key), eliminate all NA's within each group, and eliminate all
+    # groups with length less than two.
+    one_gram_keys_dups <- cpp_get_key_dups(one_gram_keys)
+    # If no duplicated keys exist, return vect unedited.
+    if (length(one_gram_keys_dups) == 0) return(vect)
+    # Get initial clusters.
+    initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys,
+                                                one_gram_keys_dups)
 
-  # If no clusters were found, return vect unedited.
-  if (is.null(clusters)) return(vect)
+    # Create a stringdistmatrix for every element of initial_clust.
+    distmatrices <- lapply(initial_clust, function(x) {
+      x <- as.matrix(
+        stringdist::stringdistmatrix(x, weight = edit_dist_weights, ...)
+      )
+      dimnames(x) <- NULL
+      x
+    })
+
+    # For each matrix in distmatrices, create clusters of matches within the
+    # matrix, based on lowest numeric edit distance (matches must have a value
+    # below edit_threshold in order to be considered suitable for merging).
+    clusters <- filter_initial_clusters(distmatrices, edit_threshold,
+                                        initial_clust)
+  }
 
   # If approx string matching is being used, then:
   # 1. Eliminate clusters that are all NA's.
@@ -114,6 +149,8 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   if (!is.na(edit_threshold)) {
     clusters <- clusters[vapply(clusters, function(x)
       any(!is.na(x)), logical(1))]
+    # If clusters were all NA, return vect unedited.
+    if (length(clusters) == 0) return(vect)
     clusters <- lapply(clusters, function(x)
       cpp_list_unique(x, sort_vals = TRUE))
     clusters <- unique(flatten_list(clusters))

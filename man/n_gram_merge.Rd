@@ -69,7 +69,7 @@ x <- c("Acme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
 n_gram_merge(vect = x)
 
 # The performance of the approximate string matching can be ajusted using
-# parameter 'edit_dist_weights'.
+# parameters 'edit_dist_weights' or 'edit_threshold'
 n_gram_merge(vect = x,
              edit_dist_weights = c(d = 0.4, i = 1, s = 1, t = 1))
 
