@@ -78,7 +78,8 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     stop("param 'edit_dist_weights' must be either a numeric vector with ",
          "length four, or NA", call. = FALSE)
   }
-  if (!is.na(edit_threshold) && edit_threshold == 0) edit_threshold <- NA
+  if ((!is.na(edit_threshold) && edit_threshold == 0) ||
+      numgram == 1) edit_threshold <- NA
   if (!is.na(edit_threshold) && is.na(edit_dist_weights)) {
     stop("param 'edit_dist_weights' must not be NA if 'edit_threshold' ",
          "is not NA", call. = FALSE)
@@ -86,9 +87,6 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
 
   # If approx string matching is being used, then get ngram == 1 keys for all
   # records.
-  ## TODO:  ----
-  ## Add code to handle input numgram == 1 (can skip "n_gram_keys" below, and
-  ## should skip a number of steps later in the function as well).
   univect <- cpp_unique(vect[!is.na(vect)])
   if (!is.na(edit_threshold)) {
     one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix,
