@@ -61,10 +61,6 @@ equality <- function(lookupvect, charstring) {
     .Call('_refinr_equality', PACKAGE = 'refinr', lookupvect, charstring)
 }
 
-cpp_duplicated <- function(vect) {
-    .Call('_refinr_cpp_duplicated', PACKAGE = 'refinr', vect)
-}
-
 cpp_unique <- function(vect) {
     .Call('_refinr_cpp_unique', PACKAGE = 'refinr', vect)
 }

@@ -128,13 +128,6 @@ LogicalVector equality(CharacterVector lookupvect,
 }
 
 
-// cpp version of R function duplicated()
-// [[Rcpp::export]]
-LogicalVector cpp_duplicated(CharacterVector vect) {
-  return duplicated(vect);
-}
-
-
 // cpp version of R function unique(), but only for char vectors.
 // [[Rcpp::export]]
 CharacterVector cpp_unique(CharacterVector vect) {
