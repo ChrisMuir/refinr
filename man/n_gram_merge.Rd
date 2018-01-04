@@ -4,9 +4,9 @@
 \alias{n_gram_merge}
 \title{Value merging based on ngram fingerprints}
 \usage{
-n_gram_merge(vect, numgram = 2, edit_threshold = 1,
-  edit_dist_weights = c(d = 0.33, i = 0.33, s = 1, t = 0.5),
-  bus_suffix = TRUE, ignore_strings = NULL)
+n_gram_merge(vect, numgram = 2, ignore_strings = NULL, bus_suffix = TRUE,
+  edit_threshold = 1, edit_dist_weights = c(d = 0.33, i = 0.33, s = 1, t =
+  0.5), ...)
 }
 \arguments{
 \item{vect}{Character vector of items for which you want similar values
@@ -14,6 +14,14 @@ merged.}
 
 \item{numgram}{Numeric value indicating the number of characters that
 will occupy each ngram token. Default value is 2.}
+
+\item{ignore_strings}{Character vector, these strings will be ignored during
+the merging of values within \code{vect}. Default value is NULL.}
+
+\item{bus_suffix}{Logical indicating whether the merging of records should
+be insensitive to common business suffixes (TRUE) or not (FALSE). If
+input \code{vect} a vector of business names it's recommended to set this
+to TRUE. Default value is TRUE.}
 
 \item{edit_threshold}{Numeric value indicating the threshold at which a
 merge is performed, based on the sum of the edit values derived from
@@ -28,13 +36,7 @@ c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
 to the \code{\link{stringdist}} function. Must be either
 a numeric vector of length four, or NA.}
 
-\item{bus_suffix}{Logical indicating whether the merging of records should
-be insensitive to common business suffixes (TRUE) or not (FALSE). If
-input \code{vect} a vector of business names it's recommended to set this
-to TRUE. Default value is TRUE.}
-
-\item{ignore_strings}{Character vector, these strings will be ignored during
-the merging of values within \code{vect}. Default value is NULL.}
+\item{...}{additional args to be passed along to \code{\link{stringdist}}.}
 }
 \value{
 Character vector with similar values merged.

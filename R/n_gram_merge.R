@@ -13,6 +13,12 @@
 #'   merged.
 #' @param numgram Numeric value indicating the number of characters that
 #'   will occupy each ngram token. Default value is 2.
+#' @param ignore_strings Character vector, these strings will be ignored during
+#'   the merging of values within \code{vect}. Default value is NULL.
+#' @param bus_suffix Logical indicating whether the merging of records should
+#'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
+#'   input \code{vect} a vector of business names it's recommended to set this
+#'   to TRUE. Default value is TRUE.
 #' @param edit_threshold Numeric value indicating the threshold at which a
 #'   merge is performed, based on the sum of the edit values derived from
 #'   param \code{edit_dist_weights}. Default value is 1. If this parameter is
@@ -24,12 +30,7 @@
 #'   c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
 #'   to the \code{\link{stringdist}} function. Must be either
 #'   a numeric vector of length four, or NA.
-#' @param bus_suffix Logical indicating whether the merging of records should
-#'   be insensitive to common business suffixes (TRUE) or not (FALSE). If
-#'   input \code{vect} a vector of business names it's recommended to set this
-#'   to TRUE. Default value is TRUE.
-#' @param ignore_strings Character vector, these strings will be ignored during
-#'   the merging of values within \code{vect}. Default value is NULL.
+#' @param ... additional args to be passed along to \code{\link{stringdist}}.
 #'
 #' @details Parameter \code{edit_dist_weights} are edit distance values that
 #'  get passed to the \code{\link{stringdist}} edit distance function. The
@@ -63,10 +64,10 @@
 #'
 #' @useDynLib refinr
 #' @importFrom Rcpp sourceCpp
-n_gram_merge <- function(vect, numgram = 2, edit_threshold = 1,
+n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
+                         bus_suffix = TRUE, edit_threshold = 1,
                          edit_dist_weights = c(d = 0.33, i = 0.33, s = 1,
-                                               t = 0.5),
-                         bus_suffix = TRUE, ignore_strings = NULL) {
+                                               t = 0.5), ...) {
   stopifnot(is.character(vect))
   stopifnot(is.numeric(numgram))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
@@ -75,11 +76,11 @@ n_gram_merge <- function(vect, numgram = 2, edit_threshold = 1,
   if (!is.na(edit_dist_weights) && !is.numeric(edit_dist_weights) &&
       length(edit_dist_weights) != 4) {
     stop("param 'edit_dist_weights' must be either a numeric vector with ",
-         "length four, or NA")
+         "length four, or NA", call. = FALSE)
   }
   if (!is.na(edit_threshold) && is.na(edit_dist_weights)) {
     stop("param 'edit_dist_weights' must not be NA if 'edit_threshold' ",
-         "is not NA")
+         "is not NA", call. = FALSE)
   }
 
   # If approx string matching is being used, then get ngram == 1 keys for all
@@ -100,7 +101,7 @@ n_gram_merge <- function(vect, numgram = 2, edit_threshold = 1,
 
   # Get clusters
   clusters <- get_ngram_clusters(one_gram_keys, n_gram_keys, edit_threshold,
-                                 edit_dist_weights)
+                                 edit_dist_weights, ...)
 
   # If no clusters were found, return vect unedited.
   if (is.null(clusters)) return(vect)

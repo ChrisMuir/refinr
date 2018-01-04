@@ -3,7 +3,7 @@
 #'
 #' @noRd
 get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
-                               edit_dist_weights) {
+                               edit_dist_weights, ...) {
   stopifnot(is.character(one_gram_keys) || is.null(one_gram_keys))
   stopifnot(is.character(n_gram_keys))
   if (is.na(edit_threshold) || edit_threshold == 0) {
@@ -37,8 +37,7 @@ get_ngram_clusters <- function(one_gram_keys, n_gram_keys, edit_threshold,
   # Create a stringdistmatrix for every element of initial_clust.
   distmatrices <- lapply(initial_clust, function(x) {
     x <- as.matrix(
-      stringdist::stringdistmatrix(x, weight = edit_dist_weights,
-                                      useBytes = TRUE)
+      stringdist::stringdistmatrix(x, weight = edit_dist_weights, ...)
     )
     dimnames(x) <- NULL
     x
