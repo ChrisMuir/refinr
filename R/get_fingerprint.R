@@ -32,7 +32,6 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
 
 #' Given a character vector as input, get the ngram fingerprint value for each
 #' element of the input.
-#'
 #'@noRd
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {

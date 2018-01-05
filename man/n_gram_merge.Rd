@@ -9,27 +9,24 @@ n_gram_merge(vect, numgram = 2, ignore_strings = NULL, bus_suffix = TRUE,
   0.5), ...)
 }
 \arguments{
-\item{vect}{Character vector of items for which you want similar values
-merged.}
+\item{vect}{Character vector, items to be potentially clustered and merged.}
 
-\item{numgram}{Numeric value indicating the number of characters that
+\item{numgram}{Numeric value, indicating the number of characters that
 will occupy each ngram token. Default value is 2.}
 
 \item{ignore_strings}{Character vector, these strings will be ignored during
 the merging of values within \code{vect}. Default value is NULL.}
 
-\item{bus_suffix}{Logical indicating whether the merging of records should
-be insensitive to common business suffixes (TRUE) or not (FALSE). If
-input \code{vect} a vector of business names it's recommended to set this
-to TRUE. Default value is TRUE.}
+\item{bus_suffix}{Logical, indicating whether the merging of records should
+be insensitive to common business suffixes or not. Default value is TRUE.}
 
-\item{edit_threshold}{Numeric value indicating the threshold at which a
+\item{edit_threshold}{Numeric value, indicating the threshold at which a
 merge is performed, based on the sum of the edit values derived from
 param \code{edit_dist_weights}. Default value is 1. If this parameter is
 set to 0 or NA, then no approximate string matching will be done, and all
 merging will be based on strings that have identical ngram fingerprints.}
 
-\item{edit_dist_weights}{Numeric vector indicating the weights to assign to
+\item{edit_dist_weights}{Numeric vector, indicating the weights to assign to
 the four edit operations (see details below), for the purpose of
 approximate string matching. Default values are
 c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
