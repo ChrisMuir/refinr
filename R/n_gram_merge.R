@@ -68,6 +68,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
                          bus_suffix = TRUE, edit_threshold = 1,
                          edit_dist_weights = c(d = 0.33, i = 0.33, s = 1,
                                                t = 0.5), ...) {
+  # Input validation.
   stopifnot(is.character(vect))
   stopifnot(is.numeric(numgram))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
@@ -79,10 +80,32 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
          "length four, or NA", call. = FALSE)
   }
   if ((!is.na(edit_threshold) && edit_threshold == 0) ||
-      numgram == 1) edit_threshold <- NA
+      numgram == 1) {
+    edit_threshold <- NA
+  }
   if (!is.na(edit_threshold) && is.na(edit_dist_weights)) {
     stop("param 'edit_dist_weights' must not be NA if 'edit_threshold' ",
          "is not NA", call. = FALSE)
+  }
+
+  # If any args were passed via ellipsis, check to make sure they are valid
+  # stringdist args.
+  ellip_args <- names(list(...))
+  if (any(c("a", "b") %in% ellip_args)) {
+    stop("'stringdistmatrix' args 'a' and 'b' cannot be set manually",
+         call. = FALSE)
+  }
+  if ("weight" %in% ellip_args) {
+    stop("please use arg 'edit_dist_weight' in place of stringdistmatrix ",
+         "arg 'weight'", call. = FALSE)
+  }
+  sd_args <- get("sd_args", envir = refinr_env)
+  if (!all(ellip_args %in% sd_args)) {
+    bad_args <- paste(
+      ellip_args[!ellip_args %in% sd_args],
+      collapse = ", "
+    )
+    stop(paste("these input arg(s) are invalid:", bad_args), call. = FALSE)
   }
 
   # If approx string matching is being used, then get ngram == 1 keys for all
