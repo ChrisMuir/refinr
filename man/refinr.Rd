@@ -9,7 +9,7 @@
 These functions take a character vector as input, identify and
  cluster similar values, and then merge clusters together so their values
  become identical. The functions are an implementation of the key collision
- and ngram fingerprint algorithms from the open source tool Open Refine. <http://openrefine.org/>. More info on key collision and ngram fingerprint can be found here <https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth>.
+ and ngram fingerprint algorithms from the open source tool Open Refine.
 }
 \section{Documentation for Open Refine}{
 

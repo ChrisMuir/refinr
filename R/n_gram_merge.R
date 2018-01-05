@@ -2,9 +2,8 @@
 #'
 #' This function takes a character vector and makes edits and merges values
 #' that are approximately equivalent yet not identical. It uses a two step
-#' process, the first is clustering values based on their ngram fingerprint
-#' method, described here
-#' \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
+#' process, the first is clustering values based on their ngram fingerprint (described here
+#' \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}).
 #' The second step is merging values based on approximate string matching of
 #' the ngram fingerprints, using the \code{stringdistmatrix} function from the
 #' package \code{\link{stringdist}}.
