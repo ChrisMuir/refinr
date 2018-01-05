@@ -19,8 +19,10 @@ test_that("param 'dict' having expected effect", {
   expect_equal(unique(key_collision_merge(vect, dict = dict)), dict[2])
 })
 
-vect <- c("Bakersfield Highschool", "BAKERSFIELD high", "high school, bakersfield")
-vect_ng <- key_collision_merge(vect, ignore_strings = c("high", "school", "highschool"))
+vect <- c("Bakersfield Highschool", "BAKERSFIELD high",
+          "high school, bakersfield")
+vect_ng <- key_collision_merge(vect, ignore_strings = c("high", "school",
+                                                        "highschool"))
 test_that("param 'ignore_strings' having expected effect", {
   expect_equal(unique(vect_ng), vect[2])
 })

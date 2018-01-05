@@ -23,8 +23,10 @@ test_that("param 'edit_threshold' set to NA having expected effect", {
   expect_equal(length(unique(n_gram_merge(vect, edit_threshold = NA))), 5)
 })
 
-vect <- c("Bakersfield Highschool", "BAKERSFIELD high", "high school, bakersfield")
-vect_ng <- n_gram_merge(vect, ignore_strings = c("high", "school", "highschool"))
+vect <- c("Bakersfield Highschool", "BAKERSFIELD high",
+          "high school, bakersfield")
+vect_ng <- n_gram_merge(vect, ignore_strings = c("high", "school",
+                                                 "highschool"))
 test_that("param 'ignore_strings' having expected effect", {
   expect_equal(unique(vect_ng), vect[2])
 })
