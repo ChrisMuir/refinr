@@ -12,8 +12,8 @@ Imports:
         stringdist
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
-URL: http://github.com/ChrisMuir/refinr
-BugReports: http://github.com/ChrisMuir/refinr/issues
+URL: https://github.com/ChrisMuir/refinr
+BugReports: https://github.com/ChrisMuir/refinr/issues
 Suggests: testthat,
     knitr,
     rmarkdown, 
