@@ -35,10 +35,13 @@ test_that("no errors when input includes len 1 str, len 0 str, NA's", {
   expect_equal(sum(is.na(n_gram_merge(c("cats", "CATS", NA)))), 1)
 })
 
-test_that("ellipsis args are being passed to stringdistmatrix", {
+test_that("ellipsis args are being handled properly", {
   vect <- c("Acmme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC",
             "acme pizza limited", "Tom's Sports Equipment, Inc.",
             "toms sports equipment")
   vect_ng <- n_gram_merge(vect, method = "lv", useBytes = TRUE)
   expect_equal(length(unique(vect_ng)), 2)
+  expect_error(n_gram_merge(vect, fakeArg = "some_value"))
+  expect_error(n_gram_merge(vect, a = c("cats", "are", "great")))
+  expect_error(n_gram_merge(vect, weight = c(1, 2, 1, 1)))
 })
