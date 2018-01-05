@@ -61,8 +61,6 @@
 #'        "high school, bakersfield")
 #' n_gram_merge(vect = x, ignore_strings = c("high", "school", "highschool"))
 #'
-#' @useDynLib refinr
-#' @importFrom Rcpp sourceCpp
 n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
                          bus_suffix = TRUE, edit_threshold = 1,
                          edit_dist_weights = c(d = 0.33, i = 0.33, s = 1,

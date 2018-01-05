@@ -25,6 +25,8 @@
 #'   \item \code{\link{n_gram_merge}}
 #' }
 #'
+#' @useDynLib refinr
+#' @importFrom Rcpp sourceCpp
 #' @docType package
 #' @name refinr
 NULL
