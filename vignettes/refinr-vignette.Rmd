@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 The purpose of this package is to assist in working with strings that are effectively equivalent, yet are not quite identical. The functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The clustering performed by these functions are implementations of the "key collision" and "ngram fingerprint" algorithms from the open source tool [Open Refine](http://openrefine.org/). More info on key collision and ngram fingerprint can be found [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth).
 
-In addition, there are few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process.
+In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process.
 
 This package provides two exported functions, `key_collision_merge` and `n_gram_merge`. Below is an explanation of each.
 
@@ -31,7 +31,7 @@ x <- c("Acme Pizza, Inc.", "AcMe PiZzA, Inc.", "ACME PIZZA COMPANY", "acme pizza
 key_collision_merge(x)
 ```
 
-Argument `bus_suffix` allows the clustering to be insensitive to common business name suffix strings (i.e. "inc", "llc", "co", etc.). The default value is`TRUE`.
+Argument `bus_suffix` allows the clustering to be insensitive to common business name suffix strings (i.e. "inc", "llc", "co", etc.). The default value is `TRUE`.
 ```{r}
 # Set bus_suffix to FALSE to see the difference (only the first two strings get merged).
 key_collision_merge(x, bus_suffix = FALSE)
@@ -98,11 +98,17 @@ x_refin <- x %>%
   key_collision_merge(ignore_strings = ignores) %>% 
   n_gram_merge(ignore_strings = ignores)
 
-# Create df for checking the results.
-# For larger input vectors, this is useful for comparing the original strings to the edited strings.
-inspect_results <- data_frame(old = x, new = x_refin) %>% 
-  mutate(equal = old == new)
+# Print results.
+cat(paste(x_refin, collapse = "<br />"))
+# Create df for comparing the original values to the edited values.
+# This is especially useful for larger input vectors.
+inspect_results <- data_frame(original_values = x, edited_values = x_refin) %>% 
+  mutate(equal = original_values == edited_values)
 
 # Display only the values that were edited by refinr.
-knitr::kable(inspect_results[!inspect_results$equal, c("old", "new")], format = "html", table.attr = "style='width:100%;'")
+knitr::kable(
+  inspect_results[!inspect_results$equal, c("original_values", "edited_values")], 
+  format = "html", 
+  table.attr = "style='width:100%;'"
+)
 ```

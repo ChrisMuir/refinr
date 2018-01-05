@@ -7,7 +7,7 @@ refinr
 
 R package implementation of two algorithms from the open source software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)).
 
-In addition, there are few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process. Examples of these features are all shown below.
+In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process. Examples of these features are all shown below.
 
 Installation
 ------------
@@ -43,7 +43,7 @@ x <- c("Acmme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
 n_gram_merge(x, edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
 #> [1] "ACME PIZA COMPANY" "ACME PIZA COMPANY" "ACME PIZA COMPANY"
 
-# The performance of the approximate string matching can be ajusted using parameter edit_dist_weights.
+# The performance of the approximate string matching can be ajusted using parameters edit_dist_weights and/or edit_threshold.
 n_gram_merge(x, edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1))
 #> [1] "Acme Pizzazza LLC" "ACME PIZA COMPANY" "Acme Pizzazza LLC"
 ```
