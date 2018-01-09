@@ -5,6 +5,7 @@ refinr
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ChrisMuir/refinr?branch=master&svg=true)](https://ci.appveyor.com/project/ChrisMuir/refinr)
 [![Coverage Status](https://img.shields.io/codecov/c/github/ChrisMuir/refinr/master.svg)](https://codecov.io/gh/ChrisMuir/refinr)
 
+
 R package implementation of two algorithms from the open source software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)).
 
 In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process. Examples of these features are all shown below.
@@ -43,7 +44,8 @@ x <- c("Acmme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
 n_gram_merge(x, edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
 #> [1] "ACME PIZA COMPANY" "ACME PIZA COMPANY" "ACME PIZA COMPANY"
 
-# The performance of the approximate string matching can be ajusted using parameters edit_dist_weights and/or edit_threshold.
+# The performance of the approximate string matching can be ajusted using parameters 
+# edit_dist_weights and/or edit_threshold.
 n_gram_merge(x, edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1))
 #> [1] "Acme Pizzazza LLC" "ACME PIZA COMPANY" "Acme Pizzazza LLC"
 ```
@@ -78,11 +80,11 @@ inspect_results <- data_frame(old = x, new = x_refin) %>%
 # Display only the values that were edited by refinr.
 inspect_results[!inspect_results$equal, c("old", "new")]
 #> # A tibble: 3 x 2
-#>                 old                new
-#>               <chr>              <chr>
-#> 1  Acme Pizza, Inc. ACME PIZZA COMPANY
+#>   old               new               
+#>   <chr>             <chr>             
+#> 1 Acme Pizza, Inc.  ACME PIZZA COMPANY
 #> 2 Acme Pizzza, Inc. ACME PIZZA COMPANY
-#> 3    acme pizza LLC ACME PIZZA COMPANY
+#> 3 acme pizza LLC    ACME PIZZA COMPANY
 ```
 
 Notes
