@@ -1,17 +1,26 @@
 refinr
-========
+======
 
 [![Travis-CI Build Status](https://travis-ci.org/ChrisMuir/refinr.svg?branch=master)](https://travis-ci.org/ChrisMuir/refinr)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ChrisMuir/refinr?branch=master&svg=true)](https://ci.appveyor.com/project/ChrisMuir/refinr)
 [![Coverage Status](https://img.shields.io/codecov/c/github/ChrisMuir/refinr/master.svg)](https://codecov.io/gh/ChrisMuir/refinr)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/refinr)](https://cran.r-project.org/package=refinr)
 
 
-R package implementation of two algorithms from the open source software [OpenRefine](http://openrefine.org/). These functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)).
+refinr is designed to cluster and merge similar values within a character vector. It features two functions that are implementations of clustering algorithms from the open source software [OpenRefine](http://openrefine.org/). The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth)).
 
-In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process. Examples of these features are all shown below.
+In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process.
 
 Installation
 ------------
+
+Install from CRAN:
+
+``` r
+install.packages("refinr")
+```
+
+Or install the dev version from this repo:
 
 ``` r
 # install.packages("devtools")
@@ -62,29 +71,43 @@ The clustering is designed to be insensitive to common business name suffixes, i
 Workflow for checking the results of the refinr processes
 ---------------------------------------------------------
 
-For larger input vectors, this is useful for comparing the original strings to the edited strings.
-
 ```r
 library(dplyr)
+library(knitr)
 
-x <- c("Acme Pizza, Inc.", "Acme Pizzza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
+x <- c("Clemsson University", 
+       "university-of-clemson", 
+       "CLEMSON", 
+       "Clem son, U.", 
+       "college, clemson u", 
+       "M.I.T.", 
+       "Technology, Massachusetts' Institute of", 
+       "Massachusetts Inst of Technology", 
+       "UNIVERSITY:  mit"
+)
 
-x_refin <- x %>%
-  refinr::key_collision_merge() %>%
-  refinr::n_gram_merge()
+ignores <- c("university", "college", "u", "of", "institute", "inst")
+x_refin <- x %>% 
+  refinr::key_collision_merge(ignore_strings = ignores) %>% 
+  refinr::n_gram_merge(ignore_strings = ignores)
 
-# Create df for checking the results.
-inspect_results <- data_frame(old = x, new = x_refin) %>% 
-  mutate(equal = old == new)
+# Create df for comparing the original values to the edited values.
+# This is especially useful for larger input vectors.
+inspect_results <- data_frame(original_values = x, edited_values = x_refin) %>% 
+  mutate(equal = original_values == edited_values)
 
 # Display only the values that were edited by refinr.
-inspect_results[!inspect_results$equal, c("old", "new")]
-#> # A tibble: 3 x 2
-#>   old               new               
-#>   <chr>             <chr>             
-#> 1 Acme Pizza, Inc.  ACME PIZZA COMPANY
-#> 2 Acme Pizzza, Inc. ACME PIZZA COMPANY
-#> 3 acme pizza LLC    ACME PIZZA COMPANY
+knitr::kable(
+  inspect_results[!inspect_results$equal, c("original_values", "edited_values")]
+)
+#> |original_values                         |edited_values                    |
+#> |:---------------------------------------|:--------------------------------|
+#> |Clemsson University                     |CLEMSON                          |
+#> |university-of-clemson                   |CLEMSON                          |
+#> |Clem son, U.                            |CLEMSON                          |
+#> |college, clemson u                      |CLEMSON                          |
+#> |Technology, Massachusetts' Institute of |Massachusetts Inst of Technology |
+#> |UNIVERSITY:  mit                        |M.I.T.                           |
 ```
 
 Notes
