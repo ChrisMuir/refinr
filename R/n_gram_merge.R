@@ -168,7 +168,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     if (length(clusters) == 0) return(vect)
     clusters <- lapply(clusters, function(x)
       cpp_list_unique(x, sort_vals = TRUE))
-    clusters <- unique(flatten_list(clusters))
+    clusters <- unique(cpp_flatten_list(clusters))
   }
 
   # For each cluster, make mass edits to the values of vect related to that

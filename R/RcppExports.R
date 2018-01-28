@@ -33,6 +33,10 @@ cpp_get_char_ngrams <- function(vects, numgram) {
     .Call('_refinr_cpp_get_char_ngrams', PACKAGE = 'refinr', vects, numgram)
 }
 
+cpp_flatten_list <- function(list_obj) {
+    .Call('_refinr_cpp_flatten_list', PACKAGE = 'refinr', list_obj)
+}
+
 cpp_paste_collapse_list <- function(input) {
     .Call('_refinr_cpp_paste_collapse_list', PACKAGE = 'refinr', input)
 }

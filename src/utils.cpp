@@ -6,6 +6,36 @@ using namespace Rcpp;
 // within c++ functions, some are used in both.
 
 
+// Flatten a nested list such that each character vector occupies its own
+// element in the return list. Can handle lists that have inconsistent nesting
+// levels.
+// [[Rcpp::export]]
+List cpp_flatten_list(List list_obj) {
+  int input_len = list_obj.size();
+
+  // Get the size of the output list by getting the sum of the lengths of each
+  // element of the input list.
+  int out_len = 0;
+  for(int i = 0; i < input_len; ++i) {
+    List curr_list = list_obj[i];
+    out_len += curr_list.size();
+  }
+
+  // Initialize output list.
+  List out(out_len);
+
+  int counter = 0;
+  for(int i = 0; i < input_len; ++i) {
+    List curr_list = list_obj[i];
+    for(int n = 0; n < curr_list.size(); ++n) {
+      out[counter] = curr_list[n];
+      counter += 1;
+    }
+  }
+  return out;
+}
+
+
 // Input a list of character vectors, for each char vect apply func "collapse"
 // and append to a char vector output object. Rcpp sugar func "collapse" is
 // equivelant to r func paste(char_vect, collapse = "").
