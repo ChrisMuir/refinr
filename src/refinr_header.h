@@ -7,3 +7,4 @@ bool complete_intersect(CharacterVector a, CharacterVector b);
 List cpp_list_unique(List input, bool sort_vals);
 CharacterVector cpp_paste_collapse_list(List input);
 CharacterVector cpp_get_key_dups(CharacterVector keys);
+List cpp_flatten_list(List list_obj);

@@ -131,13 +131,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     # n_gram_keys for which their associated one_gram_key has one or more
     # identical matches within the entire list of one_gram_keys. From that
     # list, create clusters of n_gram_keys (groups that all have an identical
-    # one_gram_key), eliminate all NA's within each group, and eliminate all
-    # groups with length less than two.
-
-    #one_gram_keys_dups <- cpp_get_key_dups(one_gram_keys)
-    # If no duplicated keys exist, return vect unedited.
-    #if (length(one_gram_keys_dups) == 0) return(vect)
-
+    # one_gram_key).
 
     # Get initial clusters.
     initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys)
@@ -156,26 +150,12 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     # below edit_threshold in order to be considered suitable for merging).
     clusters <- filter_initial_clusters(distmatrices, edit_threshold,
                                         initial_clust)
-  }
 
-  # If approx string matching is being used, then:
-  # 1. Eliminate clusters that are all NA's.
-  # 2. Filter out repeating values within each cluster.
-  # 3. Flatten nested lists so that each element of clusters is a char vector.
-  # 4. Get unique elements of the overall list.
-  if (!is.na(edit_threshold)) {
-    clusters <- clusters[vapply(clusters, function(x)
-      any(!is.na(x)), logical(1))]
     # If clusters were all NA, return vect unedited.
     if (length(clusters) == 0) return(vect)
-    clusters <- lapply(clusters, function(x)
-      cpp_list_unique(x, sort_vals = TRUE))
-    clusters <- cpp_flatten_list(clusters)
   }
 
   # For each cluster, make mass edits to the values of vect related to that
   # cluster.
-  vect <- merge_ngram_clusters(clusters, n_gram_keys, univect, vect)
-
-  return(vect)
+  return(merge_ngram_clusters(clusters, n_gram_keys, univect, vect))
 }

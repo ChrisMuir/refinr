@@ -149,6 +149,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
                              List clusters) {
   int distmatrices_len = distmatrices.size();
   List out(distmatrices_len);
+  LogicalVector na_filter(distmatrices_len);
   String na_val = NA_STRING;
 
   for(int i = 0; i < distmatrices_len; ++i) {
@@ -159,6 +160,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     if(mat_nrow < 2) {
       CharacterVector curr_clust = clusters[i];
       out[i] = curr_clust;
+      na_filter[i] = TRUE;
       continue;
     }
 
@@ -193,6 +195,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     // the edit_threshold, return NA and move on to the next iteration.
     if(is_true(all(lows > edit_threshold))) {
       out[i] = na_val;
+      na_filter[i] = FALSE;
       continue;
     }
 
@@ -257,7 +260,14 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     }
 
     out[i] = clust;
+    na_filter[i] = TRUE;
   }
+
+  // Subset to remove empty elements of the output list.
+  out = out[na_filter];
+
+  // Flatten nested lists so that each element of clusters is a char vector.
+  out = cpp_flatten_list(out);
 
   return out;
 }
