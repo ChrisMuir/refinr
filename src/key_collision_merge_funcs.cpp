@@ -3,16 +3,46 @@
 using namespace Rcpp;
 
 
+// Wrapper for the two KC merge functions (one with a data dict, one without).
+// [[Rcpp::export]]
+CharacterVector merge_KC_clusters(CharacterVector keys_vect,
+                                  CharacterVector vect,
+                                  CharacterVector dict,
+                                  CharacterVector keys_dict) {
+  if(is_true(all(is_na(dict)))) {
+    // If dict is NA, get vector of all key values that have at least one
+    // duplicate within keys (this creates clusters). Then for each cluster,
+    // make mass edits to the values of vect related to that cluster.
+    CharacterVector clusters = cpp_get_key_dups(keys_vect);
+    return merge_KC_clusters_no_dict(clusters, keys_vect, vect);
+  } else {
+    // If dict is not NA, get all key_vect values that have:
+    // 1. At least one duplicate within key_vect, AND/OR
+    // 2. At least one matching value within key_dict.
+    // Then for each cluster, make mass edits to the values of vect related to
+    // that cluster.
+    CharacterVector both_keys(keys_vect.size() + keys_dict.size());
+    int i=0;
+    for( ; i < keys_vect.size(); i++) both_keys[i] = keys_vect[i] ;
+    for(int j = 0; j < keys_dict.size(); i++, j++) both_keys[i] = keys_dict[j];
+    CharacterVector clusters = cpp_get_key_dups(both_keys);
+    return merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict);
+  }
+}
+
+
 // Merge key collision clusters of similar values, when no reference dict was
 // passed to func "key_collision_merge".
 // [[Rcpp::export]]
 CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
                                           CharacterVector keys_vect,
-                                          CharacterVector vect,
-                                          LogicalVector keys_in_clusters) {
+                                          CharacterVector vect) {
   int clust_len = clusters.size();
   int keys_len = keys_vect.size();
   CharacterVector output = clone(vect);
+
+  // Get Logical vector indicating which keys appear in the clusters vector.
+  LogicalVector keys_in_clusters = cpp_in(keys_vect, clusters);
 
   // Create subsets of vect and keys_vect based on which elements of each
   // contain at least one duplicate.
@@ -57,12 +87,14 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
                                        CharacterVector keys_vect,
                                        CharacterVector vect,
                                        CharacterVector keys_dict,
-                                       CharacterVector dict,
-                                       LogicalVector keys_in_clusters) {
+                                       CharacterVector dict) {
   int clust_len = clusters.size();
   int keys_vect_len = keys_vect.size();
   int keys_dict_len = keys_dict.size();
   CharacterVector output = clone(vect);
+
+  // Get Logical vector indicating which keys appear in the clusters vector.
+  LogicalVector keys_in_clusters = cpp_in(keys_vect, clusters);
 
   // Create subsets of vect and keys_vect based on which elements of each
   // contain at least one duplicate.

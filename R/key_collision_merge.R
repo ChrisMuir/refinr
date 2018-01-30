@@ -38,9 +38,10 @@ key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
   stopifnot(is.logical(bus_suffix))
   stopifnot(is.null(dict) || is.character(dict))
   stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
+  if (is.null(dict) || is.na(dict)) dict <- NA_character_
 
   # If dict is not NULL, get unique values of dict.
-  if (!is.null(dict)) dict <- cpp_unique(dict)
+  if (any(!is.na(dict))) dict <- cpp_unique(dict)
 
   # If ignore_strings is not NULL, make all values lower case then get uniques.
   if (!is.null(ignore_strings)) {
@@ -50,29 +51,13 @@ key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
   # Get vector of key values. If dict is not NULL, get vector of key values
   # for dict as well.
   keys_vect <- get_fingerprint_KC(vect, bus_suffix, ignore_strings)
-  if (!is.null(dict)) {
+  if (any(!is.na(dict))) {
     keys_dict <- get_fingerprint_KC(dict, bus_suffix, ignore_strings)
-  }
-
-  # If dict is NULL, get vector of all key values that have at least one
-  # duplicate within keys. Otherwise, get all key_vect values that have:
-  # 1. At least one duplicate within key_vect, AND/OR
-  # 2. At least one matching value within key_dict.
-  if (is.null(dict)) {
-    clusters <- cpp_get_key_dups(keys_vect)
   } else {
-    clusters <- cpp_get_key_dups(c(keys_vect, keys_dict))
+    keys_dict <- NA_character_
   }
 
-  # For each cluster, make mass edits to the values of vect related to that
+  # Create clusters, then make mass edits to the values of vect related to each
   # cluster.
-  keys_in_clusters <- keys_vect %in% clusters
-  if (is.null(dict)) {
-    vect <- merge_KC_clusters_no_dict(clusters, keys_vect, vect,
-                                      keys_in_clusters)
-  } else {
-    vect <- merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict,
-                                   keys_in_clusters)
-  }
-  return(vect)
+  return(merge_KC_clusters(keys_vect, vect, dict, keys_dict))
 }
