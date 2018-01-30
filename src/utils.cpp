@@ -82,18 +82,12 @@ CharacterVector cpp_get_key_dups(CharacterVector keys) {
 }
 
 
-// Meant to mimic the R func %in%. Wrote it because I kept having
-// "warning: comparison between signed and unsigned integer expressions [-Wsign-compare]"
-// compile issues related to the Rcpp sugar function in().
-// [[Rcpp::export]]
-LogicalVector cpp_in(CharacterVector x, CharacterVector y) {
-  int x_len = x.size();
-  LogicalVector out(x_len);
-
-  for(int i = 0; i < x_len; ++i) {
-    out[i] = is_true(any(equality(y, x[i])));
-  }
-  return out;
+// Meant to mimic the R func %in%.
+// Returns "x %in% table".
+LogicalVector cpp_in(CharacterVector x, CharacterVector table) {
+  LogicalVector matches = match(x, table) > 0;
+  matches[is_na(matches)] = FALSE;
+  return matches;
 }
 
 
