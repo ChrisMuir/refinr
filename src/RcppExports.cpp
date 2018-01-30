@@ -63,15 +63,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_ngram_initial_clusters
-List get_ngram_initial_clusters(CharacterVector ngram_keys, CharacterVector unigram_keys, CharacterVector unigram_dups);
-RcppExport SEXP _refinr_get_ngram_initial_clusters(SEXP ngram_keysSEXP, SEXP unigram_keysSEXP, SEXP unigram_dupsSEXP) {
+List get_ngram_initial_clusters(CharacterVector ngram_keys, CharacterVector unigram_keys);
+RcppExport SEXP _refinr_get_ngram_initial_clusters(SEXP ngram_keysSEXP, SEXP unigram_keysSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type ngram_keys(ngram_keysSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type unigram_keys(unigram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type unigram_dups(unigram_dupsSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_ngram_initial_clusters(ngram_keys, unigram_keys, unigram_dups));
+    rcpp_result_gen = Rcpp::wrap(get_ngram_initial_clusters(ngram_keys, unigram_keys));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -233,7 +232,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 6},
     {"_refinr_most_freq", (DL_FUNC) &_refinr_most_freq, 3},
     {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},
-    {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 3},
+    {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 2},
     {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},
     {"_refinr_char_ngram", (DL_FUNC) &_refinr_char_ngram, 2},
     {"_refinr_cpp_get_char_ngrams", (DL_FUNC) &_refinr_cpp_get_char_ngrams, 2},

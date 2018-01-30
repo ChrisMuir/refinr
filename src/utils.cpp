@@ -61,7 +61,7 @@ CharacterVector cpp_paste_collapse_list(List input) {
 // are found in b, otherwise return FALSE.
 // [[Rcpp::export]]
 bool complete_intersect(CharacterVector a, CharacterVector b) {
-  int a_len = a.size();
+  int a_len = unique(a).size();
   CharacterVector get_intersect = intersect(a, b);
   return a_len == get_intersect.size();
 }

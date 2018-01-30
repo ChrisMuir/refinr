@@ -133,12 +133,14 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     # list, create clusters of n_gram_keys (groups that all have an identical
     # one_gram_key), eliminate all NA's within each group, and eliminate all
     # groups with length less than two.
-    one_gram_keys_dups <- cpp_get_key_dups(one_gram_keys)
+
+    #one_gram_keys_dups <- cpp_get_key_dups(one_gram_keys)
     # If no duplicated keys exist, return vect unedited.
-    if (length(one_gram_keys_dups) == 0) return(vect)
+    #if (length(one_gram_keys_dups) == 0) return(vect)
+
+
     # Get initial clusters.
-    initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys,
-                                                one_gram_keys_dups)
+    initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys)
 
     # Create a stringdistmatrix for every element of initial_clust.
     distmatrices <- lapply(initial_clust, function(x) {
@@ -168,7 +170,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     if (length(clusters) == 0) return(vect)
     clusters <- lapply(clusters, function(x)
       cpp_list_unique(x, sort_vals = TRUE))
-    clusters <- unique(cpp_flatten_list(clusters))
+    clusters <- cpp_flatten_list(clusters)
   }
 
   # For each cluster, make mass edits to the values of vect related to that

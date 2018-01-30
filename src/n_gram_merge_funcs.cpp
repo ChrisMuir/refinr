@@ -2,7 +2,6 @@
 #include"refinr_header.h"
 using namespace Rcpp;
 
-
 // Iterate over all clusters, make mass edits related to each cluster.
 // [[Rcpp::export]]
 CharacterVector merge_ngram_clusters(List clusters,
@@ -77,29 +76,66 @@ CharacterVector merge_ngram_clusters(List clusters,
 // Get initial ngram clusters.
 // For each string in unigram_dups, find indices in which that string appears
 // in unigram_keys, then use those indices to get a subset of ngram_keys. Add
-// the subset to List "out". After "out" is compiled, remove elements of the
-// list that have length less than 2.
+// the subset to List "out".
 // [[Rcpp::export]]
 List get_ngram_initial_clusters(CharacterVector ngram_keys,
-                                CharacterVector unigram_keys,
-                                CharacterVector unigram_dups) {
+                                CharacterVector unigram_keys) {
+
+  // For each element of ngram_keys that have more than one duplicate, record
+  // indices for the 3rd element through the nth element (these get dumped
+  // into a single vector). Once that's done, subset ngram_keys and
+  // unigram_keys to remove these indices.
+  CharacterVector ngram_dups = cpp_get_key_dups(ngram_keys);
+  int ngram_dups_len = ngram_dups.size();
+  if(ngram_dups_len > 0) {
+    int ngram_keys_len = ngram_keys.size();
+    IntegerVector idx_to_remove(ngram_keys_len, -1);
+    IntegerVector nums = Rcpp::seq(0, ngram_keys_len - 1);
+    int counter = 0;
+    for(int i = 0; i < ngram_dups_len; ++i) {
+      IntegerVector idx = nums[equality(ngram_keys, ngram_dups[i])];
+      int idx_len = idx.size();
+      if(idx_len > 2) {
+        for(int n = 2; n < idx_len; ++n) {
+          idx_to_remove[counter] = idx[n];
+          counter += 1;
+        }
+      }
+    }
+    // Add indices that are NA to obj idx_to_remove.
+    IntegerVector idx = nums[is_na(ngram_keys)];
+    int idx_len = idx.size();
+    if(idx_len > 0) {
+      for(int n = 0; n < idx_len; ++n) {
+        idx_to_remove[counter] = idx[n];
+        counter += 1;
+      }
+    }
+
+    idx_to_remove = idx_to_remove[idx_to_remove > -1];
+    LogicalVector idx_to_keep(ngram_keys_len, TRUE);
+    for(int i = 0; i < idx_to_remove.size(); ++i) {
+      idx_to_keep[idx_to_remove[i]] = FALSE;
+    }
+    ngram_keys = ngram_keys[idx_to_keep];
+    unigram_keys = unigram_keys[idx_to_keep];
+  }
+
+  // Iterate over unigram_
+  CharacterVector unigram_dups = cpp_get_key_dups(unigram_keys);
   int dups_len = unigram_dups.size();
-  LogicalVector clust_len_logical(dups_len);
   List out(dups_len);
 
   for(int i = 0; i < dups_len; ++i) {
     CharacterVector clust = ngram_keys[equality(unigram_keys,
                                                 unigram_dups[i])];
-    clust = clust[!is_na(clust)];
-    if(clust.size() > 1) {
-      clust_len_logical[i] = TRUE;
-    } else {
-      clust_len_logical[i] = FALSE;
-    }
     out[i] = clust;
   }
-  return out[clust_len_logical];
+  return out;
 }
+
+
+
 
 
 // Filter stringdist matrices.
@@ -119,6 +155,13 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     // Get current matrix object, establish other variables.
     NumericMatrix curr_mat = distmatrices[i];
     int mat_nrow = curr_mat.nrow();
+
+    if(mat_nrow < 2) {
+      CharacterVector curr_clust = clusters[i];
+      out[i] = curr_clust;
+      continue;
+    }
+
     DoubleVector lows(mat_nrow);
     IntegerVector olap(mat_nrow, 0);
 
@@ -168,7 +211,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     CharacterVector curr_clust = clusters[i];
     for(int n = 0; n < lows_idx_len; ++n) {
       CharacterVector terms = curr_clust[curr_mat(lows_idx[n], _) < edit_threshold];
-      clust[n] = terms;
+      clust[n] = unique(terms);
       // Check to see if terms is a complete subset of an existing cluster.
       if(n > 0) {
         for(int k = 0; k < n; ++k) {
@@ -180,7 +223,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
       }
     }
 
-    // trim obbj's clust and olap to only include unique clusters.
+    // trim obj's clust and olap to only include unique clusters.
     clust = clust[trim_idx];
     olap = olap[trim_idx];
 
