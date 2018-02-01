@@ -14,14 +14,11 @@ CharacterVector merge_ngram_clusters(List clusters,
 
   for(int i = 0; i < clusters_len; ++i) {
     CharacterVector curr_clust = clusters[i];
-    // Get indices of elements of n_gram_keys that are found in cluster, as obj
-    // "ng_idx".
-    LogicalVector ng_idx = cpp_in(n_gram_keys, curr_clust);
 
+    // Subset univect by elements of n_gram_keys that appear in curr_clust.
+    CharacterVector univect_sub = univect[cpp_in(n_gram_keys, curr_clust)];
 
-    // Get indices of elements of vect that are found in vector
-    // univect[ng_idx], as obj "vect_idx".
-    CharacterVector univect_sub = univect[ng_idx];
+    // Get indices of elements of vect that are found in univect_sub.
     LogicalVector vect_idx = cpp_in(vect, univect_sub);
 
     // Find the string that appears most frequently in vector vect[vect_idx],
