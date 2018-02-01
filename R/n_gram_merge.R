@@ -151,7 +151,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     clusters <- filter_initial_clusters(distmatrices, edit_threshold,
                                         initial_clust)
 
-    # If clusters were all NA, return vect unedited.
+    # If there were no clusters generated, return vect unedited.
     if (length(clusters) == 0) return(vect)
   }
 
