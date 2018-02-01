@@ -24,5 +24,5 @@ vect <- c("Bakersfield Highschool", "BAKERSFIELD high",
 vect_ng <- key_collision_merge(vect, ignore_strings = c("high", "school",
                                                         "highschool"))
 test_that("param 'ignore_strings' having expected effect", {
-  expect_equal(unique(vect_ng), vect[2])
+  expect_equal(unique(vect_ng), vect[1])
 })
