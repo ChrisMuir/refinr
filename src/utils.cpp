@@ -61,9 +61,7 @@ CharacterVector cpp_paste_collapse_list(List input) {
 // are found in b, otherwise return FALSE.
 // [[Rcpp::export]]
 bool complete_intersect(CharacterVector a, CharacterVector b) {
-  int a_len = unique(a).size();
-  CharacterVector get_intersect = intersect(a, b);
-  return a_len == get_intersect.size();
+  return is_true(all(cpp_in(a, b)));
 }
 
 
@@ -84,10 +82,28 @@ CharacterVector cpp_get_key_dups(CharacterVector keys) {
 
 // Meant to mimic the R func %in%.
 // Returns "x %in% table".
+// [[Rcpp::export]]
 LogicalVector cpp_in(CharacterVector x, CharacterVector table) {
-  LogicalVector matches = match(x, table) > 0;
-  matches[is_na(matches)] = FALSE;
-  return matches;
+  // If length of table is 1, use function "equality".
+  int table_len = table.size();
+  if(table_len == 1) {
+    return equality(x, table[0]);
+  }
+
+  // Else if length of table is less than 4, use a loop.
+  if(table_len < 4) {
+    LogicalVector out(x.size());
+    for(int n = 0; n < table_len; ++n) {
+      LogicalVector matches = equality(x, table[n]);
+      out = out | matches;
+    }
+    return out;
+  }
+
+  // Else if length of table is 4 or greater, use sugar function "match".
+  LogicalVector out = match(x, table) > 0;
+  out[is_na(out)] = FALSE;
+  return out;
 }
 
 
