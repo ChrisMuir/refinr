@@ -52,7 +52,6 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
                                 CharacterVector unigram_keys) {
   CharacterVector unigram_dups = cpp_get_key_dups(unigram_keys);
   int dups_len = unigram_dups.size();
-  LogicalVector clust_len_logical(dups_len);
   List out(dups_len);
 
   // Remove indices from ngram_keys and unigram_keys in which ngram_keys are
@@ -61,17 +60,18 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   ngram_keys = ngram_keys[na_idx];
   unigram_keys = unigram_keys[na_idx];
 
+  // Get subsets of ngram_keys and unigram_keys, filter by indices of
+  // unigram_keys that appear in unigram_dups.
+  LogicalVector keys_in_dups = cpp_in(unigram_keys, unigram_dups);
+  ngram_keys = ngram_keys[keys_in_dups];
+  unigram_keys = unigram_keys[keys_in_dups];
+
   for(int i = 0; i < dups_len; ++i) {
     CharacterVector clust = ngram_keys[equality(unigram_keys,
                                                 unigram_dups[i])];
-    if(clust.size() > 1) {
-      clust_len_logical[i] = TRUE;
-    } else {
-      clust_len_logical[i] = FALSE;
-    }
     out[i] = clust;
   }
-  return out[clust_len_logical];
+  return out;
 }
 
 
