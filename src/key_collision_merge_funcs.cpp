@@ -5,8 +5,8 @@ using namespace Rcpp;
 
 // Wrapper for the two KC merge functions (one with a data dict, one without).
 // [[Rcpp::export]]
-CharacterVector merge_KC_clusters(CharacterVector keys_vect,
-                                  CharacterVector vect,
+CharacterVector merge_KC_clusters(CharacterVector vect,
+                                  CharacterVector keys_vect,
                                   CharacterVector dict,
                                   CharacterVector keys_dict) {
   if(is_true(all(is_na(dict)))) {
@@ -14,7 +14,7 @@ CharacterVector merge_KC_clusters(CharacterVector keys_vect,
     // duplicate within keys (this creates clusters). Then for each cluster,
     // make mass edits to the values of vect related to that cluster.
     CharacterVector clusters = cpp_get_key_dups(keys_vect);
-    return merge_KC_clusters_no_dict(clusters, keys_vect, vect);
+    return merge_KC_clusters_no_dict(clusters, vect, keys_vect);
   } else {
     // If dict is not NA, get all key_vect values that have:
     // 1. At least one duplicate within key_vect, AND/OR
@@ -26,7 +26,7 @@ CharacterVector merge_KC_clusters(CharacterVector keys_vect,
     for( ; i < keys_vect.size(); i++) both_keys[i] = keys_vect[i] ;
     for(int j = 0; j < keys_dict.size(); i++, j++) both_keys[i] = keys_dict[j];
     CharacterVector clusters = cpp_get_key_dups(both_keys);
-    return merge_KC_clusters_dict(clusters, keys_vect, vect, keys_dict, dict);
+    return merge_KC_clusters_dict(clusters, vect, keys_vect, dict, keys_dict);
   }
 }
 
@@ -35,8 +35,8 @@ CharacterVector merge_KC_clusters(CharacterVector keys_vect,
 // passed to func "key_collision_merge".
 // [[Rcpp::export]]
 CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
-                                          CharacterVector keys_vect,
-                                          CharacterVector vect) {
+                                          CharacterVector vect,
+                                          CharacterVector keys_vect) {
   int clust_len = clusters.size();
   int keys_len = keys_vect.size();
   CharacterVector output = clone(vect);
@@ -52,7 +52,7 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
   // For each element of clusters, get the number of unique values within vect
   // associated with that cluster. Idea is to skip the merging step for all
   // elements of clusters for which each associated element of vect is already
-  // identical. In those spots it's pointless to perform merging.
+  // identical. In those spots it is pointless to perform merging.
   IntegerVector csize(clust_len);
   for(int i = 0; i < clust_len; ++i) {
     CharacterVector curr_vect = vect_sub[equality(keys_vect_sub, clusters[i])];
@@ -84,10 +84,10 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
 // passed to func "key_collision_merge".
 // [[Rcpp::export]]
 CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
-                                       CharacterVector keys_vect,
                                        CharacterVector vect,
-                                       CharacterVector keys_dict,
-                                       CharacterVector dict) {
+                                       CharacterVector keys_vect,
+                                       CharacterVector dict,
+                                       CharacterVector keys_dict) {
   int clust_len = clusters.size();
   int keys_vect_len = keys_vect.size();
   int keys_dict_len = keys_dict.size();
@@ -166,12 +166,6 @@ String most_freq(String clust,
   LogicalVector match_bool = equality(keys_sub, clust);
   CharacterVector vect_sub_clust = vect_sub[match_bool];
 
-  CharacterVector univect = sort_unique(vect_sub_clust);
-  CharacterVector freq = Rcpp::wrap(table(vect_sub_clust));
-  int freq_len = freq.size();
-  IntegerVector freq_int(freq_len);
-  for(int i = 0; i < freq_len; ++i) {
-    freq_int[i] = atoi(freq[i]);
-  }
-  return univect[which_max(freq_int)];
+  int idx = which_max(table(vect_sub_clust));
+  return vect_sub_clust[idx];
 }
