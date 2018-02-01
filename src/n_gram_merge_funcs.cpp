@@ -10,57 +10,26 @@ CharacterVector merge_ngram_clusters(List clusters,
                                      CharacterVector vect) {
   int clusters_len = clusters.size();
   int vect_len = vect.size();
-  int n_gram_keys_len = n_gram_keys.size();
   CharacterVector output = clone(vect);
 
   for(int i = 0; i < clusters_len; ++i) {
     CharacterVector curr_clust = clusters[i];
-    int curr_clust_len = curr_clust.size();
-
     // Get indices of elements of n_gram_keys that are found in cluster, as obj
     // "ng_idx".
-    LogicalVector ng_idx(n_gram_keys_len);
+    LogicalVector ng_idx = cpp_in(n_gram_keys, curr_clust);
 
-    for(int n = 0; n < curr_clust_len; ++n) {
-      LogicalVector clust_match_bool = equality(n_gram_keys, curr_clust[n]);
-      ng_idx = ng_idx | clust_match_bool;
-    }
-
-    // If there is no intersection between n_gram_keys and curr_clust, stop
-    // the current iteration and move on to the next element of clusters.
-    if(is_false(any(ng_idx == TRUE))) {
-      continue;
-    }
 
     // Get indices of elements of vect that are found in vector
     // univect[ng_idx], as obj "vect_idx".
     CharacterVector univect_sub = univect[ng_idx];
-    int univect_sub_len = univect_sub.size();
-    LogicalVector vect_idx(vect_len);
-
-    for(int n = 0; n < univect_sub_len; ++n) {
-      LogicalVector vect_match_bool = equality(vect, univect_sub[n]);
-      vect_idx = vect_idx | vect_match_bool;
-    }
-
-    // If there is no intersection between univect[nq_idx] and vect, stop the
-    // current iteration and move on to the next element of clusters.
-    if (is_false(any(vect_idx == TRUE))) {
-      continue;
-    }
+    LogicalVector vect_idx = cpp_in(vect, univect_sub);
 
     // Find the string that appears most frequently in vector vect[vect_idx],
     // as obj "most_freq_string". Edit all elements of vect[vect_idx] to be
     // equal to string "most_freq_string".
     CharacterVector vect_sub = vect[vect_idx];
-    CharacterVector uni_vect_sub = sort_unique(vect_sub);
-    CharacterVector freq = Rcpp::wrap(table(vect_sub));
-    int freq_len = freq.size();
-    IntegerVector freq_int(freq_len);
-    for(int n = 0; n < freq_len; ++n) {
-      freq_int[n] = atoi(freq[n]);
-    }
-    String most_freq_string = uni_vect_sub[which_max(freq_int)];
+    int idx = which_max(table(vect_sub));
+    String most_freq_string = vect_sub[idx];
 
     // Make mass edits to vect.
     for(int n = 0; n < vect_len; ++n) {
@@ -76,66 +45,34 @@ CharacterVector merge_ngram_clusters(List clusters,
 // Get initial ngram clusters.
 // For each string in unigram_dups, find indices in which that string appears
 // in unigram_keys, then use those indices to get a subset of ngram_keys. Add
-// the subset to List "out".
+// the subset to List "out". After "out" is compiled, remove elements of the
+// list that have length less than 2.
 // [[Rcpp::export]]
 List get_ngram_initial_clusters(CharacterVector ngram_keys,
                                 CharacterVector unigram_keys) {
-
-  // For each element of ngram_keys that have more than one duplicate, record
-  // indices for the 3rd element through the nth element (these get dumped
-  // into a single vector). Once that's done, subset ngram_keys and
-  // unigram_keys to remove these indices.
-  CharacterVector ngram_dups = cpp_get_key_dups(ngram_keys);
-  int ngram_dups_len = ngram_dups.size();
-  if(ngram_dups_len > 0) {
-    int ngram_keys_len = ngram_keys.size();
-    IntegerVector idx_to_remove(ngram_keys_len, -1);
-    IntegerVector nums = Rcpp::seq(0, ngram_keys_len - 1);
-    int counter = 0;
-    for(int i = 0; i < ngram_dups_len; ++i) {
-      IntegerVector idx = nums[equality(ngram_keys, ngram_dups[i])];
-      int idx_len = idx.size();
-      if(idx_len > 2) {
-        for(int n = 2; n < idx_len; ++n) {
-          idx_to_remove[counter] = idx[n];
-          counter += 1;
-        }
-      }
-    }
-    // Add indices that are NA to obj idx_to_remove.
-    IntegerVector idx = nums[is_na(ngram_keys)];
-    int idx_len = idx.size();
-    if(idx_len > 0) {
-      for(int n = 0; n < idx_len; ++n) {
-        idx_to_remove[counter] = idx[n];
-        counter += 1;
-      }
-    }
-
-    idx_to_remove = idx_to_remove[idx_to_remove > -1];
-    LogicalVector idx_to_keep(ngram_keys_len, TRUE);
-    for(int i = 0; i < idx_to_remove.size(); ++i) {
-      idx_to_keep[idx_to_remove[i]] = FALSE;
-    }
-    ngram_keys = ngram_keys[idx_to_keep];
-    unigram_keys = unigram_keys[idx_to_keep];
-  }
-
-  // Iterate over unigram_
   CharacterVector unigram_dups = cpp_get_key_dups(unigram_keys);
   int dups_len = unigram_dups.size();
+  LogicalVector clust_len_logical(dups_len);
   List out(dups_len);
+
+  // Remove indices from ngram_keys and unigram_keys in which ngram_keys are
+  // NA.
+  LogicalVector na_idx = !is_na(ngram_keys);
+  ngram_keys = ngram_keys[na_idx];
+  unigram_keys = unigram_keys[na_idx];
 
   for(int i = 0; i < dups_len; ++i) {
     CharacterVector clust = ngram_keys[equality(unigram_keys,
                                                 unigram_dups[i])];
+    if(clust.size() > 1) {
+      clust_len_logical[i] = TRUE;
+    } else {
+      clust_len_logical[i] = FALSE;
+    }
     out[i] = clust;
   }
-  return out;
+  return out[clust_len_logical];
 }
-
-
-
 
 
 // Filter stringdist matrices.
@@ -204,7 +141,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     olap = olap[olap > 0];
 
     // Get indices of obj lows that are less than edit_threshold.
-    IntegerVector lows_idx = Rcpp::seq(0, mat_nrow - 1);
+    IntegerVector lows_idx = seq(0, mat_nrow - 1);
     lows_idx = lows_idx[lows < edit_threshold];
     int lows_idx_len = lows_idx.size();
 
@@ -253,7 +190,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
           continue;
         }
 
-        clust_bool[n] = is_false(all(cpp_in(curr_clust, max_clust)));
+        clust_bool[n] = !complete_intersect(curr_clust, max_clust);
       }
 
       clust = clust[clust_bool];
@@ -292,8 +229,7 @@ List char_ngram(List vects, int numgram) {
     }
     CharacterVector curr_out(curr_vect_len);
     for(int j = 0; j < curr_vect_len; ++j) {
-      NumericVector idx(numgram);
-      idx = seq(j, j+numgram_sub);
+      IntegerVector idx = seq(j, j + numgram_sub);
       CharacterVector curr_out_sub = curr_vect[idx];
       curr_out[j] = collapse(curr_out_sub);
     }
@@ -303,12 +239,12 @@ List char_ngram(List vects, int numgram) {
 }
 
 
-//
+// Takes a list of character vectors. For each vector: Get char ngram tokens,
+// reduce to unique tokens, then collapse the tokens back together into single
+// string.
 // [[Rcpp::export]]
 CharacterVector cpp_get_char_ngrams(List vects, int numgram) {
   List vects_mod = clone(vects);
-  int vects_len = vects.size();
-  CharacterVector out(vects_len);
 
   // Get character ngrams for each element of vects.
   if(numgram > 1) {
@@ -322,7 +258,7 @@ CharacterVector cpp_get_char_ngrams(List vects, int numgram) {
   // For each element of vects, combine all ngram strings into a single string,
   // equivelant to calling r func paste(char_vect, collapse = "") on each
   // element of vects.
-  out = cpp_paste_collapse_list(vects_mod);
+  CharacterVector out = cpp_paste_collapse_list(vects_mod);
 
   return(out);
 }
