@@ -7,8 +7,7 @@ using namespace Rcpp;
 
 
 // Flatten a nested list such that each character vector occupies its own
-// element in the return list. Can handle lists that have inconsistent nesting
-// levels.
+// element in the return list.
 // [[Rcpp::export]]
 List cpp_flatten_list(List list_obj) {
   int input_len = list_obj.size();
@@ -38,7 +37,7 @@ List cpp_flatten_list(List list_obj) {
 
 // Input a list of character vectors, for each char vect apply func "collapse"
 // and append to a char vector output object. Rcpp sugar func "collapse" is
-// equivelant to r func paste(char_vect, collapse = "").
+// equivelant to R func paste(char_vect, collapse = "").
 // [[Rcpp::export]]
 CharacterVector cpp_paste_collapse_list(List input) {
   int input_len = input.size();
@@ -69,12 +68,9 @@ bool complete_intersect(CharacterVector a, CharacterVector b) {
 // and then get unique values. Return the subset.
 // [[Rcpp::export]]
 CharacterVector cpp_get_key_dups(CharacterVector keys) {
-  // Create logical vector.
-  LogicalVector keys_bool = duplicated(keys);
-
   // Subset to only keep those that have a duplicate, remove, NA's, then
   // return unique values.
-  keys = keys[keys_bool];
+  keys = keys[duplicated(keys)];
   keys = keys[!is_na(keys)];
   return unique(keys);
 }
@@ -138,13 +134,7 @@ List remove_strings(List input, CharacterVector removes) {
 
   for(int i = 0; i < input_len; ++i) {
     CharacterVector curr_vect = input[i];
-    int curr_vect_len = curr_vect.size();
-    LogicalVector curr_vect_matches(curr_vect_len);
-    for(int j = 0; j < curr_vect_len; ++j) {
-      LogicalVector matches = equality(removes, curr_vect[j]);
-      curr_vect_matches[j] = is_false(any(matches == TRUE));
-    }
-    out[i] = curr_vect[curr_vect_matches];
+    out[i] = curr_vect[!cpp_in(curr_vect, removes)];
   }
   return out;
 }
@@ -156,8 +146,7 @@ List remove_strings(List input, CharacterVector removes) {
 // with length equal to the input char vector. This is equivalent to R code
 // "vector == string".
 // [[Rcpp::export]]
-LogicalVector equality(CharacterVector lookupvect,
-                       String charstring) {
+LogicalVector equality(CharacterVector lookupvect, String charstring) {
   int vect_length = lookupvect.size();
   LogicalVector out(vect_length);
 
