@@ -8,7 +8,7 @@
 # func stringdist::stringdistmatrix half-way through completion of
 # n_gram_merge, and it's preferable for n_gram_merge to fail immediately if
 # any args are passed that do not fit for either n_gram_merge nor
-# stringdistmatrix. This also has te added benefit of not failing if stringdist
+# stringdistmatrix. This also has the added benefit of not failing if stringdist
 # updates their pkg and changes their func args.
 refinr_env <- new.env()
 sd_args <- names(formals(stringdist::stringdistmatrix))
