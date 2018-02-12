@@ -49,27 +49,30 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
   CharacterVector vect_sub = vect[keys_in_clusters];
   CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
 
-  // For each element of clusters, get the number of unique values within vect
-  // associated with that cluster. Idea is to skip the merging step for all
-  // elements of clusters for which each associated element of vect is already
-  // identical. In those spots it is pointless to perform merging.
-  IntegerVector csize(clust_len);
+  // Iterate over clusters, make mass edits to output.
   for(int i = 0; i < clust_len; ++i) {
-    CharacterVector curr_vect = vect_sub[equality(keys_vect_sub, clusters[i])];
-    csize[i] = unique(curr_vect).size();
-  }
+    String clust = clusters[i];
 
-  if(is_true(any(csize > 1))) {
-    clusters = clusters[csize > 1];
-    int clust_len = clusters.size();
+    // Get indices in which clust appears in keys_vect_sub.
+    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, clust);
 
-    // Perform merging on all clusters with length greater than one.
-    for(int i = 0; i < clust_len; ++i) {
-      String clust = clusters[i];
-      String most_freq_string = most_freq(clust, keys_vect_sub, vect_sub);
-      LogicalVector match_bool_keys = equality(keys_vect, clust);
+    // Subset vect_sub by indices in matches_keys_vect_sub.
+    CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
+
+    // If the number of unique values in curr_vect is greater than one,
+    // continue on with the current iteration.
+    if(unique(curr_vect).size() > 1){
+
+      // Get the string that appears most often in curr_Vect.
+      String most_freq_string = curr_vect[which_max(table(curr_vect))];
+
+      // Get indices in which clust appears in keys_vect.
+      LogicalVector matches_keys_vect = equality(keys_vect, clust);
+
+      // For each TRUE index of matches_keys_vect, edit output to be equal to
+      // most_freq_string.
       for(int n = 0; n < keys_len; ++n) {
-        if (match_bool_keys[n]) {
+        if (matches_keys_vect[n]) {
           output[n] = most_freq_string;
         }
       }
@@ -101,71 +104,56 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
   CharacterVector vect_sub = vect[keys_in_clusters];
   CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
 
-  // For each element of clusters, get the number of unique values across both
-  // vect AND dict associated with that cluster. Idea is to skip the merging
-  // step for all elements of cluster for which each associated element of
-  // vect is already identical (or identical to an element of dict). In those
-  // spots it's pointless to perform merging.
-  IntegerVector csize(clust_len);
+  // Iterate over clusters, make mass edits to output.
   for(int i = 0; i < clust_len; ++i) {
-    CharacterVector curr_vect = vect[equality(keys_vect, clusters[i])];
-    CharacterVector curr_dict = dict[equality(keys_dict, clusters[i])];
-    csize[i] = unique(curr_vect).size() + unique(curr_dict).size();
-  }
+    String clust = clusters[i];
 
-  if(is_true(any(csize > 1))) {
-    clusters = clusters[csize > 1];
-    int clust_len = clusters.size();
+    // Get indices in which clust appears in keys_vect_sub.
+    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, clust);
 
-    // Perform merging on all clusters with length greater than one.
-    for(int i = 0; i < clust_len; ++i) {
+    // Subset vect_sub and dict by indices in matches_keys_vect_sub.
+    CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
+
+    // Subset dict by indices in which clust appears in keys_dict.
+    CharacterVector curr_dict = dict[equality(keys_dict, clust)];
+
+    // If the sum of unique values in curr_vect and unique values in curr_dict
+    // is greater than one, continue on with the current iteration.
+    if(unique(curr_vect).size() + unique(curr_dict).size() > 1) {
       // Establish variables.
-      String clust = clusters[i];
-      String match_string(1);
+      String most_freq_string(1);
       bool not_in_dict = true;
 
       // Look to see if clust exists in the dictionary. If so, use that value
       // as the edit value for all members of this cluster.
-      for(int n = 0; n < keys_dict_len; ++n) {
-        if(clust == keys_dict[n]) {
-          not_in_dict = false;
-          match_string = dict[n];
-          break;
+      int curr_dict_len = curr_dict.size();
+      if(curr_dict_len > 0) {
+        not_in_dict = false;
+        if(curr_dict_len == 1) {
+          most_freq_string = curr_dict[0];
+        } else {
+          most_freq_string = curr_dict[which_max(table(curr_dict))];
         }
       }
 
       // If no matching value was found in the dictionary, get the most freq
       // value within vect_sub related to this cluster.
       if (not_in_dict) {
-        match_string = most_freq(clust, keys_vect_sub, vect_sub);
+        most_freq_string = curr_vect[which_max(table(curr_vect))];
       }
-      LogicalVector match_bool_keys = equality(keys_vect, clust);
+
+      // Get indices in which clust appears in keys_vect.
+      LogicalVector matches_keys_vect = equality(keys_vect, clust);
+
+      // For each TRUE index of matches_keys_vect, edit output to be equal to
+      // most_freq_string.
       for(int n = 0; n < keys_vect_len; ++n) {
-        if(match_bool_keys[n]) {
-          output[n] = match_string;
+        if(matches_keys_vect[n]) {
+          output[n] = most_freq_string;
         }
       }
     }
   }
 
   return output;
-}
-
-
-// Given a cluster suitable for merging, find all instances within vect_sub
-// that coorspond with that cluster and get the most freqently occuring
-// value (this is basically using freq to choose the value from the original
-// data that will be used as the template for all elements of a single cluster).
-// eg, if we have a cluster value that correspond with these values from the
-// original data: c("Bob's Pizza", "bobs pizza", "Bob's Pizza"), then all those
-// values would be edited to be "Bob's Pizza", since its the most frequent.
-// [[Rcpp::export]]
-String most_freq(String clust,
-                 CharacterVector keys_sub,
-                 CharacterVector vect_sub) {
-  LogicalVector match_bool = equality(keys_sub, clust);
-  CharacterVector vect_sub_clust = vect_sub[match_bool];
-
-  int idx = which_max(table(vect_sub_clust));
-  return vect_sub_clust[idx];
 }
