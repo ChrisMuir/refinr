@@ -63,7 +63,7 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
     // continue on with the current iteration.
     if(unique(curr_vect).size() > 1){
 
-      // Get the string that appears most often in curr_Vect.
+      // Get the string that appears most often in curr_vect.
       String most_freq_string = curr_vect[which_max(table(curr_vect))];
 
       // Get indices in which clust appears in keys_vect.
