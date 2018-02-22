@@ -40,7 +40,8 @@ key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
   stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
 
   # If dict is not NULL, remove NA's and get unique values of dict.
-  if (!is.null(dict)) dict <- cpp_unique(dict[!is.na(dict)])
+  is_dict_null <- is.null(dict)
+  if (!is_dict_null) dict <- cpp_unique(dict[!is.na(dict)])
 
   # If ignore_strings is not NULL, make all values lower case then get uniques.
   if (!is.null(ignore_strings)) {
@@ -50,7 +51,7 @@ key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
   # Get vector of key values. If dict is not NULL, get vector of key values
   # for dict as well.
   keys_vect <- get_fingerprint_KC(vect, bus_suffix, ignore_strings)
-  if (!is.null(dict)) {
+  if (!is_dict_null) {
     keys_dict <- get_fingerprint_KC(dict, bus_suffix, ignore_strings)
   } else {
     keys_dict <- NA_character_

@@ -104,8 +104,9 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
 
   # If approx string matching is being used, then get ngram == 1 keys for all
   # records.
+  edit_threshold_missing <- is.na(edit_threshold)
   univect <- cpp_unique(vect[!is.na(vect)])
-  if (!is.na(edit_threshold)) {
+  if (!edit_threshold_missing) {
     one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix,
                                            ignore_strings)
   } else {
@@ -116,7 +117,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
                                        ignore_strings)
 
   ## Get clusters.
-  if (is.na(edit_threshold)) {
+  if (edit_threshold_missing) {
     # If approximate string matching is disabled (via param 'edit_threshold'),
     # then find all elements of n_gram_keys that have one or more identical
     # matches. From that list, create clusters of n_gram_keys (groups that all
@@ -125,7 +126,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     n_gram_keys_dups <- cpp_get_key_dups(n_gram_keys)
     # If no duplicated keys exist, return vect unedited.
     if (length(n_gram_keys_dups) == 0) return(vect)
-    clusters <- as.list(n_gram_keys_dups)
+    clusters <- as.list.default(n_gram_keys_dups)
   } else {
     # If approximate string matching is enabled, then find all elements of
     # n_gram_keys for which their associated one_gram_key has one or more
