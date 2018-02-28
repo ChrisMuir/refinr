@@ -9,7 +9,7 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
                                   CharacterVector keys_vect,
                                   CharacterVector dict,
                                   CharacterVector keys_dict) {
-  if(is_true(all(is_na(dict)))) {
+  if(CharacterVector::is_na(dict[0])) {
     // If dict is NA, get vector of all key values that have at least one
     // duplicate within keys (this creates clusters). Then for each cluster,
     // make mass edits to the values of vect related to that cluster.
@@ -37,7 +37,6 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
 CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
                                           CharacterVector vect,
                                           CharacterVector keys_vect) {
-  int clust_len = clusters.size();
   int keys_len = keys_vect.size();
   CharacterVector output = clone(vect);
 
@@ -50,11 +49,11 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
   CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
 
   // Iterate over clusters, make mass edits to output.
-  for(int i = 0; i < clust_len; ++i) {
-    String clust = clusters[i];
-
+  CharacterVector::iterator clust_end = clusters.end();
+  CharacterVector::iterator iter;
+  for(iter = clusters.begin(); iter != clust_end; ++iter) {
     // Get indices in which clust appears in keys_vect_sub.
-    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, clust);
+    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, *iter);
 
     // Subset vect_sub by indices in matches_keys_vect_sub.
     CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
@@ -67,7 +66,7 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
       String most_freq_string = curr_vect[which_max(table(curr_vect))];
 
       // Get indices in which clust appears in keys_vect.
-      LogicalVector matches_keys_vect = equality(keys_vect, clust);
+      LogicalVector matches_keys_vect = equality(keys_vect, *iter);
 
       // For each TRUE index of matches_keys_vect, edit output to be equal to
       // most_freq_string.
@@ -91,9 +90,7 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
                                        CharacterVector keys_vect,
                                        CharacterVector dict,
                                        CharacterVector keys_dict) {
-  int clust_len = clusters.size();
   int keys_vect_len = keys_vect.size();
-  int keys_dict_len = keys_dict.size();
   CharacterVector output = clone(vect);
 
   // Get Logical vector indicating which keys appear in the clusters vector.
@@ -105,17 +102,17 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
   CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
 
   // Iterate over clusters, make mass edits to output.
-  for(int i = 0; i < clust_len; ++i) {
-    String clust = clusters[i];
-
+  CharacterVector::iterator clust_end = clusters.end();
+  CharacterVector::iterator iter;
+  for(iter = clusters.begin(); iter != clust_end; ++iter) {
     // Get indices in which clust appears in keys_vect_sub.
-    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, clust);
+    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, *iter);
 
     // Subset vect_sub and dict by indices in matches_keys_vect_sub.
     CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
 
     // Subset dict by indices in which clust appears in keys_dict.
-    CharacterVector curr_dict = dict[equality(keys_dict, clust)];
+    CharacterVector curr_dict = dict[equality(keys_dict, *iter)];
 
     // If the sum of unique values in curr_vect and unique values in curr_dict
     // is greater than one, continue on with the current iteration.
@@ -143,7 +140,7 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
       }
 
       // Get indices in which clust appears in keys_vect.
-      LogicalVector matches_keys_vect = equality(keys_vect, clust);
+      LogicalVector matches_keys_vect = equality(keys_vect, *iter);
 
       // For each TRUE index of matches_keys_vect, edit output to be equal to
       // most_freq_string.

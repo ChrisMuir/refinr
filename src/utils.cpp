@@ -24,10 +24,13 @@ List cpp_flatten_list(List list_obj) {
   List out(out_len);
 
   int counter = 0;
-  for(int i = 0; i < input_len; ++i) {
-    List curr_list = list_obj[i];
-    for(int n = 0; n < curr_list.size(); ++n) {
-      out[counter] = curr_list[n];
+  List::iterator list_obj_end = list_obj.end();
+  List::iterator input_iter;
+  for(input_iter = list_obj.begin(); input_iter != list_obj_end; ++input_iter) {
+    List curr_list = *input_iter;
+    List::iterator curr_list_iter;
+    for(curr_list_iter = curr_list.begin(); curr_list_iter != curr_list.end(); ++curr_list_iter) {
+      out[counter] = *curr_list_iter;
       counter += 1;
     }
   }
@@ -89,8 +92,10 @@ LogicalVector cpp_in(CharacterVector x, CharacterVector table) {
   // Else if length of table is less than 4, use a loop.
   if(table_len < 4) {
     LogicalVector out(x.size());
-    for(int n = 0; n < table_len; ++n) {
-      LogicalVector matches = equality(x, table[n]);
+    CharacterVector::iterator table_end = table.end();
+    CharacterVector::iterator iter;
+    for(iter = table.begin(); iter != table_end; ++iter) {
+      LogicalVector matches = equality(x, *iter);
       out = out | matches;
     }
     return out;
