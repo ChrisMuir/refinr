@@ -26,7 +26,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   vect <- cpp_list_unique(vect, sort_vals = TRUE)
   vect <- vapply(vect, paste, character(1), collapse = " ")
   vect <- iconv(vect, to = "ASCII//TRANSLIT")
-  vect[vect == ""] <- NA_character_
+  vect[!nzchar(vect)] <- NA_character_
   return(vect)
 }
 
