@@ -22,8 +22,8 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
     // Then for each cluster, make mass edits to the values of vect related to
     // that cluster.
     CharacterVector both_keys(keys_vect.size() + keys_dict.size());
-    int i=0;
-    for( ; i < keys_vect.size(); i++) both_keys[i] = keys_vect[i] ;
+    int i = 0;
+    for( ; i < keys_vect.size(); i++) both_keys[i] = keys_vect[i];
     for(int j = 0; j < keys_dict.size(); i++, j++) both_keys[i] = keys_dict[j];
     CharacterVector clusters = cpp_get_key_dups(both_keys);
     return merge_KC_clusters_dict(clusters, vect, keys_vect, dict, keys_dict);

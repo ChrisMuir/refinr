@@ -61,8 +61,8 @@ remove_strings <- function(input, removes) {
     .Call('_refinr_remove_strings', PACKAGE = 'refinr', input, removes)
 }
 
-equality <- function(lookupvect, charstring) {
-    .Call('_refinr_equality', PACKAGE = 'refinr', lookupvect, charstring)
+equality <- function(table, x) {
+    .Call('_refinr_equality', PACKAGE = 'refinr', table, x)
 }
 
 cpp_unique <- function(vect) {

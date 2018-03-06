@@ -8,15 +8,16 @@ CharacterVector merge_ngram_clusters(List clusters,
                                      CharacterVector n_gram_keys,
                                      CharacterVector univect,
                                      CharacterVector vect) {
-  int clusters_len = clusters.size();
   int vect_len = vect.size();
   CharacterVector output = clone(vect);
 
-  for(int i = 0; i < clusters_len; ++i) {
-    CharacterVector curr_clust = clusters[i];
+  List::iterator clust_end = clusters.end();
+  List::iterator iter;
+  int i = 0;
 
+  for(iter = clusters.begin(); iter != clust_end; ++iter) {
     // Subset univect by elements of n_gram_keys that appear in curr_clust.
-    CharacterVector univect_sub = univect[cpp_in(n_gram_keys, curr_clust)];
+    CharacterVector univect_sub = univect[cpp_in(n_gram_keys, *iter)];
 
     // Get indices of elements of vect that are found in univect_sub.
     LogicalVector vect_idx = cpp_in(vect, univect_sub);
@@ -34,7 +35,9 @@ CharacterVector merge_ngram_clusters(List clusters,
         output[n] = most_freq_string;
       }
     }
+    i++;
   }
+
   return output;
 }
 
@@ -48,8 +51,7 @@ CharacterVector merge_ngram_clusters(List clusters,
 List get_ngram_initial_clusters(CharacterVector ngram_keys,
                                 CharacterVector unigram_keys) {
   CharacterVector unigram_dups = cpp_get_key_dups(unigram_keys);
-  int dups_len = unigram_dups.size();
-  List out(dups_len);
+  List out(unigram_dups.size());
 
   // Remove indices from ngram_keys and unigram_keys in which ngram_keys are
   // NA.
@@ -63,11 +65,15 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   ngram_keys = ngram_keys[keys_in_dups];
   unigram_keys = unigram_keys[keys_in_dups];
 
-  for(int i = 0; i < dups_len; ++i) {
-    CharacterVector clust = ngram_keys[equality(unigram_keys,
-                                                unigram_dups[i])];
-    out[i] = clust;
+  CharacterVector::iterator dups_end = unigram_dups.end();
+  CharacterVector::iterator iter;
+  int i = 0;
+
+  for(iter = unigram_dups.begin(); iter != dups_end; ++iter) {
+    out[i] = ngram_keys[equality(unigram_keys, *iter)];
+    i++;
   }
+
   return out;
 }
 
@@ -232,6 +238,7 @@ List char_ngram(List vects, int numgram) {
     }
     out[i] = curr_out;
   }
+
   return(out);
 }
 

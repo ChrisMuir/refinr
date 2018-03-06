@@ -192,14 +192,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // equality
-LogicalVector equality(CharacterVector lookupvect, String charstring);
-RcppExport SEXP _refinr_equality(SEXP lookupvectSEXP, SEXP charstringSEXP) {
+LogicalVector equality(CharacterVector table, String x);
+RcppExport SEXP _refinr_equality(SEXP tableSEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type lookupvect(lookupvectSEXP);
-    Rcpp::traits::input_parameter< String >::type charstring(charstringSEXP);
-    rcpp_result_gen = Rcpp::wrap(equality(lookupvect, charstring));
+    Rcpp::traits::input_parameter< CharacterVector >::type table(tableSEXP);
+    Rcpp::traits::input_parameter< String >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(equality(table, x));
     return rcpp_result_gen;
 END_RCPP
 }

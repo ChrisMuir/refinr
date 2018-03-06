@@ -10,30 +10,33 @@ using namespace Rcpp;
 // element in the return list.
 // [[Rcpp::export]]
 List cpp_flatten_list(List list_obj) {
-  int input_len = list_obj.size();
-
   // Get the size of the output list by getting the sum of the lengths of each
   // element of the input list.
+  List::iterator list_obj_begin = list_obj.begin();
+  List::iterator list_obj_end = list_obj.end();
+  List::iterator count_iter;
+  int i = 0;
   int out_len = 0;
-  for(int i = 0; i < input_len; ++i) {
-    List curr_list = list_obj[i];
+  for(count_iter = list_obj_begin; count_iter != list_obj_end; ++count_iter) {
+    List curr_list = *count_iter;
     out_len += curr_list.size();
+    i++;
   }
 
   // Initialize output list.
   List out(out_len);
 
-  int counter = 0;
-  List::iterator list_obj_end = list_obj.end();
-  List::iterator input_iter;
-  for(input_iter = list_obj.begin(); input_iter != list_obj_end; ++input_iter) {
-    List curr_list = *input_iter;
+  List::iterator iter;
+  int n = 0;
+  for(iter = list_obj.begin(); iter != list_obj_end; ++iter) {
+    List curr_list = *iter;
     List::iterator curr_list_iter;
     for(curr_list_iter = curr_list.begin(); curr_list_iter != curr_list.end(); ++curr_list_iter) {
-      out[counter] = *curr_list_iter;
-      counter += 1;
+      out[n] = *curr_list_iter;
+      n++;
     }
   }
+
   return out;
 }
 
@@ -43,16 +46,19 @@ List cpp_flatten_list(List list_obj) {
 // equivelant to R func paste(char_vect, collapse = "").
 // [[Rcpp::export]]
 CharacterVector cpp_paste_collapse_list(List input) {
-  int input_len = input.size();
-  CharacterVector output(input_len);
-
-  for(int i = 0; i < input_len; ++i) {
-    CharacterVector curr_vect = input[i];
+  //int input_len = input.size();
+  CharacterVector output(input.size());
+  List::iterator input_end = input.end();
+  List::iterator iter;
+  int i = 0;
+  for(iter = input.begin(); iter != input_end; ++iter) {
+    CharacterVector curr_vect = *iter;
     if(is_false(all(is_na(curr_vect)))) {
       output[i] = collapse(curr_vect);
     } else {
       output[i] = NA_STRING;
     }
+    i++;
   }
 
   return output;
@@ -112,20 +118,25 @@ LogicalVector cpp_in(CharacterVector x, CharacterVector table) {
 // containing the unique values of each vector.
 // [[Rcpp::export]]
 List cpp_list_unique(List input, bool sort_vals) {
-  int input_len = input.size();
-  List out(input_len);
+  List out(input.size());
+  List::iterator input_end = input.end();
+  List::iterator iter;
+  int i = 0;
 
   if(sort_vals) {
-    for(int i = 0; i < input_len; ++i) {
-      CharacterVector curr_vect = input[i];
+    for(iter = input.begin(); iter != input_end; ++iter) {
+      CharacterVector curr_vect = *iter;
       out[i] = unique(curr_vect).sort();
+      i++;
     }
   } else {
-    for(int i = 0; i < input_len; ++i) {
-      CharacterVector curr_vect = input[i];
+    for(iter = input.begin(); iter != input_end; ++iter) {
+      CharacterVector curr_vect = *iter;
       out[i] = unique(curr_vect);
+      i++;
     }
   }
+
   return out;
 }
 
@@ -134,13 +145,17 @@ List cpp_list_unique(List input, bool sort_vals) {
 // appear in input vector "removes".
 // [[Rcpp::export]]
 List remove_strings(List input, CharacterVector removes) {
-  int input_len = input.size();
-  List out(input_len);
+  List out(input.size());
+  List::iterator input_end = input.end();
+  List::iterator iter;
+  int i = 0;
 
-  for(int i = 0; i < input_len; ++i) {
-    CharacterVector curr_vect = input[i];
+  for(iter = input.begin(); iter != input_end; ++iter) {
+    CharacterVector curr_vect = *iter;
     out[i] = curr_vect[!cpp_in(curr_vect, removes)];
+    i++;
   }
+
   return out;
 }
 
@@ -151,13 +166,17 @@ List remove_strings(List input, CharacterVector removes) {
 // with length equal to the input char vector. This is equivalent to R code
 // "vector == string".
 // [[Rcpp::export]]
-LogicalVector equality(CharacterVector lookupvect, String charstring) {
-  int vect_length = lookupvect.size();
-  LogicalVector out(vect_length);
+LogicalVector equality(CharacterVector table, String x) {
+  LogicalVector out(table.size());
+  CharacterVector::iterator table_end = table.end();
+  CharacterVector::iterator iter;
+  int i = 0;
 
-  for(int i = 0; i < vect_length; ++i) {
-    out[i] = charstring == lookupvect[i];
+  for(iter = table.begin(); iter != table_end; ++iter) {
+    out[i] = *iter == x;
+    i++;
   }
+
   return out;
 }
 
