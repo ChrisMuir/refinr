@@ -110,6 +110,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// most_freq_str
+String most_freq_str(CharacterVector x);
+RcppExport SEXP _refinr_most_freq_str(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(most_freq_str(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_flatten_list
 List cpp_flatten_list(List list_obj);
 RcppExport SEXP _refinr_cpp_flatten_list(SEXP list_objSEXP) {
@@ -235,6 +246,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},
     {"_refinr_char_ngram", (DL_FUNC) &_refinr_char_ngram, 2},
     {"_refinr_cpp_get_char_ngrams", (DL_FUNC) &_refinr_cpp_get_char_ngrams, 2},
+    {"_refinr_most_freq_str", (DL_FUNC) &_refinr_most_freq_str, 1},
     {"_refinr_cpp_flatten_list", (DL_FUNC) &_refinr_cpp_flatten_list, 1},
     {"_refinr_cpp_paste_collapse_list", (DL_FUNC) &_refinr_cpp_paste_collapse_list, 1},
     {"_refinr_complete_intersect", (DL_FUNC) &_refinr_complete_intersect, 2},

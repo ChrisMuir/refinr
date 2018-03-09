@@ -28,7 +28,7 @@ vect <- c("Bakersfield Highschool", "BAKERSFIELD high",
 vect_ng <- n_gram_merge(vect, ignore_strings = c("high", "school",
                                                  "highschool"))
 test_that("param 'ignore_strings' having expected effect", {
-  expect_equal(unique(vect_ng), vect[1])
+  expect_equal(length(unique(vect_ng)), 1)
 })
 
 test_that("no errors when input includes len 1 str, len 0 str, NA's", {

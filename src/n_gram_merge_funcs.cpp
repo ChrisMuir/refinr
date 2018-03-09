@@ -25,9 +25,7 @@ CharacterVector merge_ngram_clusters(List clusters,
     // Find the string that appears most frequently in vector vect[vect_idx],
     // as obj "most_freq_string". Edit all elements of vect[vect_idx] to be
     // equal to string "most_freq_string".
-    CharacterVector vect_sub = vect[vect_idx];
-    int idx = which_max(table(vect_sub));
-    String most_freq_string = vect_sub[idx];
+    String most_freq_string = most_freq_str(vect[vect_idx]);
 
     // Make mass edits to vect.
     for(int n = 0; n < vect_len; ++n) {

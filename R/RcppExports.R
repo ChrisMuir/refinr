@@ -33,6 +33,10 @@ cpp_get_char_ngrams <- function(vects, numgram) {
     .Call('_refinr_cpp_get_char_ngrams', PACKAGE = 'refinr', vects, numgram)
 }
 
+most_freq_str <- function(x) {
+    .Call('_refinr_most_freq_str', PACKAGE = 'refinr', x)
+}
+
 cpp_flatten_list <- function(list_obj) {
     .Call('_refinr_cpp_flatten_list', PACKAGE = 'refinr', list_obj)
 }

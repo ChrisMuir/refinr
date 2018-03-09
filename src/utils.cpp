@@ -6,6 +6,16 @@ using namespace Rcpp;
 // within c++ functions, some are used in both.
 
 
+// Given a CharacterVector, return the string that appears most frequently.
+// Ties are determined by the string that appears first alphabetically.
+// [[Rcpp::export]]
+String most_freq_str(CharacterVector x) {
+  IntegerVector x_tab = table(x);
+  CharacterVector tab_names = x_tab.attr("names");
+  return(tab_names[which_max(x_tab)]);
+}
+
+
 // Flatten a nested list such that each character vector occupies its own
 // element in the return list.
 // [[Rcpp::export]]

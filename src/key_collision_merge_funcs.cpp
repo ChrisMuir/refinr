@@ -60,10 +60,10 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
 
     // If the number of unique values in curr_vect is greater than one,
     // continue on with the current iteration.
-    if(unique(curr_vect).size() > 1){
+    if(unique(curr_vect).size() > 1) {
 
       // Get the string that appears most often in curr_vect.
-      String most_freq_string = curr_vect[which_max(table(curr_vect))];
+      String most_freq_string = most_freq_str(curr_vect);
 
       // Get indices in which clust appears in keys_vect.
       LogicalVector matches_keys_vect = equality(keys_vect, *iter);
@@ -129,14 +129,14 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
         if(curr_dict_len == 1) {
           most_freq_string = curr_dict[0];
         } else {
-          most_freq_string = curr_dict[which_max(table(curr_dict))];
+          most_freq_string = most_freq_str(curr_dict);
         }
       }
 
       // If no matching value was found in the dictionary, get the most freq
       // value within vect_sub related to this cluster.
       if (not_in_dict) {
-        most_freq_string = curr_vect[which_max(table(curr_vect))];
+        most_freq_string = most_freq_str(curr_vect);
       }
 
       // Get indices in which clust appears in keys_vect.
