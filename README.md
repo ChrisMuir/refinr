@@ -11,6 +11,8 @@ refinr is designed to cluster and merge similar values within a character vector
 
 In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process.
 
+Please [report](https://github.com/ChrisMuir/refinr/issues) issues, comments, or feature requests.
+
 Installation
 ------------
 
@@ -26,10 +28,6 @@ Or install the dev version from this repo:
 # install.packages("devtools")
 devtools::install_github("ChrisMuir/refinr")
 ```
-
-Software Requirements
----------------------
-Installing this package directly from GitHub requires a C++ compiler. See [here](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) for an explaination of how to meet this requirement for Windows, Mac and Linux.
 
 Example Usage
 -------------
