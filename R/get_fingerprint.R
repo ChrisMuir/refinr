@@ -24,7 +24,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   if (!is.null(ignore_strings)) vect <- remove_strings(vect, ignore_strings)
   # Final transformations, then return object "out".
   vect <- cpp_list_unique(vect, sort_vals = TRUE)
-  vect <- cpp_paste_list(vect, collapse = " ")
+  vect <- cpp_paste_list(vect, collapse_str = " ")
   vect <- iconv(vect, to = "ASCII//TRANSLIT")
   vect[!nzchar(vect)] <- NA_character_
   return(vect)

@@ -133,25 +133,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_paste_list
-CharacterVector cpp_paste_list(List input, std::string collapse);
-RcppExport SEXP _refinr_cpp_paste_list(SEXP inputSEXP, SEXP collapseSEXP) {
+CharacterVector cpp_paste_list(List input, std::string collapse_str);
+RcppExport SEXP _refinr_cpp_paste_list(SEXP inputSEXP, SEXP collapse_strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< std::string >::type collapse(collapseSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_paste_list(input, collapse));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cpp_paste_collapse_list
-CharacterVector cpp_paste_collapse_list(List input);
-RcppExport SEXP _refinr_cpp_paste_collapse_list(SEXP inputSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_paste_collapse_list(input));
+    Rcpp::traits::input_parameter< std::string >::type collapse_str(collapse_strSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_paste_list(input, collapse_str));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -261,7 +250,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_most_freq_str", (DL_FUNC) &_refinr_most_freq_str, 1},
     {"_refinr_cpp_flatten_list", (DL_FUNC) &_refinr_cpp_flatten_list, 1},
     {"_refinr_cpp_paste_list", (DL_FUNC) &_refinr_cpp_paste_list, 2},
-    {"_refinr_cpp_paste_collapse_list", (DL_FUNC) &_refinr_cpp_paste_collapse_list, 1},
     {"_refinr_complete_intersect", (DL_FUNC) &_refinr_complete_intersect, 2},
     {"_refinr_cpp_get_key_dups", (DL_FUNC) &_refinr_cpp_get_key_dups, 1},
     {"_refinr_cpp_in", (DL_FUNC) &_refinr_cpp_in, 2},

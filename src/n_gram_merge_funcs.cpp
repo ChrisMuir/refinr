@@ -260,7 +260,7 @@ CharacterVector cpp_get_char_ngrams(List vects, int numgram) {
   // For each element of vects, combine all ngram strings into a single string,
   // equivelant to calling r func paste(char_vect, collapse = "") on each
   // element of vects.
-  CharacterVector out = cpp_paste_collapse_list(vects_mod);
+  CharacterVector out = cpp_paste_list(vects_mod, "");
 
   return(out);
 }

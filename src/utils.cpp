@@ -56,7 +56,7 @@ List cpp_flatten_list(List list_obj) {
 // functions being applied to each element of the list are equivelant to
 // R func paste(char_vect, collapse = collapse).
 // [[Rcpp::export]]
-CharacterVector cpp_paste_list(List input, std::string collapse) {
+CharacterVector cpp_paste_list(List input, std::string collapse_str) {
   CharacterVector output(input.size());
   List::iterator input_end = input.end();
   List::iterator iter;
@@ -72,7 +72,7 @@ CharacterVector cpp_paste_list(List input, std::string collapse) {
       }
       std::string curr_out = as<std::string>(curr_vect[0]);
       for(int n = 1; n < curr_vect_len; ++n) {
-        curr_out += collapse;
+        curr_out += collapse_str;
         curr_out += curr_vect[n];
       }
       output[i] = curr_out;
@@ -83,29 +83,6 @@ CharacterVector cpp_paste_list(List input, std::string collapse) {
   }
 
   return(output);
-}
-
-
-// Input a list of character vectors, for each char vect apply func "collapse"
-// and append to a char vector output object. Rcpp sugar func "collapse" is
-// equivelant to R func paste(char_vect, collapse = "").
-// [[Rcpp::export]]
-CharacterVector cpp_paste_collapse_list(List input) {
-  CharacterVector output(input.size());
-  List::iterator input_end = input.end();
-  List::iterator iter;
-  int i = 0;
-  for(iter = input.begin(); iter != input_end; ++iter) {
-    CharacterVector curr_vect = *iter;
-    if(is_false(all(is_na(curr_vect)))) {
-      output[i] = collapse(curr_vect);
-    } else {
-      output[i] = NA_STRING;
-    }
-    i++;
-  }
-
-  return output;
 }
 
 
