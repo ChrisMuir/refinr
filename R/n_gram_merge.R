@@ -17,10 +17,10 @@
 #'   be insensitive to common business suffixes or not. Default value is TRUE.
 #' @param edit_threshold Numeric value, indicating the threshold at which a
 #'   merge is performed, based on the sum of the edit values derived from
-#'   param \code{edit_dist_weights}. Default value is 1. If this parameter is
+#'   param \code{weight}. Default value is 1. If this parameter is
 #'   set to 0 or NA, then no approximate string matching will be done, and all
 #'   merging will be based on strings that have identical ngram fingerprints.
-#' @param edit_dist_weights Numeric vector, indicating the weights to assign to
+#' @param weight Numeric vector, indicating the weights to assign to
 #'   the four edit operations (see details below), for the purpose of
 #'   approximate string matching. Default values are
 #'   c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
@@ -28,7 +28,7 @@
 #'   a numeric vector of length four, or NA.
 #' @param ... additional args to be passed along to \code{\link{stringdist}}.
 #'
-#' @details Parameter \code{edit_dist_weights} are edit distance values that
+#' @details The values of arg \code{weight} are edit distance values that
 #'  get passed to the \code{\link{stringdist}} edit distance function. The
 #'  param takes four arguments, each one is a specific type of edit, with
 #'  default penalty value.
@@ -48,9 +48,9 @@
 #' n_gram_merge(vect = x)
 #'
 #' # The performance of the approximate string matching can be ajusted using
-#' # parameters 'edit_dist_weights' or 'edit_threshold'
+#' # parameters 'weight' or 'edit_threshold'
 #' n_gram_merge(vect = x,
-#'              edit_dist_weights = c(d = 0.4, i = 1, s = 1, t = 1))
+#'              weight = c(d = 0.4, i = 1, s = 1, t = 1))
 #'
 #' # Use parameter 'ignore_strings' to ignore specific strings during merging
 #' # of values.
@@ -60,26 +60,24 @@
 #'
 n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
                          bus_suffix = TRUE, edit_threshold = 1,
-                         edit_dist_weights = c(d = 0.33, i = 0.33, s = 1,
-                                               t = 0.5), ...) {
+                         weight = c(d = 0.33, i = 0.33, s = 1, t = 0.5), ...) {
   # Input validation.
   stopifnot(is.character(vect))
   stopifnot(is.numeric(numgram))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
   stopifnot(is.logical(bus_suffix))
   stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
-  if (!is.na(edit_dist_weights) && !is.numeric(edit_dist_weights) &&
-      length(edit_dist_weights) != 4) {
-    stop("param 'edit_dist_weights' must be either a numeric vector with ",
+  if (!is.na(weight) && !is.numeric(weight) && length(weight) != 4) {
+    stop("param 'weight' must be either a numeric vector with ",
          "length four, or NA", call. = FALSE)
   }
   if ((!is.na(edit_threshold) && edit_threshold == 0) ||
       numgram == 1) {
     edit_threshold <- NA
   }
-  if (!is.na(edit_threshold) && is.na(edit_dist_weights)) {
-    stop("param 'edit_dist_weights' must not be NA if 'edit_threshold' ",
-         "is not NA", call. = FALSE)
+  if (!is.na(edit_threshold) && is.na(weight)) {
+    stop("param 'weight' must not be NA if 'edit_threshold'is not NA",
+         call. = FALSE)
   }
 
   # If any args were passed via ellipsis, check to make sure they are valid
@@ -88,10 +86,6 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   if (any(c("a", "b") %in% ellip_args)) {
     stop("'stringdistmatrix' args 'a' and 'b' cannot be set manually",
          call. = FALSE)
-  }
-  if ("weight" %in% ellip_args) {
-    stop("please use arg 'edit_dist_weight' in place of stringdistmatrix ",
-         "arg 'weight'", call. = FALSE)
   }
   sd_args <- get("sd_args", envir = refinr_env)
   if (!all(ellip_args %in% sd_args)) {
@@ -140,7 +134,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     # Create a stringdistmatrix for every element of initial_clust.
     distmatrices <- lapply(initial_clust, function(x) {
       x <- as.matrix(
-        stringdist::stringdistmatrix(x, weight = edit_dist_weights, ...)
+        stringdist::stringdistmatrix(x, weight = weight, ...)
       )
       dimnames(x) <- NULL
       x

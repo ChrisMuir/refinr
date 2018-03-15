@@ -15,7 +15,7 @@ test_that("output lengths are correct", {
   expect_equal(length(unique(n_gram_merge(vect, bus_suffix = FALSE))),
                length(vect))
   vect_ng <- n_gram_merge(
-    vect, edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1))
+    vect, weight = c(d = 1, i = 1, s = 0.1, t = 0.1))
   expect_equal(length(unique(vect_ng)), 4)
 })
 

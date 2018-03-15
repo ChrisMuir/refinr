@@ -33,6 +33,9 @@ Installing this package directly from GitHub requires a C++ compiler. See [here]
 
 Example Usage
 -------------
+```r
+library(refinr)
+```
 
 ```r
 x <- c("Acme Pizza, Inc.", "Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
@@ -50,12 +53,12 @@ key_collision_merge(x, dict = c("Nicks Pizza", "acme PIZZA inc"))
 Function `n_gram_merge` can be used to merge similar values that contain slight spelling differences.
 ```r
 x <- c("Acmme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
-n_gram_merge(x, edit_dist_weights = c(d = 0.2, i = 0.2, s = 1, t = 1))
+n_gram_merge(x, weight = c(d = 0.2, i = 0.2, s = 1, t = 1))
 #> [1] "ACME PIZA COMPANY" "ACME PIZA COMPANY" "ACME PIZA COMPANY"
 
 # The performance of the approximate string matching can be ajusted using parameters 
-# edit_dist_weights and/or edit_threshold.
-n_gram_merge(x, edit_dist_weights = c(d = 1, i = 1, s = 0.1, t = 0.1))
+# "weight" and/or "edit_threshold".
+n_gram_merge(x, weight = c(d = 1, i = 1, s = 0.1, t = 0.1))
 #> [1] "Acme Pizzazza LLC" "ACME PIZA COMPANY" "Acme Pizzazza LLC"
 ```
 

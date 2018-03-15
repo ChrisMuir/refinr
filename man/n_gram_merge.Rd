@@ -5,8 +5,7 @@
 \title{Value merging based on ngram fingerprints}
 \usage{
 n_gram_merge(vect, numgram = 2, ignore_strings = NULL, bus_suffix = TRUE,
-  edit_threshold = 1, edit_dist_weights = c(d = 0.33, i = 0.33, s = 1, t =
-  0.5), ...)
+  edit_threshold = 1, weight = c(d = 0.33, i = 0.33, s = 1, t = 0.5), ...)
 }
 \arguments{
 \item{vect}{Character vector, items to be potentially clustered and merged.}
@@ -22,11 +21,11 @@ be insensitive to common business suffixes or not. Default value is TRUE.}
 
 \item{edit_threshold}{Numeric value, indicating the threshold at which a
 merge is performed, based on the sum of the edit values derived from
-param \code{edit_dist_weights}. Default value is 1. If this parameter is
+param \code{weight}. Default value is 1. If this parameter is
 set to 0 or NA, then no approximate string matching will be done, and all
 merging will be based on strings that have identical ngram fingerprints.}
 
-\item{edit_dist_weights}{Numeric vector, indicating the weights to assign to
+\item{weight}{Numeric vector, indicating the weights to assign to
 the four edit operations (see details below), for the purpose of
 approximate string matching. Default values are
 c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
@@ -48,7 +47,7 @@ the ngram fingerprints, using the \code{stringdistmatrix} function from the
 package \code{\link{stringdist}}.
 }
 \details{
-Parameter \code{edit_dist_weights} are edit distance values that
+The values of arg \code{weight} are edit distance values that
  get passed to the \code{\link{stringdist}} edit distance function. The
  param takes four arguments, each one is a specific type of edit, with
  default penalty value.
@@ -65,9 +64,9 @@ x <- c("Acme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
 n_gram_merge(vect = x)
 
 # The performance of the approximate string matching can be ajusted using
-# parameters 'edit_dist_weights' or 'edit_threshold'
+# parameters 'weight' or 'edit_threshold'
 n_gram_merge(vect = x,
-             edit_dist_weights = c(d = 0.4, i = 1, s = 1, t = 1))
+             weight = c(d = 0.4, i = 1, s = 1, t = 1))
 
 # Use parameter 'ignore_strings' to ignore specific strings during merging
 # of values.

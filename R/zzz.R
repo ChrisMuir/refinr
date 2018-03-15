@@ -11,5 +11,5 @@
 # and changes their func args.
 refinr_env <- new.env()
 sd_args <- names(formals(stringdist::stringdistmatrix))
-sd_args <- sd_args[!sd_args %in% c("a", "b", "weight")]
+sd_args <- sd_args[!sd_args %in% c("a", "b")]
 assign("sd_args", sd_args, envir = refinr_env)
