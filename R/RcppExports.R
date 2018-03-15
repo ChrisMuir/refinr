@@ -41,6 +41,10 @@ cpp_flatten_list <- function(list_obj) {
     .Call('_refinr_cpp_flatten_list', PACKAGE = 'refinr', list_obj)
 }
 
+cpp_paste_list <- function(input, collapse) {
+    .Call('_refinr_cpp_paste_list', PACKAGE = 'refinr', input, collapse)
+}
+
 cpp_paste_collapse_list <- function(input) {
     .Call('_refinr_cpp_paste_collapse_list', PACKAGE = 'refinr', input)
 }
