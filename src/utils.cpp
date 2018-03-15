@@ -56,7 +56,6 @@ List cpp_flatten_list(List list_obj) {
 // equivelant to R func paste(char_vect, collapse = "").
 // [[Rcpp::export]]
 CharacterVector cpp_paste_collapse_list(List input) {
-  //int input_len = input.size();
   CharacterVector output(input.size());
   List::iterator input_end = input.end();
   List::iterator iter;
