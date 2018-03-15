@@ -52,8 +52,9 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
   CharacterVector::iterator clust_end = clusters.end();
   CharacterVector::iterator iter;
   for(iter = clusters.begin(); iter != clust_end; ++iter) {
+    String curr_clust = *iter;
     // Get indices in which clust appears in keys_vect_sub.
-    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, *iter);
+    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, curr_clust);
 
     // Subset vect_sub by indices in matches_keys_vect_sub.
     CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
@@ -66,7 +67,7 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
       String most_freq_string = most_freq_str(curr_vect);
 
       // Get indices in which clust appears in keys_vect.
-      LogicalVector matches_keys_vect = equality(keys_vect, *iter);
+      LogicalVector matches_keys_vect = equality(keys_vect, curr_clust);
 
       // For each TRUE index of matches_keys_vect, edit output to be equal to
       // most_freq_string.
@@ -105,14 +106,15 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
   CharacterVector::iterator clust_end = clusters.end();
   CharacterVector::iterator iter;
   for(iter = clusters.begin(); iter != clust_end; ++iter) {
+    String curr_clust = *iter;
     // Get indices in which clust appears in keys_vect_sub.
-    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, *iter);
+    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, curr_clust);
 
     // Subset vect_sub and dict by indices in matches_keys_vect_sub.
     CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
 
     // Subset dict by indices in which clust appears in keys_dict.
-    CharacterVector curr_dict = dict[equality(keys_dict, *iter)];
+    CharacterVector curr_dict = dict[equality(keys_dict, curr_clust)];
 
     // If the sum of unique values in curr_vect and unique values in curr_dict
     // is greater than one, continue on with the current iteration.
@@ -140,7 +142,7 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
       }
 
       // Get indices in which clust appears in keys_vect.
-      LogicalVector matches_keys_vect = equality(keys_vect, *iter);
+      LogicalVector matches_keys_vect = equality(keys_vect, curr_clust);
 
       // For each TRUE index of matches_keys_vect, edit output to be equal to
       // most_freq_string.
