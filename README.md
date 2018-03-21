@@ -64,7 +64,7 @@ Both `key_collision_merge` and `n_gram_merge` have optional arg `ignore_strings`
 ```r
 x <- c("Bakersfield Highschool", "BAKERSFIELD high", "high school, bakersfield")
 key_collision_merge(x, ignore_strings = c("high", "school", "highschool"))
-#> [1] "Bakersfield Highschool" "Bakersfield Highschool" "Bakersfield Highschool"
+#> [1] "BAKERSFIELD high" "BAKERSFIELD high" "BAKERSFIELD high"
 ```
 
 The clustering is designed to be insensitive to common business name suffixes, i.e. "inc", "llc", "co", etc. This feature can be turned on/off using function parameter `bus_suffix`.
