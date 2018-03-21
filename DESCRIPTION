@@ -10,7 +10,7 @@ LazyData: true
 Imports:
         Rcpp, 
         stringdist
-RoxygenNote: 6.0.1
+RoxygenNote: 6.0.1.9000
 LinkingTo: Rcpp
 URL: https://github.com/ChrisMuir/refinr
 BugReports: https://github.com/ChrisMuir/refinr/issues
