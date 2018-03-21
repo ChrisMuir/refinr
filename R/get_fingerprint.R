@@ -3,9 +3,9 @@
 #' @noRd
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
-  vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
+  vect <- gsub("[[:punct:]]", " ", tolower(vect), perl = TRUE)
   if (bus_suffix) {
-    vect <- business_suffix(tolower(vect))
+    vect <- business_suffix(vect)
     if (!is.null(ignore_strings)) {
       ignore_strings <- c(ignore_strings,
                           c("inc", "corp", "co", "llc", "ltd", "div", "ent",
@@ -14,8 +14,6 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
       ignore_strings <- c("inc", "corp", "co", "llc", "ltd", "div", "ent",
                           "lp")
     }
-  } else {
-    vect <- tolower(vect)
   }
   vect <- strsplit(cpp_trimws_left(vect), "\\s+", perl = TRUE)
   # If "ignore_strings" is not NULL, for each element of list "vect", remove
@@ -34,9 +32,10 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
 #'@noRd
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
-  vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
+  vect <- gsub("[[:punct:]]", " ", tolower(vect), perl = TRUE)
   # Compile variable ignore_strings.
   if (bus_suffix) {
+    vect <- business_suffix(vect)
     if (!is.null(ignore_strings)) {
       ignore_strings <- c(ignore_strings,
                           c("inc", "corp", "co", "llc", "ltd", "div", "ent",
@@ -46,21 +45,17 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                           "lp")
     }
   }
-
   if (!is.null(ignore_strings)) {
-    # Initial transformations given "ignore_strings" is not NULL.
     # Use values in "ignore_strings" to create a regex of substrings to
     # eliminate from each element of "vect" (also remove all spaces).
     regex <- paste0("\\b(",
                     paste(ignore_strings, collapse = "|"),
                     ")\\b|\\s")
-    vect <- business_suffix(tolower(vect))
-    vect <- gsub(regex, "", vect, perl = TRUE)
   } else {
-    # Initial transformations given "ignore_strings" is NULL.
-    gsub("\\s", "", tolower(vect), perl = TRUE)
+    # Otherwise, if ignore_strings is NULL, only remove spaces.
+    regex <- "\\s+"
   }
-
+  vect <- gsub(regex, "", vect, perl = TRUE)
   # Rest of the transformations. For each value in vect: get ngrams, filter by
   # unique, sort alphabetically, paste back together, and normalize encoding.
   vect <- strsplit(vect, "", fixed = TRUE)
