@@ -13,7 +13,6 @@ CharacterVector merge_ngram_clusters(List clusters,
 
   List::iterator clust_end = clusters.end();
   List::iterator iter;
-  int i = 0;
 
   for(iter = clusters.begin(); iter != clust_end; ++iter) {
     // Subset univect by elements of n_gram_keys that appear in curr_clust.
@@ -33,7 +32,6 @@ CharacterVector merge_ngram_clusters(List clusters,
         output[n] = most_freq_string;
       }
     }
-    i++;
   }
 
   return output;
