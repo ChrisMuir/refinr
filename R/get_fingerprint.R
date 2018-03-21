@@ -3,7 +3,9 @@
 #' @noRd
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
-  vect <- gsub("[[:punct:]]", " ", tolower(vect), perl = TRUE)
+  # This regex is all punct except "&".
+  vect <- gsub('[!"\'#$%()*+,-./:;<=>?@[\\]^_`{|}~\\\\]', " ", tolower(vect),
+               perl = TRUE)
   if (bus_suffix) {
     vect <- business_suffix(vect)
     if (!is.null(ignore_strings)) {
@@ -32,7 +34,9 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
 #'@noRd
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
-  vect <- gsub("[[:punct:]]", " ", tolower(vect), perl = TRUE)
+  # This regex is all punct except "&".
+  vect <- gsub('[!"\'#$%()*+,-./:;<=>?@[\\]^_`{|}~\\\\]', " ", tolower(vect),
+               perl = TRUE)
   # Compile variable ignore_strings.
   if (bus_suffix) {
     vect <- business_suffix(vect)
