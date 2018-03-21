@@ -3,6 +3,7 @@
 #' @noRd
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
+  vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
   if (bus_suffix) {
     vect <- business_suffix(tolower(vect))
     if (!is.null(ignore_strings)) {
@@ -16,8 +17,6 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   } else {
     vect <- tolower(vect)
   }
-  # Perform initial transformations.
-  vect <- gsub("[[:punct:]]", "", vect, perl = TRUE)
   vect <- strsplit(cpp_trimws_left(vect), "\\s+", perl = TRUE)
   # If "ignore_strings" is not NULL, for each element of list "vect", remove
   # any string that has a match within vector "ignore_strings".
@@ -35,6 +34,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
 #'@noRd
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
+  vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
   # Compile variable ignore_strings.
   if (bus_suffix) {
     if (!is.null(ignore_strings)) {
@@ -49,18 +49,16 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
 
   if (!is.null(ignore_strings)) {
     # Initial transformations given "ignore_strings" is not NULL.
-    #
     # Use values in "ignore_strings" to create a regex of substrings to
-    # eliminate from each element of "vect" (also remove all punctuation
-    # and spaces).
+    # eliminate from each element of "vect" (also remove all spaces).
     regex <- paste0("\\b(",
                     paste(ignore_strings, collapse = "|"),
-                    ")\\b|[[:punct:]]|\\s")
+                    ")\\b|\\s")
     vect <- business_suffix(tolower(vect))
     vect <- gsub(regex, "", vect, perl = TRUE)
   } else {
     # Initial transformations given "ignore_strings" is NULL.
-    gsub("[[:punct:]]|\\s", "", tolower(vect), perl = TRUE)
+    gsub("\\s", "", tolower(vect), perl = TRUE)
   }
 
   # Rest of the transformations. For each value in vect: get ngrams, filter by
