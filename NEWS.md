@@ -7,6 +7,10 @@ refinr 0.2.0.9000
 
 ## BUG FIXES
 
+* Fixed issue in `n_gram_merge()` in which incorrect values were being return when input arg `ignore_strings` was not `NULL`, and arg `bus_suffix = FALSE` ([#7](https://github.com/ChrisMuir/refinr/issues/7)).
+
+* Fixed issue in which input strings that contained punctuation that was NOT surrounded by spaces was returning incorrect values ([#6](https://github.com/ChrisMuir/refinr/issues/6)).
+
 * Fixed issue in which the edit value assigned to a cluster was sometimes not the most frequent string in that cluster ([#5](https://github.com/ChrisMuir/refinr/issues/5)). 
 
 refinr 0.2.0 (2018-01-10)
