@@ -9,6 +9,5 @@ business_suffix <- function(vect) {
   vect <- gsub(" division| divisions", " div", vect, perl = TRUE)
   vect <- gsub(" enterprises| enterprise", " ent", vect, perl = TRUE)
   vect <- gsub(" limited partnership", " lp", vect, fixed = TRUE)
-  vect <- gsub(" and ", " & ", vect, fixed = TRUE)
   return(vect)
 }

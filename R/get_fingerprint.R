@@ -3,18 +3,19 @@
 #' @noRd
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
-  # This regex is all punct except "&".
-  vect <- gsub('[!"\'#$%()*+,-./:;<=>?@[\\]^_`{|}~\\\\]', " ", tolower(vect),
-               perl = TRUE)
+  # Replace some punctuation with an empty string (want "Ed's" to be 1 word).
+  vect <- gsub("[;'`\"]", "", tolower(vect), perl = TRUE)
+  # Replace other punct with a blank space (want "cats,inc" to be 2 words).
+  vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
   if (bus_suffix) {
     vect <- business_suffix(vect)
     if (!is.null(ignore_strings)) {
       ignore_strings <- c(ignore_strings,
                           c("inc", "corp", "co", "llc", "ltd", "div", "ent",
-                            "lp"))
+                            "lp", "and"))
     } else {
       ignore_strings <- c("inc", "corp", "co", "llc", "ltd", "div", "ent",
-                          "lp")
+                          "lp", "and")
     }
   }
   vect <- strsplit(cpp_trimws_left(vect), "\\s+", perl = TRUE)
@@ -34,19 +35,20 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
 #'@noRd
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
-  # This regex is all punct except "&".
-  vect <- gsub('[!"\'#$%()*+,-./:;<=>?@[\\]^_`{|}~\\\\]', " ", tolower(vect),
-               perl = TRUE)
+  # Replace some punctuation with an empty string (want "Ed's" to be 1 word).
+  vect <- gsub("[;'`\"]", "", tolower(vect), perl = TRUE)
+  # Replace other punct with a blank space (want "cats,inc" to be 2 words).
+  vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
   # Compile variable ignore_strings.
   if (bus_suffix) {
     vect <- business_suffix(vect)
     if (!is.null(ignore_strings)) {
       ignore_strings <- c(ignore_strings,
                           c("inc", "corp", "co", "llc", "ltd", "div", "ent",
-                            "lp"))
+                            "lp", "and"))
     } else {
       ignore_strings <- c("inc", "corp", "co", "llc", "ltd", "div", "ent",
-                          "lp")
+                          "lp", "and")
     }
   }
   if (!is.null(ignore_strings)) {
