@@ -2,6 +2,7 @@
 #include"refinr_header.h"
 using namespace Rcpp;
 
+
 // Iterate over all clusters, make mass edits related to each cluster.
 // [[Rcpp::export]]
 CharacterVector merge_ngram_clusters(List clusters,
@@ -9,20 +10,16 @@ CharacterVector merge_ngram_clusters(List clusters,
                                      CharacterVector n_gram_keys,
                                      CharacterVector univect,
                                      CharacterVector vect) {
-  //int vect_len = vect.size();
   CharacterVector output = clone(vect);
+
+  // Subset clust_unlist to only keep unique values.
+  clust_unlist = unique(clust_unlist);
 
   // Create maps
   std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);
-  unordered_map<std::string, std::vector<int> > ngram_map = create_map(
-    n_gram_keys,
-    cl_ul
-  );
   std::vector<std::string> uni = as<std::vector<std::string> >(univect);
-  unordered_map<std::string, std::vector<int> > univect_map = create_map(
-    vect,
-    uni
-  );
+  refinr_map ngram_map = create_map(n_gram_keys, cl_ul);
+  refinr_map univect_map = create_map(vect, uni);
 
   List::iterator clust_end = clusters.end();
   List::iterator iter;
@@ -95,10 +92,7 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   // Create unordered_map, using unigram_dups as keys, values will be the
   // indices of each dup in unigram_keys.
   std::vector<std::string> dups = as<std::vector<std::string> >(unigram_dups);
-  unordered_map<std::string, std::vector<int> > unigram_map = create_map(
-    unigram_keys,
-    dups
-  );
+  refinr_map unigram_map = create_map(unigram_keys, dups);
 
   // Iterate over unigram_dups, for each value get the corresponding indices
   // from unigram_map, Use those indices to subset ngram_keys, save the subset

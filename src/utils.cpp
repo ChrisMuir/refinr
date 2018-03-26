@@ -2,30 +2,32 @@
 #include"refinr_header.h"
 using namespace Rcpp;
 
+
 // Utility helper functions, some are used within R functions, some are used
 // within c++ functions, some are used in both.
 
 
 // Create unordered_map with strings as keys, and integer vectors as values.
-unordered_map <std::string, std::vector<int> > create_map(
-    CharacterVector vect,
-    std::vector<std::string> clusters
-) {
-  int clust_len = clusters.size();
-  int vect_len = vect.size();
+refinr_map create_map(CharacterVector terms,
+                      std::vector<std::string> keys) {
+  int keys_len = keys.size();
+  int terms_len = terms.size();
 
   // Initialize unordered_map.
-  unordered_map<std::string, std::vector<int> > clust_map;
-  for(int i = 0; i < clust_len; ++i) {
-    clust_map[clusters[i]];
+  refinr_map out;
+  for(int i = 0; i < keys_len; ++i) {
+    out[keys[i]];
   }
 
   // Fill values of the map.
-  for(int i = 0; i < vect_len; ++i) {
-    clust_map[as<std::string>(vect[i])].push_back(i);
+  for(int i = 0; i < terms_len; ++i) {
+    refinr_map::iterator val = out.find(as<std::string>(terms[i]));
+    if(val != out.end()) {
+      val->second.push_back(i);
+    }
   }
 
-  return(clust_map);
+  return(out);
 }
 
 // Given a CharacterVector, return the string that appears most frequently.

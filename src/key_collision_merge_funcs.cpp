@@ -43,10 +43,7 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
   // Create unordered_map, using clusters as keys, values will be the indices
   // of each cluster in keys_vect.
   std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
-  unordered_map<std::string, std::vector<int> > keys_vect_map = create_map(
-    keys_vect,
-    cl
-  );
+  refinr_map keys_vect_map = create_map(keys_vect, cl);
 
   // Iterate over clusters, make mass edits to output.
   std::vector<std::string>::iterator clust_end = cl.end();
@@ -90,14 +87,8 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
   // keys_vect_map will be the indices of each cluster in keys_vect. Values for
   // keys_dict_map will be the indices of each cluster in keys_dict.
   std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
-  unordered_map<std::string, std::vector<int> > keys_vect_map = create_map(
-    keys_vect,
-    cl
-  );
-  unordered_map<std::string, std::vector<int> > keys_dict_map = create_map(
-    keys_dict,
-    cl
-  );
+  refinr_map keys_vect_map = create_map(keys_vect, cl);
+  refinr_map keys_dict_map = create_map(keys_dict, cl);
 
   // Iterate over clusters, make mass edits to output.
   std::vector<std::string>::iterator clust_end = cl.end();
