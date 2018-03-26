@@ -48,16 +48,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // merge_ngram_clusters
-CharacterVector merge_ngram_clusters(List clusters, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
-RcppExport SEXP _refinr_merge_ngram_clusters(SEXP clustersSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
+CharacterVector merge_ngram_clusters(List clusters, CharacterVector clust_unlist, CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
+RcppExport SEXP _refinr_merge_ngram_clusters(SEXP clustersSEXP, SEXP clust_unlistSEXP, SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type clust_unlist(clust_unlistSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    rcpp_result_gen = Rcpp::wrap(merge_ngram_clusters(clusters, n_gram_keys, univect, vect));
+    rcpp_result_gen = Rcpp::wrap(merge_ngram_clusters(clusters, clust_unlist, n_gram_keys, univect, vect));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -242,7 +243,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters", (DL_FUNC) &_refinr_merge_KC_clusters, 4},
     {"_refinr_merge_KC_clusters_no_dict", (DL_FUNC) &_refinr_merge_KC_clusters_no_dict, 3},
     {"_refinr_merge_KC_clusters_dict", (DL_FUNC) &_refinr_merge_KC_clusters_dict, 5},
-    {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 4},
+    {"_refinr_merge_ngram_clusters", (DL_FUNC) &_refinr_merge_ngram_clusters, 5},
     {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 2},
     {"_refinr_filter_initial_clusters", (DL_FUNC) &_refinr_filter_initial_clusters, 3},
     {"_refinr_char_ngram", (DL_FUNC) &_refinr_char_ngram, 2},

@@ -5,32 +5,69 @@ using namespace Rcpp;
 // Iterate over all clusters, make mass edits related to each cluster.
 // [[Rcpp::export]]
 CharacterVector merge_ngram_clusters(List clusters,
+                                     CharacterVector clust_unlist,
                                      CharacterVector n_gram_keys,
                                      CharacterVector univect,
                                      CharacterVector vect) {
-  int vect_len = vect.size();
+  //int vect_len = vect.size();
   CharacterVector output = clone(vect);
+
+  // Create maps
+  std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);
+  unordered_map<std::string, std::vector<int> > ngram_map = create_map(
+    n_gram_keys,
+    cl_ul
+  );
+  std::vector<std::string> uni = as<std::vector<std::string> >(univect);
+  unordered_map<std::string, std::vector<int> > univect_map = create_map(
+    vect,
+    uni
+  );
 
   List::iterator clust_end = clusters.end();
   List::iterator iter;
 
   for(iter = clusters.begin(); iter != clust_end; ++iter) {
-    // Subset univect by elements of n_gram_keys that appear in curr_clust.
-    CharacterVector univect_sub = univect[cpp_in(n_gram_keys, *iter)];
+    CharacterVector curr_clust = *iter;
 
-    // Get indices of elements of vect that are found in univect_sub.
-    LogicalVector vect_idx = cpp_in(vect, univect_sub);
+    // Create subset of univect using the indices of n_gram_keys that appear
+    // in curr_clust.
+    int curr_clust_len = curr_clust.size();
+    std::vector<int> ngram_idx;
+    for(int i = 0; i < curr_clust_len; ++i) {
+      std::string curr_clust_str = as<std::string>(curr_clust[i]);
+      std::vector<int> curr_ngram_idx = ngram_map[curr_clust_str];
+      ngram_idx.insert(
+        ngram_idx.end(), curr_ngram_idx.begin(), curr_ngram_idx.end()
+      );
+    }
+    int ngram_idx_len = ngram_idx.size();
+    std::vector<std::string> univect_sub(ngram_idx_len);
+    for(int i = 0; i < ngram_idx_len; ++i) {
+      univect_sub[i] = uni[ngram_idx[i]];
+    }
 
-    // Find the string that appears most frequently in vector vect[vect_idx],
-    // as obj "most_freq_string". Edit all elements of vect[vect_idx] to be
-    // equal to string "most_freq_string".
-    String most_freq_string = most_freq_str(vect[vect_idx]);
+    // Create subset of vect using the elements of univect_sub.
+    int univect_sub_len = univect_sub.size();
+    std::vector<int> uni_idx;
+    for(int i = 0; i < univect_sub_len; ++i) {
+      std::vector<int> curr_uni_idx = univect_map[univect_sub[i]];
+      uni_idx.insert(
+        uni_idx.end(), curr_uni_idx.begin(), curr_uni_idx.end()
+      );
+    }
+    int uni_idx_len = uni_idx.size();
+    CharacterVector vect_sub(uni_idx_len);
+    for(int i = 0; i < uni_idx_len; ++i) {
+      vect_sub[i] = vect[uni_idx[i]];
+    }
 
-    // Make mass edits to vect.
-    for(int n = 0; n < vect_len; ++n) {
-      if(vect_idx[n]) {
-        output[n] = most_freq_string;
-      }
+    // Find the string that appears most frequently in vect_sub.
+    String most_freq_string = most_freq_str(vect_sub);
+
+    // Edit all elements of output[uni_idx] to be equal to most_freq_string.
+    for(int n = 0; n < uni_idx_len; ++n) {
+      output[uni_idx[n]] = most_freq_string;
     }
   }
 

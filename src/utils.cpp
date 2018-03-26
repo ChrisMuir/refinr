@@ -7,8 +7,10 @@ using namespace Rcpp;
 
 
 // Create unordered_map with strings as keys, and integer vectors as values.
-unordered_map <std::string, std::vector<int> > create_map(CharacterVector vect,
-                                                          std::vector<std::string> clusters) {
+unordered_map <std::string, std::vector<int> > create_map(
+    CharacterVector vect,
+    std::vector<std::string> clusters
+) {
   int clust_len = clusters.size();
   int vect_len = vect.size();
 
