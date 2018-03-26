@@ -11,7 +11,11 @@ refinr 0.2.0.9000
 
 * Fixed issue in which input strings that contained punctuation that was NOT surrounded by spaces was returning incorrect values ([#6](https://github.com/ChrisMuir/refinr/issues/6)).
 
-* Fixed issue in which the edit value assigned to a cluster was sometimes not the most frequent string in that cluster ([#5](https://github.com/ChrisMuir/refinr/issues/5)). 
+* Fixed issue in which the edit value assigned to a cluster was sometimes not the most frequent string in that cluster ([#5](https://github.com/ChrisMuir/refinr/issues/5)).
+
+## NEW FEATURES
+
+* Rewrote some of the cpp functions to incorporate `tr1::unordered_map`, resulting in a substantial speed improvement when passing large character vectors (length 100,000+) to either of the exported functions ([#8](https://github.com/ChrisMuir/refinr/issues/8)).
 
 refinr 0.2.0 (2018-01-10)
 =========================

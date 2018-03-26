@@ -119,4 +119,4 @@ Notes
 - The advantages this package has over OpenRefine: 
   * Operations are fully automated.
   * Facilitates a more reproducible workflow.
-  * Seems to handle larger datasets better (1000000 - 5000000 observations).
+  * Faster when working with large input data (character vectors of length 500000+).
