@@ -11,7 +11,7 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
                                   CharacterVector keys_dict) {
   if(CharacterVector::is_na(dict[0])) {
     // If dict is NA, get vector of all key values that have at least one
-    // duplicate within keys (this creates clusters). Then for each cluster,
+    // duplicate within keys (this creates clusters). The "merge_" func will
     // make mass edits to the values of vect related to that cluster.
     CharacterVector clusters = cpp_get_key_dups(keys_vect);
     return merge_KC_clusters_no_dict(clusters, vect, keys_vect);
@@ -19,7 +19,7 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
     // If dict is not NA, get all key_vect values that have:
     // 1. At least one duplicate within key_vect, AND/OR
     // 2. At least one matching value within key_dict.
-    // Then for each cluster, make mass edits to the values of vect related to
+    // The "merge_" func will make mass edits to the values of vect related to
     // that cluster.
     CharacterVector both_keys(keys_vect.size() + keys_dict.size());
     int i = 0;
@@ -37,45 +37,37 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
 CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
                                           CharacterVector vect,
                                           CharacterVector keys_vect) {
-  int keys_len = keys_vect.size();
+  // Create copy of vect to use as the output vector.
   CharacterVector output = clone(vect);
 
-  // Get Logical vector indicating which keys appear in the clusters vector.
-  LogicalVector keys_in_clusters = cpp_in(keys_vect, clusters);
-
-  // Create subsets of vect and keys_vect based on which elements of each
-  // contain at least one duplicate.
-  CharacterVector vect_sub = vect[keys_in_clusters];
-  CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
+  // Create unordered_map, using clusters as keys, values will be the indices
+  // of each cluster in keys_vect.
+  std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
+  unordered_map<std::string, std::vector<int> > keys_vect_map = create_map(
+    keys_vect,
+    cl
+  );
 
   // Iterate over clusters, make mass edits to output.
-  CharacterVector::iterator clust_end = clusters.end();
-  CharacterVector::iterator iter;
-  for(iter = clusters.begin(); iter != clust_end; ++iter) {
-    String curr_clust = *iter;
-    // Get indices in which clust appears in keys_vect_sub.
-    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, curr_clust);
+  std::vector<std::string>::iterator clust_end = cl.end();
+  std::vector<std::string>::iterator iter;
 
-    // Subset vect_sub by indices in matches_keys_vect_sub.
-    CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
+  for(iter = cl.begin(); iter != clust_end; ++iter) {
+    // Create subset of vect using the indices from keys_vect_map that
+    // correspond to the current cluster iteration.
+    std::vector<int> curr_idx = keys_vect_map[*iter];
+    int curr_idx_len = curr_idx.size();
+    CharacterVector curr_vect(curr_idx_len);
+    for(int i = 0; i < curr_idx_len; ++i) {
+      curr_vect[i] = vect[curr_idx[i]];
+    }
 
-    // If the number of unique values in curr_vect is greater than one,
-    // continue on with the current iteration.
-    if(unique(curr_vect).size() > 1) {
+    // Get the string that appears most often in curr_vect.
+    String most_freq_string = most_freq_str(curr_vect);
 
-      // Get the string that appears most often in curr_vect.
-      String most_freq_string = most_freq_str(curr_vect);
-
-      // Get indices in which clust appears in keys_vect.
-      LogicalVector matches_keys_vect = equality(keys_vect, curr_clust);
-
-      // For each TRUE index of matches_keys_vect, edit output to be equal to
-      // most_freq_string.
-      for(int n = 0; n < keys_len; ++n) {
-        if (matches_keys_vect[n]) {
-          output[n] = most_freq_string;
-        }
-      }
+    // For each index in curr_idx, edit output to be equal to most_freq_string.
+    for(int n = 0; n < curr_idx_len; ++n) {
+      output[curr_idx[n]] = most_freq_string;
     }
   }
 
@@ -91,66 +83,68 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
                                        CharacterVector keys_vect,
                                        CharacterVector dict,
                                        CharacterVector keys_dict) {
-  int keys_vect_len = keys_vect.size();
+  // Create copy of vect to use as the output vector.
   CharacterVector output = clone(vect);
 
-  // Get Logical vector indicating which keys appear in the clusters vector.
-  LogicalVector keys_in_clusters = cpp_in(keys_vect, clusters);
-
-  // Create subsets of vect and keys_vect based on which elements of each
-  // contain at least one duplicate.
-  CharacterVector vect_sub = vect[keys_in_clusters];
-  CharacterVector keys_vect_sub = keys_vect[keys_in_clusters];
+  // Create two unordered_maps, both using clusters as keys. Values for
+  // keys_vect_map will be the indices of each cluster in keys_vect. Values for
+  // keys_dict_map will be the indices of each cluster in keys_dict.
+  std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
+  unordered_map<std::string, std::vector<int> > keys_vect_map = create_map(
+    keys_vect,
+    cl
+  );
+  unordered_map<std::string, std::vector<int> > keys_dict_map = create_map(
+    keys_dict,
+    cl
+  );
 
   // Iterate over clusters, make mass edits to output.
-  CharacterVector::iterator clust_end = clusters.end();
-  CharacterVector::iterator iter;
-  for(iter = clusters.begin(); iter != clust_end; ++iter) {
-    String curr_clust = *iter;
-    // Get indices in which clust appears in keys_vect_sub.
-    LogicalVector matches_keys_vect_sub = equality(keys_vect_sub, curr_clust);
+  std::vector<std::string>::iterator clust_end = cl.end();
+  std::vector<std::string>::iterator iter;
 
-    // Subset vect_sub and dict by indices in matches_keys_vect_sub.
-    CharacterVector curr_vect = vect_sub[matches_keys_vect_sub];
+  for(iter = cl.begin(); iter != clust_end; ++iter) {
+    std::string curr_clust = *iter;
 
-    // Subset dict by indices in which clust appears in keys_dict.
-    CharacterVector curr_dict = dict[equality(keys_dict, curr_clust)];
+    // Create subset of vect using the indices that correspond to curr_clust.
+    std::vector<int> curr_vect_idx = keys_vect_map[curr_clust];
+    int curr_vect_len = curr_vect_idx.size();
+    CharacterVector curr_vect(curr_vect_len);
+    for(int i = 0; i < curr_vect_len; ++i) {
+      curr_vect[i] = vect[curr_vect_idx[i]];
+    }
 
-    // If the sum of unique values in curr_vect and unique values in curr_dict
-    // is greater than one, continue on with the current iteration.
-    if(unique(curr_vect).size() + unique(curr_dict).size() > 1) {
-      // Establish variables.
-      String most_freq_string(1);
-      bool not_in_dict = true;
-
-      // Look to see if clust exists in the dictionary. If so, use that value
-      // as the edit value for all members of this cluster.
-      int curr_dict_len = curr_dict.size();
-      if(curr_dict_len > 0) {
-        not_in_dict = false;
-        if(curr_dict_len == 1) {
-          most_freq_string = curr_dict[0];
-        } else {
-          most_freq_string = most_freq_str(curr_dict);
-        }
+    // Check to see if curr_clust appears in keys_dict_map. If it does, create
+    // subset of dict using the indices that correspond to curr_clust.
+    std::vector<int> curr_dict_idx = keys_dict_map[curr_clust];
+    int curr_dict_len = curr_dict_idx.size();
+    CharacterVector curr_dict(curr_dict_len);
+    bool not_in_dict = true;
+    if(curr_dict_len > 0) {
+      not_in_dict = false;
+      for(int i = 0; i < curr_dict_len; ++i) {
+        curr_dict[i] = dict[curr_dict_idx[i]];
       }
+    }
 
-      // If no matching value was found in the dictionary, get the most freq
-      // value within vect_sub related to this cluster.
-      if (not_in_dict) {
-        most_freq_string = most_freq_str(curr_vect);
+    // Establish most_freq_string. If curr_clust exists in curr_dict, get
+    // most_freq_string from curr_dict. Otherwise get most_freq_string from
+    // curr_vect.
+    String most_freq_string(1);
+    if(not_in_dict) {
+      most_freq_string = most_freq_str(curr_vect);
+    } else {
+      if(curr_dict_len == 1) {
+        most_freq_string = curr_dict[0];
+      } else {
+        most_freq_string = most_freq_str(curr_dict);
       }
+    }
 
-      // Get indices in which clust appears in keys_vect.
-      LogicalVector matches_keys_vect = equality(keys_vect, curr_clust);
-
-      // For each TRUE index of matches_keys_vect, edit output to be equal to
-      // most_freq_string.
-      for(int n = 0; n < keys_vect_len; ++n) {
-        if(matches_keys_vect[n]) {
-          output[n] = most_freq_string;
-        }
-      }
+    // For each index in curr_vect_idx, edit output to be equal to
+    // most_freq_string.
+    for(int n = 0; n < curr_vect_len; ++n) {
+      output[curr_vect_idx[n]] = most_freq_string;
     }
   }
 

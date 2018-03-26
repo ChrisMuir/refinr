@@ -6,6 +6,26 @@ using namespace Rcpp;
 // within c++ functions, some are used in both.
 
 
+// Create unordered_map with strings as keys, and integer vectors as values.
+unordered_map <std::string, std::vector<int> > create_map(CharacterVector vect,
+                                                          std::vector<std::string> clusters) {
+  int clust_len = clusters.size();
+  int vect_len = vect.size();
+
+  // Initialize unordered_map.
+  unordered_map<std::string, std::vector<int> > clust_map;
+  for(int i = 0; i < clust_len; ++i) {
+    clust_map[clusters[i]];
+  }
+
+  // Fill values of the map.
+  for(int i = 0; i < vect_len; ++i) {
+    clust_map[as<std::string>(vect[i])].push_back(i);
+  }
+
+  return(clust_map);
+}
+
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
 // [[Rcpp::export]]

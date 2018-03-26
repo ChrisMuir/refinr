@@ -58,7 +58,6 @@ key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
     dict <- NA_character_
   }
 
-  # Create clusters, then make mass edits to the values of vect related to each
-  # cluster.
+  # Make mass edits to the values of vect related to each cluster.
   return(merge_KC_clusters(vect, keys_vect, dict, keys_dict))
 }
