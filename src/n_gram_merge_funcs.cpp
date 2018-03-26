@@ -55,18 +55,32 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   ngram_keys = ngram_keys[na_idx];
   unigram_keys = unigram_keys[na_idx];
 
-  // Get subsets of ngram_keys and unigram_keys, filter by indices of
-  // unigram_keys that appear in unigram_dups.
-  LogicalVector keys_in_dups = cpp_in(unigram_keys, unigram_dups);
-  ngram_keys = ngram_keys[keys_in_dups];
-  unigram_keys = unigram_keys[keys_in_dups];
+  // Create unordered_map, using unigram_dups as keys, values will be the
+  // indices of each dup in unigram_keys.
+  std::vector<std::string> dups = as<std::vector<std::string> >(unigram_dups);
+  unordered_map<std::string, std::vector<int> > unigram_map = create_map(
+    unigram_keys,
+    dups
+  );
 
-  CharacterVector::iterator dups_end = unigram_dups.end();
-  CharacterVector::iterator iter;
+  // Iterate over unigram_dups, for each value get the corresponding indices
+  // from unigram_map, Use those indices to subset ngram_keys, save the subset
+  // to the list output.
+  std::vector<std::string>::iterator dups_end = dups.end();
+  std::vector<std::string>::iterator iter;
   int i = 0;
 
-  for(iter = unigram_dups.begin(); iter != dups_end; ++iter) {
-    out[i] = ngram_keys[equality(unigram_keys, *iter)];
+  for(iter = dups.begin(); iter != dups_end; ++iter) {
+    // Create subset of ngram_keys using the indices from unigram_map that
+    // correspond to the current unigram_dup iteration.
+    std::vector<int> curr_idx = unigram_map[*iter];
+    int curr_idx_len = curr_idx.size();
+    CharacterVector curr_ngram(curr_idx_len);
+    for(int n = 0; n < curr_idx_len; ++n) {
+      curr_ngram[n] = ngram_keys[curr_idx[n]];
+    }
+
+    out[i] = curr_ngram;
     i++;
   }
 
