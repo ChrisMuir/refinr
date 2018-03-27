@@ -40,6 +40,18 @@ String most_freq_str(CharacterVector x) {
 }
 
 
+// cpp version of base::as.list(), for character vectors.
+List cpp_as_list(CharacterVector x) {
+  int x_len = x.size();
+  List out(x_len);
+
+  for(int i = 0; i < x_len; ++i) {
+    out[i] = x[i];
+  }
+
+  return(out);
+}
+
 // cpp version of base::unlist(), for character vectors.
 CharacterVector cpp_unlist(List x) {
   int x_len = x.size();

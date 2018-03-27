@@ -71,14 +71,41 @@ CharacterVector merge_ngram_clusters(List clusters,
 }
 
 
-// Filter the initial clusters, then pass args along to merge_ngram_clusters().
+// Prep steps prior to the merging clusters, given that approximate string
+// matching is NOT being used (via arg edit_threshold). Generate clusters by
+// finding all elements of n_gram_keys that have one or more identical
+// matches, then pass args along to merge_ngram_clusters().
 // [[Rcpp::export]]
-CharacterVector merge_ngram_clusters_approx(CharacterVector n_gram_keys,
-                                            CharacterVector univect,
-                                            CharacterVector vect,
-                                            List distmatrices,
-                                            double edit_threshold,
-                                            List initial_clust) {
+CharacterVector ngram_merge_no_approx(CharacterVector n_gram_keys,
+                                      CharacterVector univect,
+                                      CharacterVector vect) {
+  // Find all elements of n_gram_keys that have one or more identical
+  // matches.
+  CharacterVector n_gram_keys_dups = cpp_get_key_dups(n_gram_keys);
+
+  // If no duplicated keys exist, return vect unedited.
+  if(n_gram_keys_dups.size() == 0) {
+    return(vect);
+  }
+
+  // Cast n_gram_keys_dups as a list.
+  List clusters = cpp_as_list(n_gram_keys_dups);
+
+  // Pass clusters and other args along to merge_ngram_clusters().
+  return(merge_ngram_clusters(clusters, n_gram_keys, univect, vect));
+}
+
+
+// Prep steps prior to the merging clusters, given that approximate string
+// matching is being used (via arg edit_threshold). Filter clusters based on
+// distmatrices, then pass args along to merge_ngram_clusters().
+// [[Rcpp::export]]
+CharacterVector ngram_merge_approx(CharacterVector n_gram_keys,
+                                   CharacterVector univect,
+                                   CharacterVector vect,
+                                   List distmatrices,
+                                   double edit_threshold,
+                                   List initial_clust) {
   // For each matrix in distmatrices, create clusters of matches within the
   // matrix, based on lowest numeric edit distance (matches must have a value
   // below edit_threshold in order to be considered suitable for merging).

@@ -110,26 +110,17 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix,
                                        ignore_strings)
 
-  ## Get clusters.
+  # If approximate string matching is not being used, return output of
+  # ngram_merge_no_approx().
   if (edit_threshold_missing) {
-    # If approximate string matching is disabled (via param 'edit_threshold'),
-    # then find all elements of n_gram_keys that have one or more identical
-    # matches. From that list, create clusters of n_gram_keys (groups that all
-    # have an identical n_gram_key), eliminate all NA's within each group, and
-    # eliminate all groups with length less than two, then return clusters.
-    n_gram_keys_dups <- cpp_get_key_dups(n_gram_keys)
-    # If no duplicated keys exist, return vect unedited.
-    if (length(n_gram_keys_dups) == 0) return(vect)
-    clusters <- as.list.default(n_gram_keys_dups)
-    # For each cluster, make mass edits to the values of vect related to that
-    # cluster.
-    return(merge_ngram_clusters(clusters, n_gram_keys, univect, vect))
+    return(ngram_merge_no_approx(n_gram_keys, univect, vect))
   }
-  # If approximate string matching is enabled, then find all elements of
-  # n_gram_keys for which their associated one_gram_key has one or more
-  # identical matches within the entire list of one_gram_keys. From that
-  # list, create clusters of n_gram_keys (groups that all have an identical
-  # one_gram_key).
+
+  # If approximate string matching is enabled, get initial clusters by finding
+  # all elements of n_gram_keys for which their associated one_gram_key has
+  # one or more matches within the entire list of one_gram_keys. Then create a
+  # stringdistmatrix for each cluster, which will be used to filter the
+  # initial clusters.
 
   # Get initial clusters.
   initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys)
@@ -145,6 +136,6 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
 
   # Filter clusters based on distmatrices, then for each cluster, make mass
   # edits to the values of vect related to that cluster.
-  return(merge_ngram_clusters_approx(n_gram_keys, univect, vect, distmatrices,
-                                     edit_threshold, initial_clust))
+  return(ngram_merge_approx(n_gram_keys, univect, vect, distmatrices,
+                            edit_threshold, initial_clust))
 }

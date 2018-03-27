@@ -17,6 +17,7 @@ CharacterVector cpp_paste_list(List input, std::string collapse_str);
 CharacterVector cpp_get_key_dups(CharacterVector keys);
 List cpp_flatten_list(List list_obj);
 String most_freq_str(CharacterVector x);
+List cpp_as_list(CharacterVector x);
 CharacterVector cpp_unlist(List x);
 
 // key_collision_merge
