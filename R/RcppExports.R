@@ -17,6 +17,10 @@ merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
     .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
 }
 
+merge_ngram_clusters_approx <- function(n_gram_keys, univect, vect, distmatrices, edit_threshold, initial_clust) {
+    .Call('_refinr_merge_ngram_clusters_approx', PACKAGE = 'refinr', n_gram_keys, univect, vect, distmatrices, edit_threshold, initial_clust)
+}
+
 get_ngram_initial_clusters <- function(ngram_keys, unigram_keys) {
     .Call('_refinr_get_ngram_initial_clusters', PACKAGE = 'refinr', ngram_keys, unigram_keys)
 }

@@ -19,6 +19,17 @@ List cpp_flatten_list(List list_obj);
 String most_freq_str(CharacterVector x);
 CharacterVector cpp_unlist(List x);
 
-// key_collision_merge_funcs
-CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters, CharacterVector vect, CharacterVector keys_vect);
-CharacterVector merge_KC_clusters_dict(CharacterVector clusters, CharacterVector vect, CharacterVector keys_vect, CharacterVector dict, CharacterVector keys_dict);
+// key_collision_merge
+CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
+                                          CharacterVector vect,
+                                          CharacterVector keys_vect);
+
+CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
+                                       CharacterVector vect,
+                                       CharacterVector keys_vect,
+                                       CharacterVector dict,
+                                       CharacterVector keys_dict);
+
+// n_gram_merge
+List filter_initial_clusters(List distmatrices, double edit_threshold,
+                             List clusters);

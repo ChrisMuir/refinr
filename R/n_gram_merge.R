@@ -121,36 +121,30 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     # If no duplicated keys exist, return vect unedited.
     if (length(n_gram_keys_dups) == 0) return(vect)
     clusters <- as.list.default(n_gram_keys_dups)
-  } else {
-    # If approximate string matching is enabled, then find all elements of
-    # n_gram_keys for which their associated one_gram_key has one or more
-    # identical matches within the entire list of one_gram_keys. From that
-    # list, create clusters of n_gram_keys (groups that all have an identical
-    # one_gram_key).
-
-    # Get initial clusters.
-    initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys)
-
-    # Create a stringdistmatrix for every element of initial_clust.
-    distmatrices <- lapply(initial_clust, function(x) {
-      x <- as.matrix(
-        stringdist::stringdistmatrix(x, weight = weight, ...)
-      )
-      dimnames(x) <- NULL
-      x
-    })
-
-    # For each matrix in distmatrices, create clusters of matches within the
-    # matrix, based on lowest numeric edit distance (matches must have a value
-    # below edit_threshold in order to be considered suitable for merging).
-    clusters <- filter_initial_clusters(distmatrices, edit_threshold,
-                                        initial_clust)
-
-    # If there were no clusters generated, return vect unedited.
-    if (length(clusters) == 0) return(vect)
+    # For each cluster, make mass edits to the values of vect related to that
+    # cluster.
+    return(merge_ngram_clusters(clusters, n_gram_keys, univect, vect))
   }
+  # If approximate string matching is enabled, then find all elements of
+  # n_gram_keys for which their associated one_gram_key has one or more
+  # identical matches within the entire list of one_gram_keys. From that
+  # list, create clusters of n_gram_keys (groups that all have an identical
+  # one_gram_key).
 
-  # For each cluster, make mass edits to the values of vect related to that
-  # cluster.
-  return(merge_ngram_clusters(clusters, n_gram_keys, univect, vect))
+  # Get initial clusters.
+  initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys)
+
+  # Create a stringdistmatrix for every element of initial_clust.
+  distmatrices <- lapply(initial_clust, function(x) {
+    x <- as.matrix(
+      stringdist::stringdistmatrix(x, weight = weight, ...)
+    )
+    dimnames(x) <- NULL
+    x
+  })
+
+  # Filter clusters based on distmatrices, then for each cluster, make mass
+  # edits to the values of vect related to that cluster.
+  return(merge_ngram_clusters_approx(n_gram_keys, univect, vect, distmatrices,
+                                     edit_threshold, initial_clust))
 }
