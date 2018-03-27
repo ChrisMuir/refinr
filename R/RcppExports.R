@@ -5,18 +5,6 @@ merge_KC_clusters <- function(vect, keys_vect, dict, keys_dict) {
     .Call('_refinr_merge_KC_clusters', PACKAGE = 'refinr', vect, keys_vect, dict, keys_dict)
 }
 
-merge_KC_clusters_no_dict <- function(clusters, vect, keys_vect) {
-    .Call('_refinr_merge_KC_clusters_no_dict', PACKAGE = 'refinr', clusters, vect, keys_vect)
-}
-
-merge_KC_clusters_dict <- function(clusters, vect, keys_vect, dict, keys_dict) {
-    .Call('_refinr_merge_KC_clusters_dict', PACKAGE = 'refinr', clusters, vect, keys_vect, dict, keys_dict)
-}
-
-merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
-    .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
-}
-
 ngram_merge_no_approx <- function(n_gram_keys, univect, vect) {
     .Call('_refinr_ngram_merge_no_approx', PACKAGE = 'refinr', n_gram_keys, univect, vect)
 }
@@ -29,40 +17,12 @@ get_ngram_initial_clusters <- function(ngram_keys, unigram_keys) {
     .Call('_refinr_get_ngram_initial_clusters', PACKAGE = 'refinr', ngram_keys, unigram_keys)
 }
 
-filter_initial_clusters <- function(distmatrices, edit_threshold, clusters) {
-    .Call('_refinr_filter_initial_clusters', PACKAGE = 'refinr', distmatrices, edit_threshold, clusters)
-}
-
-char_ngram <- function(vects, numgram) {
-    .Call('_refinr_char_ngram', PACKAGE = 'refinr', vects, numgram)
-}
-
 cpp_get_char_ngrams <- function(vects, numgram) {
     .Call('_refinr_cpp_get_char_ngrams', PACKAGE = 'refinr', vects, numgram)
 }
 
-most_freq_str <- function(x) {
-    .Call('_refinr_most_freq_str', PACKAGE = 'refinr', x)
-}
-
-cpp_flatten_list <- function(list_obj) {
-    .Call('_refinr_cpp_flatten_list', PACKAGE = 'refinr', list_obj)
-}
-
 cpp_paste_list <- function(input, collapse_str) {
     .Call('_refinr_cpp_paste_list', PACKAGE = 'refinr', input, collapse_str)
-}
-
-complete_intersect <- function(a, b) {
-    .Call('_refinr_complete_intersect', PACKAGE = 'refinr', a, b)
-}
-
-cpp_get_key_dups <- function(keys) {
-    .Call('_refinr_cpp_get_key_dups', PACKAGE = 'refinr', keys)
-}
-
-cpp_in <- function(x, table) {
-    .Call('_refinr_cpp_in', PACKAGE = 'refinr', x, table)
 }
 
 cpp_list_unique <- function(input, sort_vals) {
@@ -71,10 +31,6 @@ cpp_list_unique <- function(input, sort_vals) {
 
 remove_strings <- function(input, removes) {
     .Call('_refinr_remove_strings', PACKAGE = 'refinr', input, removes)
-}
-
-equality <- function(table, x) {
-    .Call('_refinr_equality', PACKAGE = 'refinr', table, x)
 }
 
 cpp_unique <- function(vect) {

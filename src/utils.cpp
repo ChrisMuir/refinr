@@ -32,7 +32,6 @@ refinr_map create_map(CharacterVector terms,
 
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
-// [[Rcpp::export]]
 String most_freq_str(CharacterVector x) {
   IntegerVector x_tab = table(x);
   CharacterVector tab_names = x_tab.attr("names");
@@ -81,7 +80,6 @@ CharacterVector cpp_unlist(List x) {
 
 // Flatten a nested list such that each character vector occupies its own
 // element in the return list.
-// [[Rcpp::export]]
 List cpp_flatten_list(List list_obj) {
   // Get the size of the output list by getting the sum of the lengths of each
   // element of the input list.
@@ -150,7 +148,6 @@ CharacterVector cpp_paste_list(List input, std::string collapse_str) {
 
 // Input two char vectors (a and b), return TRUE if all of the elements of a
 // are found in b, otherwise return FALSE.
-// [[Rcpp::export]]
 bool complete_intersect(CharacterVector a, CharacterVector b) {
   return is_true(all(cpp_in(a, b)));
 }
@@ -158,7 +155,6 @@ bool complete_intersect(CharacterVector a, CharacterVector b) {
 
 // Input a char vector, subset to only include duplicated values, remove NA's,
 // and then get unique values. Return the subset.
-// [[Rcpp::export]]
 CharacterVector cpp_get_key_dups(CharacterVector keys) {
   // Subset to only keep those that have a duplicate, remove, NA's, then
   // return unique values.
@@ -170,7 +166,6 @@ CharacterVector cpp_get_key_dups(CharacterVector keys) {
 
 // Meant to mimic the R func %in%.
 // Returns "x %in% table".
-// [[Rcpp::export]]
 LogicalVector cpp_in(CharacterVector x, CharacterVector table) {
   // If length of table is 1, use function "equality".
   int table_len = table.size();
@@ -248,7 +243,6 @@ List remove_strings(List input, CharacterVector removes) {
 // Takes a char vector and char string as input, output is a logical vector
 // with length equal to the input char vector. This is equivalent to R code
 // "vector == string".
-// [[Rcpp::export]]
 LogicalVector equality(CharacterVector table, String x) {
   LogicalVector out(table.size());
   CharacterVector::iterator table_end = table.end();

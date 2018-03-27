@@ -33,7 +33,6 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
 
 // Merge key collision clusters of similar values, when no reference dict was
 // passed to func "key_collision_merge".
-// [[Rcpp::export]]
 CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
                                           CharacterVector vect,
                                           CharacterVector keys_vect) {
@@ -74,7 +73,6 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
 
 // Merge key collision clusters of similar values, when a reference dict was
 // passed to func "key_collision_merge".
-// [[Rcpp::export]]
 CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
                                        CharacterVector vect,
                                        CharacterVector keys_vect,

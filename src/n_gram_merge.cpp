@@ -4,7 +4,6 @@ using namespace Rcpp;
 
 
 // Iterate over all clusters, make mass edits related to each cluster.
-// [[Rcpp::export]]
 CharacterVector merge_ngram_clusters(List clusters,
                                      CharacterVector n_gram_keys,
                                      CharacterVector univect,
@@ -173,7 +172,6 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
 // within the matrix, based on lowest numeric edit distance. (matches must
 // have a value below edit_threshold in order to be considered a cluster
 // suitable for merging).
-// [[Rcpp::export]]
 List filter_initial_clusters(List distmatrices, double edit_threshold,
                              List clusters) {
   int distmatrices_len = distmatrices.size();
@@ -306,7 +304,6 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
 // string that's been tokenized by individual char. This function iterates
 // over the list, for each char vector it will compile every available ngram
 // of length equal to arg numgram. Output is a list of ngrams as char vectors.
-// [[Rcpp::export]]
 List char_ngram(List vects, int numgram) {
   int vects_len = vects.size();
   List out(vects_len);
