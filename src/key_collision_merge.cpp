@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include"refinr_header.h"
+#include"refinr.h"
 using namespace Rcpp;
 
 
