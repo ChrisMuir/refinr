@@ -6,14 +6,13 @@ using namespace Rcpp;
 // Iterate over all clusters, make mass edits related to each cluster.
 // [[Rcpp::export]]
 CharacterVector merge_ngram_clusters(List clusters,
-                                     CharacterVector clust_unlist,
                                      CharacterVector n_gram_keys,
                                      CharacterVector univect,
                                      CharacterVector vect) {
   CharacterVector output = clone(vect);
 
-  // Subset clust_unlist to only keep unique values.
-  clust_unlist = unique(clust_unlist);
+  // Unlist clusters to a char vector, and get uniques.
+  CharacterVector clust_unlist = unique(cpp_unlist(clusters));
 
   // Create maps
   std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);

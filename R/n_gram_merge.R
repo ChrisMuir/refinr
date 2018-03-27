@@ -152,8 +152,5 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
 
   # For each cluster, make mass edits to the values of vect related to that
   # cluster.
-  clust_unlist <- unlist(clusters, FALSE, FALSE)
-  return(
-    merge_ngram_clusters(clusters, clust_unlist, n_gram_keys, univect, vect)
-  )
+  return(merge_ngram_clusters(clusters, n_gram_keys, univect, vect))
 }

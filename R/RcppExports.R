@@ -13,8 +13,8 @@ merge_KC_clusters_dict <- function(clusters, vect, keys_vect, dict, keys_dict) {
     .Call('_refinr_merge_KC_clusters_dict', PACKAGE = 'refinr', clusters, vect, keys_vect, dict, keys_dict)
 }
 
-merge_ngram_clusters <- function(clusters, clust_unlist, n_gram_keys, univect, vect) {
-    .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, clust_unlist, n_gram_keys, univect, vect)
+merge_ngram_clusters <- function(clusters, n_gram_keys, univect, vect) {
+    .Call('_refinr_merge_ngram_clusters', PACKAGE = 'refinr', clusters, n_gram_keys, univect, vect)
 }
 
 get_ngram_initial_clusters <- function(ngram_keys, unigram_keys) {

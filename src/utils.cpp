@@ -40,6 +40,33 @@ String most_freq_str(CharacterVector x) {
 }
 
 
+// cpp version of base::unlist(), for character vectors.
+CharacterVector cpp_unlist(List x) {
+  int x_len = x.size();
+
+  // Get size of output vector.
+  int out_len = 0;
+  for(int i = 0; i < x_len; ++i) {
+    out_len += Rf_length(x[i]);
+  }
+
+  // Allocate the vector
+  CharacterVector out(out_len);
+
+  // Loop and fill
+  int idx = 0;
+  for(int i = 0; i < x_len; ++i) {
+    CharacterVector curr_vect = x[i];
+    std::copy(curr_vect.begin(), curr_vect.end(), out.begin() + idx);
+
+    // Update the index
+    idx += curr_vect.size();
+  }
+
+  return out;
+}
+
+
 // Flatten a nested list such that each character vector occupies its own
 // element in the return list.
 // [[Rcpp::export]]
@@ -49,12 +76,11 @@ List cpp_flatten_list(List list_obj) {
   List::iterator list_obj_begin = list_obj.begin();
   List::iterator list_obj_end = list_obj.end();
   List::iterator count_iter;
-  int i = 0;
   int out_len = 0;
   for(count_iter = list_obj_begin; count_iter != list_obj_end; ++count_iter) {
-    List curr_list = *count_iter;
-    out_len += curr_list.size();
-    i++;
+    //List curr_list = *count_iter;
+    //out_len += curr_list.size();
+    out_len += Rf_length(*count_iter);
   }
 
   // Initialize output list.
