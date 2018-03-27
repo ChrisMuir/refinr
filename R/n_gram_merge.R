@@ -128,7 +128,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   # Create a stringdistmatrix for every element of initial_clust.
   distmatrices <- lapply(initial_clust, function(x) {
     x <- as.matrix(
-      stringdist::stringdistmatrix(x, weight = weight, ...)
+      stringdistmatrix(x, weight = weight, ...)
     )
     dimnames(x) <- NULL
     x
