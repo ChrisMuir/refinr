@@ -127,11 +127,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
 
   # Create a stringdistmatrix for every element of initial_clust.
   distmatrices <- lapply(initial_clust, function(x) {
-    x <- as.matrix(
-      stringdistmatrix(x, weight = weight, ...)
-    )
-    dimnames(x) <- NULL
-    x
+    as_matrix(stringdistmatrix(x, weight = weight, ...))
   })
 
   # Filter clusters based on distmatrices, then for each cluster, make mass

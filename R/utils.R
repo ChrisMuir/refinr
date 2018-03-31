@@ -11,3 +11,11 @@ business_suffix <- function(vect) {
   vect <- gsub(" limited partnership", " lp", vect, fixed = TRUE)
   return(vect)
 }
+
+# Modified version of stats:::as.matrix.dist() that doesn't mess with dimnames.
+as_matrix <- function (x) {
+  size <- attr(x, "Size")
+  df <- matrix(0, size, size)
+  df[row(df) > col(df)] <- x
+  df + t.default(df)
+}
