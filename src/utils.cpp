@@ -51,6 +51,7 @@ List cpp_as_list(CharacterVector x) {
   return(out);
 }
 
+
 // cpp version of base::unlist(), for character vectors.
 CharacterVector cpp_unlist(List x) {
   int x_len = x.size();
@@ -88,8 +89,6 @@ List cpp_flatten_list(List list_obj) {
   List::iterator count_iter;
   int out_len = 0;
   for(count_iter = list_obj_begin; count_iter != list_obj_end; ++count_iter) {
-    //List curr_list = *count_iter;
-    //out_len += curr_list.size();
     out_len += Rf_length(*count_iter);
   }
 
@@ -101,7 +100,9 @@ List cpp_flatten_list(List list_obj) {
   for(iter = list_obj.begin(); iter != list_obj_end; ++iter) {
     List curr_list = *iter;
     List::iterator curr_list_iter;
-    for(curr_list_iter = curr_list.begin(); curr_list_iter != curr_list.end(); ++curr_list_iter) {
+    for(curr_list_iter = curr_list.begin();
+        curr_list_iter != curr_list.end();
+        ++curr_list_iter) {
       out[n] = *curr_list_iter;
       n++;
     }
@@ -223,15 +224,28 @@ List cpp_list_unique(List input, bool sort_vals) {
 // appear in input vector "removes".
 // [[Rcpp::export]]
 List remove_strings(List input, CharacterVector removes) {
-  List out(input.size());
-  List::iterator input_end = input.end();
-  List::iterator iter;
-  int i = 0;
+  // Create unordered_set of the "removes" strings.
+  int removes_len = removes.size();
+  std::unordered_set<std::string> removes_set;
+  for(int n = 0; n < removes_len; ++n) {
+    removes_set.insert(as<std::string>(removes[n]));
+  }
 
-  for(iter = input.begin(); iter != input_end; ++iter) {
-    CharacterVector curr_vect = *iter;
-    out[i] = curr_vect[!cpp_in(curr_vect, removes)];
-    i++;
+  List out(input.size());
+  int input_len = input.size();
+
+  for(int i = 0; i < input_len; ++i) {
+    CharacterVector curr_vect = input[i];
+    int curr_vect_len = curr_vect.size();
+    std::deque<std::string> curr_vect_out;
+    for(int n = 0; n < curr_vect_len; ++n) {
+      std::string curr_str = as<std::string>(curr_vect[n]);
+      if(removes_set.find(curr_str) == removes_set.end()) {
+        curr_vect_out.push_back(curr_str);
+      }
+    }
+
+    out[i] = curr_vect_out;
   }
 
   return out;
