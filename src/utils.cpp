@@ -254,26 +254,6 @@ List remove_strings(List input, CharacterVector removes) {
 }
 
 
-// Compare all elements of a char vector to a char string.
-//
-// Takes a char vector and char string as input, output is a logical vector
-// with length equal to the input char vector. This is equivalent to R code
-// "vector == string".
-LogicalVector equality(CharacterVector table, String x) {
-  LogicalVector out(table.size());
-  CharacterVector::iterator table_end = table.end();
-  CharacterVector::iterator iter;
-  int i = 0;
-
-  for(iter = table.begin(); iter != table_end; ++iter) {
-    out[i] = *iter == x;
-    i++;
-  }
-
-  return out;
-}
-
-
 // cpp version of R function unique(), but only for char vectors.
 // [[Rcpp::export]]
 CharacterVector cpp_unique(CharacterVector vect) {
