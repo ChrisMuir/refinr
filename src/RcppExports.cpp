@@ -61,12 +61,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_get_char_ngrams
-CharacterVector cpp_get_char_ngrams(List vects, int numgram);
+CharacterVector cpp_get_char_ngrams(std::vector<std::string> vects, int numgram);
 RcppExport SEXP _refinr_cpp_get_char_ngrams(SEXP vectsSEXP, SEXP numgramSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type vects(vectsSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type vects(vectsSEXP);
     Rcpp::traits::input_parameter< int >::type numgram(numgramSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_get_char_ngrams(vects, numgram));
     return rcpp_result_gen;

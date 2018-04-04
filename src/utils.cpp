@@ -147,13 +147,6 @@ CharacterVector cpp_paste_list(List input, std::string collapse_str) {
 }
 
 
-// Input two char vectors (a and b), return TRUE if all of the elements of a
-// are found in b, otherwise return FALSE.
-bool complete_intersect(CharacterVector a, CharacterVector b) {
-  return is_true(all(cpp_in(a, b)));
-}
-
-
 // Input a char vector, subset to only include duplicated values, remove NA's,
 // and then get unique values. Return the subset.
 CharacterVector cpp_get_key_dups(CharacterVector keys) {
@@ -165,31 +158,40 @@ CharacterVector cpp_get_key_dups(CharacterVector keys) {
 }
 
 
-// Meant to mimic the R func %in%.
-// Returns "x %in% table".
-LogicalVector cpp_in(CharacterVector x, CharacterVector table) {
-  // If length of table is 1, use function "equality".
+// Does string x appear in char vect table.
+bool cpp_in(String x, CharacterVector table) {
   int table_len = table.size();
-  if(table_len == 1) {
-    return equality(x, table[0]);
-  }
+  bool out = false;
 
-  // Else if length of table is less than 4, use a loop.
-  if(table_len < 4) {
-    LogicalVector out(x.size());
-    CharacterVector::iterator table_end = table.end();
-    CharacterVector::iterator iter;
-    for(iter = table.begin(); iter != table_end; ++iter) {
-      LogicalVector matches = equality(x, *iter);
-      out = out | matches;
+  for(int i = 0; i < table_len; ++i) {
+    if(table[i] == x) {
+      out = true;
+      break;
     }
-    return out;
   }
 
-  // Else if length of table is 4 or greater, use sugar function "match".
-  LogicalVector out = match(x, table) > 0;
-  out[is_na(out)] = FALSE;
-  return out;
+  return(out);
+}
+
+
+// Are all strings of char vect x found in table.
+bool cpp_all(CharacterVector x, CharacterVector table) {
+  int table_len = table.size();
+  int x_len = x.size();
+
+  if(x_len > table_len) {
+    return(false);
+  }
+
+  bool out = true;
+  for(int i = 0; i < x_len; ++i) {
+    if(!cpp_in(x[i], table)) {
+      out = false;
+      break;
+    }
+  }
+
+  return(out);
 }
 
 

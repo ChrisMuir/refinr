@@ -241,11 +241,12 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     CharacterVector curr_clust = clusters[i];
     for(int n = 0; n < lows_idx_len; ++n) {
       CharacterVector terms = curr_clust[curr_mat(lows_idx[n], _) < edit_threshold];
-      clust[n] = unique(terms);
+      terms = unique(terms);
+      clust[n] = terms;
       // Check to see if terms is a complete subset of an existing cluster.
       if(n > 0) {
         for(int k = 0; k < n; ++k) {
-          if(complete_intersect(terms, clust[k])) {
+          if(cpp_all(terms, clust[k])) {
             trim_idx[n] = FALSE;
             break;
           }
@@ -280,7 +281,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
           continue;
         }
 
-        clust_bool[n] = !complete_intersect(curr_clust, max_clust);
+        clust_bool[n] = !cpp_all(curr_clust, max_clust);
       }
 
       clust = clust[clust_bool];
@@ -304,23 +305,26 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
 // string that's been tokenized by individual char. This function iterates
 // over the list, for each char vector it will compile every available ngram
 // of length equal to arg numgram. Output is a list of ngrams as char vectors.
-List char_ngram(List vects, int numgram) {
-  int vects_len = vects.size();
-  List out(vects_len);
+List char_ngram(std::vector<std::string> strings, int numgram) {
+  int strings_len = strings.size();
+  List out(strings_len);
   int numgram_sub = numgram - 1;
 
-  for(int i = 0; i < vects_len; ++i) {
-    CharacterVector curr_vect = vects[i];
-    int curr_vect_len = curr_vect.size() - numgram_sub;
-    if(curr_vect_len <= 0) {
+  for(int i = 0; i < strings_len; ++i) {
+    std::string curr_str = strings[i];
+    int curr_str_len = curr_str.size() - numgram_sub;
+    if(curr_str_len <= 0 or curr_str == "NA") {
       out[i] = NA_STRING;
       continue;
     }
-    CharacterVector curr_out(curr_vect_len);
-    for(int j = 0; j < curr_vect_len; ++j) {
+    CharacterVector curr_out(curr_str_len);
+    for(int j = 0; j < curr_str_len; ++j) {
       IntegerVector idx = seq(j, j + numgram_sub);
-      CharacterVector curr_out_sub = curr_vect[idx];
-      curr_out[j] = collapse(curr_out_sub);
+      std::string curr_token;
+      for(int k = 0; k < numgram; ++k) {
+        curr_token += curr_str[idx[k]];
+      }
+      curr_out[j] = curr_token;
     }
     out[i] = curr_out;
   }
@@ -333,13 +337,11 @@ List char_ngram(List vects, int numgram) {
 // reduce to unique tokens, then collapse the tokens back together into single
 // string.
 // [[Rcpp::export]]
-CharacterVector cpp_get_char_ngrams(List vects, int numgram) {
-  List vects_mod = clone(vects);
+CharacterVector cpp_get_char_ngrams(std::vector<std::string> vects,
+                                    int numgram) {
 
   // Get character ngrams for each element of vects.
-  if(numgram > 1) {
-    vects_mod = char_ngram(vects_mod, numgram);
-  }
+  List vects_mod = char_ngram(vects, numgram);
 
   // For each element of vects, reduce values down to uniques, then sort
   // values alphabetically.
