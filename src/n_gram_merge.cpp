@@ -19,46 +19,60 @@ CharacterVector merge_ngram_clusters(List clusters,
   refinr_map ngram_map = create_map(n_gram_keys, cl_ul);
   refinr_map univect_map = create_map(vect, uni);
 
+  // initialize iterators.
   List::iterator clust_end = clusters.end();
   List::iterator iter;
 
+  // Initialize variables used throughout the loop below.
+  CharacterVector curr_clust;
+  int curr_clust_len;
+  std::vector<int> ngram_idx;
+  std::string curr_clust_str;
+  std::vector<int> curr_ngram_idx;
+  int ngram_idx_len;
+  int univect_sub_len;
+  std::vector<int> uni_idx;
+  std::vector<int> curr_uni_idx;
+  int uni_idx_len;
+  String most_freq_string;
+
   for(iter = clusters.begin(); iter != clust_end; ++iter) {
-    CharacterVector curr_clust = *iter;
+    curr_clust = *iter;
 
     // Create subset of univect using the indices of n_gram_keys that appear
     // in curr_clust.
-    int curr_clust_len = curr_clust.size();
-    std::vector<int> ngram_idx;
+    curr_clust_len = curr_clust.size();
+    ngram_idx.clear();
     for(int i = 0; i < curr_clust_len; ++i) {
-      std::string curr_clust_str = as<std::string>(curr_clust[i]);
-      std::vector<int> curr_ngram_idx = ngram_map[curr_clust_str];
+      curr_clust_str = as<std::string>(curr_clust[i]);
+      curr_ngram_idx = ngram_map[curr_clust_str];
       ngram_idx.insert(
         ngram_idx.end(), curr_ngram_idx.begin(), curr_ngram_idx.end()
       );
     }
-    int ngram_idx_len = ngram_idx.size();
+    ngram_idx_len = ngram_idx.size();
     std::vector<std::string> univect_sub(ngram_idx_len);
     for(int i = 0; i < ngram_idx_len; ++i) {
       univect_sub[i] = uni[ngram_idx[i]];
     }
 
     // Create subset of vect using the elements of univect_sub.
-    int univect_sub_len = univect_sub.size();
-    std::vector<int> uni_idx;
+    univect_sub_len = univect_sub.size();
+    uni_idx.clear();
     for(int i = 0; i < univect_sub_len; ++i) {
-      std::vector<int> curr_uni_idx = univect_map[univect_sub[i]];
+      curr_uni_idx = univect_map[univect_sub[i]];
       uni_idx.insert(
         uni_idx.end(), curr_uni_idx.begin(), curr_uni_idx.end()
       );
     }
-    int uni_idx_len = uni_idx.size();
+    uni_idx_len = uni_idx.size();
     CharacterVector vect_sub(uni_idx_len);
     for(int i = 0; i < uni_idx_len; ++i) {
       vect_sub[i] = vect[uni_idx[i]];
     }
 
     // Find the string that appears most frequently in vect_sub.
-    String most_freq_string = most_freq_str(vect_sub);
+    most_freq_string = most_freq_str(vect_sub);
 
     // Edit all elements of output[uni_idx] to be equal to most_freq_string.
     for(int n = 0; n < uni_idx_len; ++n) {
@@ -146,13 +160,16 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   // to the list output.
   std::vector<std::string>::iterator dups_end = dups.end();
   std::vector<std::string>::iterator iter;
+
   int i = 0;
+  std::vector<int> curr_idx;
+  int curr_idx_len;
 
   for(iter = dups.begin(); iter != dups_end; ++iter) {
     // Create subset of ngram_keys using the indices from unigram_map that
     // correspond to the current unigram_dup iteration.
-    std::vector<int> curr_idx = unigram_map[*iter];
-    int curr_idx_len = curr_idx.size();
+    curr_idx = unigram_map[*iter];
+    curr_idx_len = curr_idx.size();
     CharacterVector curr_ngram(curr_idx_len);
     for(int n = 0; n < curr_idx_len; ++n) {
       curr_ngram[n] = ngram_keys[curr_idx[n]];
@@ -177,7 +194,6 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
   int distmatrices_len = distmatrices.size();
   List out(distmatrices_len);
   LogicalVector na_filter(distmatrices_len);
-  String na_val = NA_STRING;
 
   for(int i = 0; i < distmatrices_len; ++i) {
     // Get current matrix object, establish other variables.
@@ -221,7 +237,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     // If none of the rows in curr_mat contain an edit distance value below
     // the edit_threshold, return NA and move on to the next iteration.
     if(is_true(all(lows > edit_threshold))) {
-      out[i] = na_val;
+      out[i] = NA_STRING;
       na_filter[i] = FALSE;
       continue;
     }
@@ -310,17 +326,22 @@ List char_ngram(std::vector<std::string> strings, int numgram) {
   List out(strings_len);
   int numgram_sub = numgram - 1;
 
+  std::string curr_str;
+  int curr_str_len;
+  IntegerVector idx;
+  std::string curr_token;
+
   for(int i = 0; i < strings_len; ++i) {
-    std::string curr_str = strings[i];
-    int curr_str_len = curr_str.size() - numgram_sub;
+    curr_str = strings[i];
+    curr_str_len = curr_str.size() - numgram_sub;
     if(curr_str_len <= 0 or curr_str == "NA") {
       out[i] = NA_STRING;
       continue;
     }
     CharacterVector curr_out(curr_str_len);
     for(int j = 0; j < curr_str_len; ++j) {
-      IntegerVector idx = seq(j, j + numgram_sub);
-      std::string curr_token;
+      idx = seq(j, j + numgram_sub);
+      curr_token.clear();
       for(int k = 0; k < numgram; ++k) {
         curr_token += curr_str[idx[k]];
       }

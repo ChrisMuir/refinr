@@ -44,6 +44,11 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
   std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
   refinr_map keys_vect_map = create_map(keys_vect, cl);
 
+  // Initialize variables used in the loop below.
+  std::vector<int> curr_idx;
+  int curr_idx_len;
+  String most_freq_string;
+
   // Iterate over clusters, make mass edits to output.
   std::vector<std::string>::iterator clust_end = cl.end();
   std::vector<std::string>::iterator iter;
@@ -51,15 +56,15 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
   for(iter = cl.begin(); iter != clust_end; ++iter) {
     // Create subset of vect using the indices from keys_vect_map that
     // correspond to the current cluster iteration.
-    std::vector<int> curr_idx = keys_vect_map[*iter];
-    int curr_idx_len = curr_idx.size();
+    curr_idx = keys_vect_map[*iter];
+    curr_idx_len = curr_idx.size();
     CharacterVector curr_vect(curr_idx_len);
     for(int i = 0; i < curr_idx_len; ++i) {
       curr_vect[i] = vect[curr_idx[i]];
     }
 
     // Get the string that appears most often in curr_vect.
-    String most_freq_string = most_freq_str(curr_vect);
+    most_freq_string = most_freq_str(curr_vect);
 
     // For each index in curr_idx, edit output to be equal to most_freq_string.
     for(int n = 0; n < curr_idx_len; ++n) {
@@ -88,16 +93,25 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
   refinr_map keys_vect_map = create_map(keys_vect, cl);
   refinr_map keys_dict_map = create_map(keys_dict, cl);
 
+  // Initialize variables used in the loop below.
+  std::string curr_clust;
+  std::vector<int> curr_vect_idx;
+  int curr_vect_len;
+  std::vector<int> curr_dict_idx;
+  int curr_dict_len;
+  bool not_in_dict;
+  String most_freq_string;
+
   // Iterate over clusters, make mass edits to output.
   std::vector<std::string>::iterator clust_end = cl.end();
   std::vector<std::string>::iterator iter;
 
   for(iter = cl.begin(); iter != clust_end; ++iter) {
-    std::string curr_clust = *iter;
+    curr_clust = *iter;
 
     // Create subset of vect using the indices that correspond to curr_clust.
-    std::vector<int> curr_vect_idx = keys_vect_map[curr_clust];
-    int curr_vect_len = curr_vect_idx.size();
+    curr_vect_idx = keys_vect_map[curr_clust];
+    curr_vect_len = curr_vect_idx.size();
     CharacterVector curr_vect(curr_vect_len);
     for(int i = 0; i < curr_vect_len; ++i) {
       curr_vect[i] = vect[curr_vect_idx[i]];
@@ -105,10 +119,10 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
 
     // Check to see if curr_clust appears in keys_dict_map. If it does, create
     // subset of dict using the indices that correspond to curr_clust.
-    std::vector<int> curr_dict_idx = keys_dict_map[curr_clust];
-    int curr_dict_len = curr_dict_idx.size();
+    curr_dict_idx = keys_dict_map[curr_clust];
+    curr_dict_len = curr_dict_idx.size();
     CharacterVector curr_dict(curr_dict_len);
-    bool not_in_dict = true;
+    not_in_dict = true;
     if(curr_dict_len > 0) {
       not_in_dict = false;
       for(int i = 0; i < curr_dict_len; ++i) {
@@ -119,7 +133,6 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
     // Establish most_freq_string. If curr_clust exists in curr_dict, get
     // most_freq_string from curr_dict. Otherwise get most_freq_string from
     // curr_vect.
-    String most_freq_string(1);
     if(not_in_dict) {
       most_freq_string = most_freq_str(curr_vect);
     } else {

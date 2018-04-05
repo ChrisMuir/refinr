@@ -20,8 +20,10 @@ refinr_map create_map(CharacterVector terms,
   }
 
   // Fill values of the map.
+  refinr_map::iterator val;
+
   for(int i = 0; i < terms_len; ++i) {
-    refinr_map::iterator val = out.find(as<std::string>(terms[i]));
+    val = out.find(as<std::string>(terms[i]));
     if(val != out.end()) {
       val->second.push_back(i);
     }
@@ -66,9 +68,10 @@ CharacterVector cpp_unlist(List x) {
   CharacterVector out(out_len);
 
   // Loop and fill
+  CharacterVector curr_vect;
   int idx = 0;
   for(int i = 0; i < x_len; ++i) {
-    CharacterVector curr_vect = x[i];
+    curr_vect = x[i];
     std::copy(curr_vect.begin(), curr_vect.end(), out.begin() + idx);
 
     // Update the index
@@ -95,15 +98,13 @@ List cpp_flatten_list(List list_obj) {
   // Initialize output list.
   List out(out_len);
 
+  List curr_list;
   List::iterator iter;
   int n = 0;
   for(iter = list_obj.begin(); iter != list_obj_end; ++iter) {
-    List curr_list = *iter;
-    List::iterator curr_list_iter;
-    for(curr_list_iter = curr_list.begin();
-        curr_list_iter != curr_list.end();
-        ++curr_list_iter) {
-      out[n] = *curr_list_iter;
+    curr_list = *iter;
+    for(int i = 0; i < curr_list.size(); ++i) {
+      out[n] = curr_list[i];
       n++;
     }
   }
@@ -119,19 +120,25 @@ List cpp_flatten_list(List list_obj) {
 // [[Rcpp::export]]
 CharacterVector cpp_paste_list(List input, std::string collapse_str) {
   CharacterVector output(input.size());
+
+  // Initialize variables used in the loop below.
+  CharacterVector curr_vect;
+  int curr_vect_len;
+  std::string curr_out;
+
   List::iterator input_end = input.end();
   List::iterator iter;
   int i = 0;
   for(iter = input.begin(); iter != input_end; ++iter) {
-    CharacterVector curr_vect = *iter;
+    curr_vect = *iter;
     if(is_false(all(is_na(curr_vect)))) {
-      int curr_vect_len = curr_vect.size();
+      curr_vect_len = curr_vect.size();
       if(curr_vect_len == 1) {
         output[i] = as<std::string>(curr_vect);
         i++;
         continue;
       }
-      std::string curr_out = as<std::string>(curr_vect[0]);
+      curr_out = as<std::string>(curr_vect[0]);
       for(int n = 1; n < curr_vect_len; ++n) {
         curr_out += collapse_str;
         curr_out += curr_vect[n];
@@ -140,6 +147,7 @@ CharacterVector cpp_paste_list(List input, std::string collapse_str) {
     } else {
       output[i] = NA_STRING;
     }
+
     i++;
   }
 
@@ -199,6 +207,9 @@ bool cpp_all(CharacterVector x, CharacterVector table) {
 // containing the unique values of each vector.
 // [[Rcpp::export]]
 List cpp_list_unique(List input, bool sort_vals) {
+
+  CharacterVector curr_vect;
+
   List out(input.size());
   List::iterator input_end = input.end();
   List::iterator iter;
@@ -206,13 +217,13 @@ List cpp_list_unique(List input, bool sort_vals) {
 
   if(sort_vals) {
     for(iter = input.begin(); iter != input_end; ++iter) {
-      CharacterVector curr_vect = *iter;
+      curr_vect = *iter;
       out[i] = unique(curr_vect).sort();
       i++;
     }
   } else {
     for(iter = input.begin(); iter != input_end; ++iter) {
-      CharacterVector curr_vect = *iter;
+      curr_vect = *iter;
       out[i] = unique(curr_vect);
       i++;
     }
@@ -233,15 +244,20 @@ List remove_strings(List input, CharacterVector removes) {
     removes_set.insert(as<std::string>(removes[n]));
   }
 
-  List out(input.size());
   int input_len = input.size();
+  List out(input_len);
+
+  CharacterVector curr_vect;
+  int curr_vect_len;
+  std::deque<std::string> curr_vect_out;
+  std::string curr_str;
 
   for(int i = 0; i < input_len; ++i) {
-    CharacterVector curr_vect = input[i];
-    int curr_vect_len = curr_vect.size();
-    std::deque<std::string> curr_vect_out;
+    curr_vect = input[i];
+    curr_vect_len = curr_vect.size();
+    curr_vect_out.clear();
     for(int n = 0; n < curr_vect_len; ++n) {
-      std::string curr_str = as<std::string>(curr_vect[n]);
+      curr_str = as<std::string>(curr_vect[n]);
       if(removes_set.find(curr_str) == removes_set.end()) {
         curr_vect_out.push_back(curr_str);
       }
