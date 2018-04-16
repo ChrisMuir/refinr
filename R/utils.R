@@ -30,10 +30,16 @@ sdm_args <- function() {
 sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
                  qgram = 5L, cosine = 6L, jaccard = 7L, jw = 8L, soundex = 9L)
 
-# R wrapper for stringdist C function R_lower_tri()
+# R wrapper for stringdist C function `R_lower_tri()`.`
 lower_tri <- function(a, method, weight, p, bt, q, useBytes, nthread) {
-  x <- .Call("get_lower_tri", a, method, weight, p, bt, q, useBytes, nthread)
+  x <- .Call("sd_lower_tri", a, method, weight, p, bt, q, useBytes, nthread)
   attributes(x) <- list(class = "dist", Size = length(a), Diag = TRUE,
                         Upper = TRUE, method = method)
   x
+}
+
+# R wrapper for C function list_lens (the C func calls stringdist C function
+# `R_lengths()`).
+get_list_lengths <- function(x) {
+  .Call("list_lens", x)
 }
