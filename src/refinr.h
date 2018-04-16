@@ -8,7 +8,7 @@ using namespace Rcpp;
 typedef std::unordered_map<std::string, std::vector<int> > refinr_map;
 
 // utils
-refinr_map create_map(CharacterVector vect, std::vector<std::string> clusters);
+refinr_map create_map(CharacterVector terms, std::vector<std::string> keys);
 bool cpp_all(CharacterVector x, CharacterVector table);
 List cpp_list_unique(List input, bool sort_vals);
 CharacterVector cpp_paste_list(List input, std::string collapse_str);

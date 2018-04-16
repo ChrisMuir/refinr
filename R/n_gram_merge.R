@@ -67,38 +67,112 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
   stopifnot(is.logical(bus_suffix))
   stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
-  if (!is.na(weight) && !is.numeric(weight) && length(weight) != 4) {
-    stop("param 'weight' must be either a numeric vector with ",
-         "length four, or NA", call. = FALSE)
+  if (all(!is.na(weight))) {
+    if (!is.numeric(weight) && length(weight) != 4) {
+      stop("param 'weight' must be either a numeric vector with ",
+           "length four, or NA", call. = FALSE)
+    } else {
+      weight <- as.double(weight)
+    }
   }
   if ((!is.na(edit_threshold) && edit_threshold == 0) ||
       numgram == 1) {
     edit_threshold <- NA
   }
-  if (!is.na(edit_threshold) && is.na(weight)) {
+  edit_threshold_missing <- is.na(edit_threshold)
+  if (!edit_threshold_missing && is.na(weight)) {
     stop("param 'weight' must not be NA if 'edit_threshold'is not NA",
          call. = FALSE)
   }
 
   # If any args were passed via ellipsis, check to make sure they are valid
   # stringdist args.
-  ellip_args <- names(list(...))
-  if (any(c("a", "b") %in% ellip_args)) {
+  ellip_args <- list(...)
+  ellip_args_names <- names(ellip_args)
+  if (any(c("a", "b") %in% ellip_args_names)) {
     stop("'stringdistmatrix' args 'a' and 'b' cannot be set manually",
          call. = FALSE)
   }
-  sd_args <- get("sd_args", envir = refinr_env)
-  if (!all(ellip_args %in% sd_args)) {
+  sdm_args_vect <- sdm_args()
+  if (!all(ellip_args_names %in% sdm_args_vect)) {
     bad_args <- paste(
-      ellip_args[!ellip_args %in% sd_args],
+      ellip_args_names[!ellip_args_names %in% sdm_args_vect],
       collapse = ", "
     )
     stop(paste("these input arg(s) are invalid:", bad_args), call. = FALSE)
   }
 
+  # More input validations for stringdist args. These steps also establish
+  # variables that will be passed to function lower_tri()
+  if (!edit_threshold_missing) {
+    if ("maxDist" %in% ellip_args && maxDist < Inf) {
+      warning("Arg 'maxDist' is deprecated for function 'stringdistmatrix'. ",
+              "This argument will be removed in the future.", call. = FALSE)
+    }
+
+    if ("ncores" %in% ellip_args) {
+      warning("Arg 'ncores' is deprecated as stringdist uses multithreading ",
+              "by default. This argument is currently ignored and will be ",
+              "removed in the future.", call. = FALSE)
+    }
+
+    if ("cluster" %in% ellip_args) {
+      warning("Arg 'cluster' is deprecaterd as stringdust uses ",
+              "multithreading by default. The argument is currently ignored ",
+              "and will be removed in the future", call. = FALSE)
+    }
+
+    if (!"method" %in% ellip_args_names) {
+      method <- 1L
+    } else {
+      if (!ellip_args$method %in% names(sdm_methods)) {
+        stop(
+          sprintf("arg 'method' must be one of:\n%s",
+                  paste(names(sdm_methods), collapse = ", ")),
+          call. = FALSE
+        )
+      }
+      method <- sdm_methods[ellip_args$method]
+    }
+
+    if (!"nthread" %in% ellip_args_names) {
+      nthread <- getOption("sd_num_thread")
+    } else {
+      stopifnot(is.numeric(ellip_args$nthread) && ellip_args$nthread > 0)
+      nthread <- as.integer(ellip_args$nthread)
+    }
+
+    if (!"useBytes" %in% ellip_args_names) {
+      useBytes <- FALSE
+    } else {
+      stopifnot(is.logical(ellip_args$useBytes))
+      useBytes <- ellip_args$useBytes
+    }
+
+    if (!"q" %in% ellip_args_names) {
+      q <- 1
+    } else {
+      stopifnot(ellip_args$q >= 0)
+      q <- as.integer(ellip_args$q)
+    }
+
+    if (!"p" %in% ellip_args_names) {
+      p <- 0
+    } else {
+      stopifnot(ellip_args$p <= 0.25 && ellip_args$p >= 0)
+      p <- as.double(ellip_args$p)
+    }
+
+    if (!"bt" %in% ellip_args_names) {
+      bt <- 0
+    } else {
+      stopifnot(is.numeric(ellip_args$bt))
+      bt <- as.double(ellip_args$bt)
+    }
+  }
+
   # If approx string matching is being used, then get ngram == 1 keys for all
   # records.
-  edit_threshold_missing <- is.na(edit_threshold)
   univect <- cpp_unique(vect[!is.na(vect)])
   if (!edit_threshold_missing) {
     one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix,
@@ -127,7 +201,8 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
 
   # Create a stringdistmatrix for every element of initial_clust.
   distmatrices <- lapply(initial_clust, function(x) {
-    as_matrix(stringdistmatrix(x, weight = weight, ...))
+    #as_matrix(stringdistmatrix(x, weight = weight, ...))
+    as_matrix(lower_tri(x, method, weight, p, bt, q, useBytes, nthread))
   })
 
   # Filter clusters based on distmatrices, then for each cluster, make mass

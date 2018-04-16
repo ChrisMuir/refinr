@@ -131,6 +131,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP get_lower_tri(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters", (DL_FUNC) &_refinr_merge_KC_clusters, 4},
     {"_refinr_ngram_merge_no_approx", (DL_FUNC) &_refinr_ngram_merge_no_approx, 3},
@@ -142,6 +144,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},
     {"_refinr_cpp_unique", (DL_FUNC) &_refinr_cpp_unique, 1},
     {"_refinr_cpp_trimws_left", (DL_FUNC) &_refinr_cpp_trimws_left, 1},
+    {"get_lower_tri",                      (DL_FUNC) &get_lower_tri,                      8},
     {NULL, NULL, 0}
 };
 

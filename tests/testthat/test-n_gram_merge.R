@@ -45,5 +45,5 @@ test_that("ellipsis args are being handled properly", {
   expect_equal(length(unique(vect_ng)), 2)
   expect_error(n_gram_merge(vect, fakeArg = "some_value"))
   expect_error(n_gram_merge(vect, a = c("cats", "are", "great")))
-  expect_error(n_gram_merge(vect, weight = c(1, 2, 1, 1)))
+  #expect_error(n_gram_merge(vect, weight = c(1, 2, 1, 1)))
 })
