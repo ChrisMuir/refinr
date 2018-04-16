@@ -2,6 +2,6 @@
 
 export(key_collision_merge)
 export(n_gram_merge)
+import(stringdist)
 importFrom(Rcpp,sourceCpp)
-importFrom(stringdist,stringdist)
 useDynLib(refinr)
