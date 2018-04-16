@@ -93,10 +93,11 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     stop("'stringdistmatrix' args 'a' and 'b' cannot be set manually",
          call. = FALSE)
   }
-  sdm_args_vect <- sdm_args()
-  if (!all(ellip_args_names %in% sdm_args_vect)) {
+  sdm_args <- c("method", "useBytes", "weight", "maxDist", "q", "p", "bt",
+                "useNames", "ncores", "cluster", "nthread")
+  if (!all(ellip_args_names %in% sdm_args)) {
     bad_args <- paste(
-      ellip_args_names[!ellip_args_names %in% sdm_args_vect],
+      ellip_args_names[!ellip_args_names %in% sdm_args],
       collapse = ", "
     )
     stop(paste("these input arg(s) are invalid:", bad_args), call. = FALSE)
@@ -126,6 +127,9 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
       method <- 1L
     } else {
       if (!ellip_args$method %in% names(sdm_methods)) {
+        sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
+                         qgram = 5L, cosine = 6L, jaccard = 7L, jw = 8L,
+                         soundex = 9L)
         stop(
           sprintf("arg 'method' must be one of:\n%s",
                   paste(names(sdm_methods), collapse = ", ")),
