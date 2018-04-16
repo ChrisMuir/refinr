@@ -25,16 +25,16 @@ CharacterVector merge_ngram_clusters(List clusters,
 
   // Initialize variables used throughout the loop below.
   CharacterVector curr_clust;
+  String most_freq_string;
   int curr_clust_len;
-  std::vector<int> ngram_idx;
-  std::string curr_clust_str;
-  std::vector<int> curr_ngram_idx;
   int ngram_idx_len;
   int univect_sub_len;
+  int uni_idx_len;
+  std::string curr_clust_str;
   std::vector<int> uni_idx;
   std::vector<int> curr_uni_idx;
-  int uni_idx_len;
-  String most_freq_string;
+  std::vector<int> ngram_idx;
+  std::vector<int> curr_ngram_idx;
 
   for(iter = clusters.begin(); iter != clust_end; ++iter) {
     curr_clust = *iter;
@@ -162,8 +162,8 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   std::vector<std::string>::iterator iter;
 
   int i = 0;
-  std::vector<int> curr_idx;
   int curr_idx_len;
+  std::vector<int> curr_idx;
 
   for(iter = dups.begin(); iter != dups_end; ++iter) {
     // Create subset of ngram_keys using the indices from unigram_map that
@@ -189,19 +189,29 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
 // within the matrix, based on lowest numeric edit distance. (matches must
 // have a value below edit_threshold in order to be considered a cluster
 // suitable for merging).
-List filter_initial_clusters(List distmatrices, double edit_threshold,
-                             List clusters) {
+List filter_initial_clusters(List distmatrices, double edit_threshold, List clusters) {
   int distmatrices_len = distmatrices.size();
   List out(distmatrices_len);
   LogicalVector na_filter(distmatrices_len);
 
+  CharacterVector curr_clust;
+  CharacterVector max_clust;
+  CharacterVector terms;
+  DoubleVector curr_row;
+  IntegerVector lows_idx;
+  double lowest;
+  int lows_idx_len;
+  int clust_len;
+  int max_clust_idx;
+  int mat_nrow;
+
   for(int i = 0; i < distmatrices_len; ++i) {
     // Get current matrix object, establish other variables.
     NumericMatrix curr_mat = distmatrices[i];
-    int mat_nrow = curr_mat.nrow();
+    mat_nrow = curr_mat.nrow();
 
     if(mat_nrow < 2) {
-      CharacterVector curr_clust = clusters[i];
+      curr_clust = clusters[i];
       out[i] = curr_clust;
       na_filter[i] = TRUE;
       continue;
@@ -216,7 +226,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     // than one cluster match (ie a min value that repeats within any given
     // row).
     for(int row_idx = 0; row_idx < mat_nrow; ++row_idx) {
-      DoubleVector curr_row = curr_mat(row_idx,_);
+      curr_row = curr_mat(row_idx,_);
       LogicalVector row_bool(mat_nrow);
       for(int n = 0; n < mat_nrow; ++n) {
         if(n != row_idx) {
@@ -227,7 +237,7 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
       }
 
       curr_row = curr_row[row_bool];
-      double lowest = min(curr_row);
+      lowest = min(curr_row);
       lows[row_idx] = lowest;
       if(lowest < edit_threshold) {
         olap[row_idx] = sum(curr_row == lowest);
@@ -247,16 +257,16 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
     olap = olap[olap > 0];
 
     // Get indices of obj lows that are less than edit_threshold.
-    IntegerVector lows_idx = seq(0, mat_nrow - 1);
+    lows_idx = seq(0, mat_nrow - 1);
     lows_idx = lows_idx[lows < edit_threshold];
-    int lows_idx_len = lows_idx.size();
+    lows_idx_len = lows_idx.size();
 
     // Generate clusters of char keys based on the edit distance matrix values.
     List clust(lows_idx_len);
     LogicalVector trim_idx(lows_idx_len, TRUE);
-    CharacterVector curr_clust = clusters[i];
+    curr_clust = clusters[i];
     for(int n = 0; n < lows_idx_len; ++n) {
-      CharacterVector terms = curr_clust[curr_mat(lows_idx[n], _) < edit_threshold];
+      terms = curr_clust[curr_mat(lows_idx[n], _) < edit_threshold];
       terms = unique(terms);
       clust[n] = terms;
       // Check to see if terms is a complete subset of an existing cluster.
@@ -270,14 +280,14 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
       }
     }
 
-    // trim obj's clust and olap to only include unique clusters.
+    // trim objs clust and olap to only include unique clusters.
     clust = clust[trim_idx];
     olap = olap[trim_idx];
 
     // If any rows of curr_mat have a min edit distance that repeats,
     // eliminate any clusters that are complete subsets of the longest
     // cluster of the group.
-    int clust_len = clust.size();
+    clust_len = clust.size();
     if(sum(olap > 1) > 0 and clust_len > 1) {
       NumericVector lens_of_clusts(clust_len);
       for(int n = 0; n < clust_len; ++n) {
@@ -286,12 +296,12 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
 
       // Eliminate any clusters that are complete subsets of the longest
       // cluster of the group.
-      int max_clust_idx = which_max(lens_of_clusts);
-      CharacterVector max_clust = clust[max_clust_idx];
+      max_clust_idx = which_max(lens_of_clusts);
+      max_clust = clust[max_clust_idx];
       LogicalVector clust_bool(clust_len);
 
       for(int n = 0; n < clust_len; ++n) {
-        CharacterVector curr_clust = clust[n];
+        curr_clust = clust[n];
         if(n == max_clust_idx) {
           clust_bool[n] = TRUE;
           continue;
@@ -321,15 +331,15 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
 // string that's been tokenized by individual char. This function iterates
 // over the list, for each char vector it will compile every available ngram
 // of length equal to arg numgram. Output is a list of ngrams as char vectors.
-List char_ngram(std::vector<std::string> strings, int numgram) {
+List char_ngram(const std::vector<std::string>& strings, int numgram) {
   int strings_len = strings.size();
   List out(strings_len);
   int numgram_sub = numgram - 1;
 
-  std::string curr_str;
-  int curr_str_len;
   IntegerVector idx;
+  std::string curr_str;
   std::string curr_token;
+  int curr_str_len;
 
   for(int i = 0; i < strings_len; ++i) {
     curr_str = strings[i];

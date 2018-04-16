@@ -32,6 +32,7 @@ refinr_map create_map(CharacterVector terms,
   return(out);
 }
 
+
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
 String most_freq_str(CharacterVector x) {
