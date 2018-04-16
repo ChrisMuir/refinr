@@ -27,7 +27,7 @@
 #'
 #' @useDynLib refinr
 #' @importFrom Rcpp sourceCpp
-#' @importFrom stringdist stringdistmatrix
+#' @importFrom stringdist stringdist
 #' @docType package
 #' @name refinr
 NULL
