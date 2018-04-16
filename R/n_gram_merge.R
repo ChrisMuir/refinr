@@ -105,18 +105,18 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   # More input validations for stringdist args. These steps also establish
   # variables that will be passed to function lower_tri()
   if (!edit_threshold_missing) {
-    if ("maxDist" %in% ellip_args && maxDist < Inf) {
+    if ("maxDist" %in% ellip_args_names && maxDist < Inf) {
       warning("Arg 'maxDist' is deprecated for function 'stringdistmatrix'. ",
               "This argument will be removed in the future.", call. = FALSE)
     }
 
-    if ("ncores" %in% ellip_args) {
+    if ("ncores" %in% ellip_args_names) {
       warning("Arg 'ncores' is deprecated as stringdist uses multithreading ",
               "by default. This argument is currently ignored and will be ",
               "removed in the future.", call. = FALSE)
     }
 
-    if ("cluster" %in% ellip_args) {
+    if ("cluster" %in% ellip_args_names) {
       warning("Arg 'cluster' is deprecaterd as stringdust uses ",
               "multithreading by default. The argument is currently ignored ",
               "and will be removed in the future", call. = FALSE)
