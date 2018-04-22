@@ -25,7 +25,10 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   # Final transformations, then return object "out".
   vect <- cpp_list_unique(vect, sort_vals = TRUE)
   vect <- cpp_paste_list(vect, collapse_str = " ")
-  vect <- iconv(vect, to = "ASCII//TRANSLIT")
+  #vect <- iconv(vect, to = "ASCII//TRANSLIT")
+  enc <- Encoding(vect) == "UTF-8"
+  vect[enc] <- stri_trans_general(vect[enc], "latin-ASCII")
+  vect[!enc] <- iconv(vect[!enc], to = "ASCII//TRANSLIT")
   vect[!nzchar(vect)] <- NA_character_
   return(vect)
 }
@@ -64,7 +67,10 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
   vect <- gsub(regex, "", vect, perl = TRUE)
   # Rest of the transformations. For each value in vect: get ngrams, filter by
   # unique, sort alphabetically, paste back together, and normalize encoding.
-  vect <- iconv(vect, to = "ASCII//TRANSLIT")
+  enc <- Encoding(vect) == "UTF-8"
+  vect[enc] <- stri_trans_general(vect[enc], "latin-ASCII")
+  vect[!enc] <- iconv(vect[!enc], to = "ASCII//TRANSLIT")
+  #vect <- iconv(vect, to = "ASCII//TRANSLIT")
   if (numgram == 1) {
     vect <- strsplit(vect, "", fixed = TRUE)
     vect <- cpp_list_unique(vect, sort_vals = TRUE)
