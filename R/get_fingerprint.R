@@ -18,17 +18,16 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                           "lp", "and")
     }
   }
+  ignore_str_null <- is.null(ignore_strings)
+  vect <- remove_accents(vect)
+  if(!ignore_str_null) ignore_strings <- remove_accents(ignore_strings)
   vect <- strsplit(cpp_trimws_left(vect), "\\s+", perl = TRUE)
   # If "ignore_strings" is not NULL, for each element of list "vect", remove
   # any string that has a match within vector "ignore_strings".
-  if (!is.null(ignore_strings)) vect <- remove_strings(vect, ignore_strings)
+  if (!ignore_str_null) vect <- remove_strings(vect, ignore_strings)
   # Final transformations, then return object "out".
   vect <- cpp_list_unique(vect, sort_vals = TRUE)
   vect <- cpp_paste_list(vect, collapse_str = " ")
-  #vect <- iconv(vect, to = "ASCII//TRANSLIT")
-  enc <- Encoding(vect) == "UTF-8"
-  vect[enc] <- stri_trans_general(vect[enc], "latin-ASCII")
-  vect[!enc] <- iconv(vect[!enc], to = "ASCII//TRANSLIT")
   vect[!nzchar(vect)] <- NA_character_
   return(vect)
 }
@@ -67,10 +66,7 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
   vect <- gsub(regex, "", vect, perl = TRUE)
   # Rest of the transformations. For each value in vect: get ngrams, filter by
   # unique, sort alphabetically, paste back together, and normalize encoding.
-  enc <- Encoding(vect) == "UTF-8"
-  vect[enc] <- stri_trans_general(vect[enc], "latin-ASCII")
-  vect[!enc] <- iconv(vect[!enc], to = "ASCII//TRANSLIT")
-  #vect <- iconv(vect, to = "ASCII//TRANSLIT")
+  vect <- remove_accents(vect)
   if (numgram == 1) {
     vect <- strsplit(vect, "", fixed = TRUE)
     vect <- cpp_list_unique(vect, sort_vals = TRUE)
@@ -79,4 +75,14 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
     vect <- cpp_get_char_ngrams(vect, numgram = numgram)
   }
   return(vect)
+}
+
+#' Remove accents from chars, while properly handling UTF-8 strings.
+#'
+#' @noRd
+remove_accents <- function(vect) {
+  enc <- Encoding(vect) == "UTF-8"
+  vect[enc] <- stri_trans_general(vect[enc], "latin-ASCII")
+  vect[!enc] <- iconv(vect[!enc], to = "ASCII//TRANSLIT")
+  vect
 }
