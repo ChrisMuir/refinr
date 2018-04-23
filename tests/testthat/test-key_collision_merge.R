@@ -28,6 +28,5 @@ test_that("param 'ignore_strings' having expected effect", {
 })
 
 vect <- c("César Moreira Nuñez", "cesar moreira nunez")
-#test_that("check encoding", expect_equal(Encoding(vect), c("UTF-8", "unknown")))
 test_that("encoding of input strings handled correctly",
           expect_equal(length(unique(key_collision_merge(vect))), 1))
