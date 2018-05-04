@@ -7,7 +7,7 @@ refinr 0.3.0
 
 ## BUG FIXES
 
-* Fixed issue in which input strings that contained accent marks were not being properly handled/clustered ([#9](https://github.com/ChrisMuir/refinr/issues/9)). The fix involved adding [stringi](https://cran.r-project.org/web/packages/stringi/index.html) to `Imports` and using `stringi::stri_trans_general()`.
+* Fixed issue in which input strings that contained accent marks were not being properly handled/clustered ([#9](https://github.com/ChrisMuir/refinr/issues/9)). The fix involved adding [stringi](https://CRAN.R-project.org/package=stringi) to `Imports` and using `stringi::stri_trans_general()`.
 
 * Fixed issue in `n_gram_merge()` in which incorrect values were being return when input arg `ignore_strings` was not `NULL`, and arg `bus_suffix = FALSE` ([#7](https://github.com/ChrisMuir/refinr/issues/7)).
 
