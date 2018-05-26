@@ -5,8 +5,8 @@
 #' process, the first is clustering values based on their ngram fingerprint (described here
 #' \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}).
 #' The second step is merging values based on approximate string matching of
-#' the ngram fingerprints, using the \code{stringdistmatrix} function from the
-#' package \code{\link{stringdist}}.
+#' the ngram fingerprints, using the [stringdistmatrix()] function from the
+#' package \code{stringdist}.
 #'
 #' @param vect Character vector, items to be potentially clustered and merged.
 #' @param numgram Numeric value, indicating the number of characters that
@@ -24,12 +24,12 @@
 #'   the four edit operations (see details below), for the purpose of
 #'   approximate string matching. Default values are
 #'   c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
-#'   to the \code{\link{stringdist}} function. Must be either
+#'   to the \code{stringdist} function. Must be either
 #'   a numeric vector of length four, or NA.
-#' @param ... additional args to be passed along to \code{\link{stringdist}}.
+#' @param ... additional args to be passed along to \code{stringdist}.
 #'
 #' @details The values of arg \code{weight} are edit distance values that
-#'  get passed to the \code{\link{stringdist}} edit distance function. The
+#'  get passed to the \code{stringdist} edit distance function. The
 #'  param takes four arguments, each one is a specific type of edit, with
 #'  default penalty value.
 #'  \itemize{
@@ -127,9 +127,6 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
       method <- 1L
     } else {
       if (!ellip_args$method %in% names(sdm_methods)) {
-        sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
-                         qgram = 5L, cosine = 6L, jaccard = 7L, jw = 8L,
-                         soundex = 9L)
         stop(
           sprintf("arg 'method' must be one of:\n%s",
                   paste(names(sdm_methods), collapse = ", ")),

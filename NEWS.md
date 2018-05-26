@@ -1,11 +1,13 @@
-refinr 0.2.0.9000
-=================
+refinr 0.3.0
+============
 
 ## PKG API CHANGES
 
 * In function `n_gram_merge()`, renamed arg `edit_dist_weights` to `weight`. The only purpose of this arg is to be passed along to function `stringdistmatrix` from the [stringdist](https://CRAN.R-project.org/package=stringdist) package (which uses the name `weight`, so this change is simply to match that).
 
 ## BUG FIXES
+
+* Fixed issue in which input strings that contained accent marks were not being properly handled/clustered ([#9](https://github.com/ChrisMuir/refinr/issues/9)). The fix involved adding [stringi](https://CRAN.R-project.org/package=stringi) to `Imports` and using `stringi::stri_trans_general()`.
 
 * Fixed issue in `n_gram_merge()` in which incorrect values were being return when input arg `ignore_strings` was not `NULL`, and arg `bus_suffix = FALSE` ([#7](https://github.com/ChrisMuir/refinr/issues/7)).
 
@@ -15,7 +17,7 @@ refinr 0.2.0.9000
 
 ## NEW FEATURES
 
-* Rewrote some of the cpp functions to incorporate `tr1::unordered_map`, resulting in a substantial speed improvement when passing large character vectors (length 100,000+) to either of the exported functions ([#8](https://github.com/ChrisMuir/refinr/issues/8)).
+* Rewrote some of the cpp functions to incorporate `std::unordered_map()`, resulting in a substantial speed improvement when passing large character vectors (length 100,000+) to either of the exported functions ([#8](https://github.com/ChrisMuir/refinr/issues/8)).
 
 refinr 0.2.0 (2018-01-10)
 =========================

@@ -47,3 +47,7 @@ test_that("ellipsis args are being handled properly", {
   expect_error(n_gram_merge(vect, a = c("cats", "are", "great")))
   #expect_error(n_gram_merge(vect, weight = c(1, 2, 1, 1)))
 })
+
+vect <- c("César Moreira Nuñez", "cesar moreira nunez")
+test_that("encoding of input strings handled correctly",
+          expect_equal(length(unique(n_gram_merge(vect))), 1))

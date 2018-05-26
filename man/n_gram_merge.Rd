@@ -29,10 +29,10 @@ merging will be based on strings that have identical ngram fingerprints.}
 the four edit operations (see details below), for the purpose of
 approximate string matching. Default values are
 c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
-to the \code{\link{stringdist}} function. Must be either
+to the \code{stringdist} function. Must be either
 a numeric vector of length four, or NA.}
 
-\item{...}{additional args to be passed along to \code{\link{stringdist}}.}
+\item{...}{additional args to be passed along to \code{stringdist}.}
 }
 \value{
 Character vector with similar values merged.
@@ -43,12 +43,12 @@ that are approximately equivalent yet not identical. It uses a two step
 process, the first is clustering values based on their ngram fingerprint (described here
 \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}).
 The second step is merging values based on approximate string matching of
-the ngram fingerprints, using the \code{stringdistmatrix} function from the
-package \code{\link{stringdist}}.
+the ngram fingerprints, using the [stringdistmatrix()] function from the
+package \code{stringdist}.
 }
 \details{
 The values of arg \code{weight} are edit distance values that
- get passed to the \code{\link{stringdist}} edit distance function. The
+ get passed to the \code{stringdist} edit distance function. The
  param takes four arguments, each one is a specific type of edit, with
  default penalty value.
  \itemize{

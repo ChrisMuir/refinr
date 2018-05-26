@@ -28,6 +28,10 @@ lower_tri <- function(a, method, weight, p, bt, q, useBytes, nthread) {
   x
 }
 
+# vector for int-switch used by lower_tri()
+sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
+                 qgram = 5L, cosine = 6L, jaccard = 7L, jw = 8L, soundex = 9L)
+
 # R wrapper for C function `list_lens()` (`list_lens()` calls stringdist C
 # function `R_lengths()`).
 get_list_lengths <- function(x) {

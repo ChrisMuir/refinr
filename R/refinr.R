@@ -28,6 +28,7 @@
 #' @useDynLib refinr
 #' @importFrom Rcpp sourceCpp
 #' @import stringdist
+#' @importFrom stringi stri_trans_general
 #' @docType package
 #' @name refinr
 NULL
