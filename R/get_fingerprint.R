@@ -7,6 +7,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   vect <- gsub("[;'`\"]", "", tolower(vect), perl = TRUE)
   # Replace other punct with a blank space (want "cats,inc" to be 2 words).
   vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
+  vect <- gsub(" {2,}", " ", vect, perl = TRUE)
   if (bus_suffix) {
     vect <- business_suffix(vect)
     if (!is.null(ignore_strings)) {
@@ -21,7 +22,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   ignore_str_null <- is.null(ignore_strings)
   vect <- remove_accents(vect)
   if(!ignore_str_null) ignore_strings <- remove_accents(ignore_strings)
-  vect <- strsplit(cpp_trimws_left(vect), "\\s+", perl = TRUE)
+  vect <- strsplit(cpp_trimws_left(vect), " ", fixed = TRUE)
   # If "ignore_strings" is not NULL, for each element of list "vect", remove
   # any string that has a match within vector "ignore_strings".
   if (!ignore_str_null) vect <- remove_strings(vect, ignore_strings)
@@ -58,12 +59,15 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
     # eliminate from each element of "vect" (also remove all spaces).
     regex <- paste0("\\b(",
                     paste(ignore_strings, collapse = "|"),
-                    ")\\b|\\s")
+                    ")\\b| ")
+    vect <- gsub(regex, "", vect, perl = TRUE)
   } else {
     # Otherwise, if ignore_strings is NULL, only remove spaces.
-    regex <- "\\s+"
+    #regex <- "\\s+"
+    vect <- gsub(" ", "", vect, fixed = TRUE)
+
   }
-  vect <- gsub(regex, "", vect, perl = TRUE)
+  #vect <- gsub(regex, "", vect, perl = TRUE)
   # Rest of the transformations. For each value in vect: get ngrams, filter by
   # unique, sort alphabetically, paste back together, and normalize encoding.
   vect <- remove_accents(vect)
