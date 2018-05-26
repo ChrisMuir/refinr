@@ -63,11 +63,9 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
     vect <- gsub(regex, "", vect, perl = TRUE)
   } else {
     # Otherwise, if ignore_strings is NULL, only remove spaces.
-    #regex <- "\\s+"
     vect <- gsub(" ", "", vect, fixed = TRUE)
 
   }
-  #vect <- gsub(regex, "", vect, perl = TRUE)
   # Rest of the transformations. For each value in vect: get ngrams, filter by
   # unique, sort alphabetically, paste back together, and normalize encoding.
   vect <- remove_accents(vect)
