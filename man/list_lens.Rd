@@ -13,7 +13,7 @@ list_lens(x)
 Integer vector, indicating the length of each input list element.
 }
 \description{
-R wrapper for cpp function `cpp_list_lens()` (`cpp_list_lens()` calls
+R wrapper for C function `C_list_lens()` (`C_list_lens()` calls
 stringdist C function `R_lengths()`).
 }
 \examples{

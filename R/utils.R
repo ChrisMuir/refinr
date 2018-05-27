@@ -34,7 +34,7 @@ sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
 
 #' Get Length of Each List Element
 #'
-#' R wrapper for cpp function `cpp_list_lens()` (`cpp_list_lens()` calls
+#' R wrapper for C function `C_list_lens()` (`C_list_lens()` calls
 #' stringdist C function `R_lengths()`).
 #'
 #' @param x List
@@ -46,5 +46,5 @@ sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
 #' test_list <- list(c(1, 2, 3), c("cats", "dogs"))
 #' list_lens(test_list)
 list_lens <- function(x) {
-  cpp_list_lens(x)
+  .Call("C_list_lens", x)
 }

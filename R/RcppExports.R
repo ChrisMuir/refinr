@@ -21,10 +21,6 @@ cpp_get_char_ngrams <- function(vects, numgram) {
     .Call('_refinr_cpp_get_char_ngrams', PACKAGE = 'refinr', vects, numgram)
 }
 
-cpp_list_lens <- function(x) {
-    .Call('_refinr_cpp_list_lens', PACKAGE = 'refinr', x)
-}
-
 cpp_paste_list <- function(input, collapse_str) {
     .Call('_refinr_cpp_paste_list', PACKAGE = 'refinr', input, collapse_str)
 }
