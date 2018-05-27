@@ -32,8 +32,19 @@ lower_tri <- function(a, method, weight, p, bt, q, useBytes, nthread) {
 sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
                  qgram = 5L, cosine = 6L, jaccard = 7L, jw = 8L, soundex = 9L)
 
-# R wrapper for C function `list_lens()` (`list_lens()` calls stringdist C
-# function `R_lengths()`).
-get_list_lengths <- function(x) {
-  .Call("list_lens", x)
+#' Get Length of Each List Element
+#'
+#' R wrapper for cpp function `cpp_list_lens()` (`cpp_list_lens()` calls
+#' stringdist C function `R_lengths()`).
+#'
+#' @param x List
+#'
+#' @return Integer vector, indicating the length of each input list element.
+#' @export
+#'
+#' @examples
+#' test_list <- list(c(1, 2, 3), c("cats", "dogs"))
+#' list_lens(test_list)
+list_lens <- function(x) {
+  cpp_list_lens(x)
 }
