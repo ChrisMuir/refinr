@@ -34,8 +34,8 @@ sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
 
 #' Get Length of Each List Element
 #'
-#' R wrapper for C function `C_list_lens()` (`C_list_lens()` calls
-#' stringdist C function `R_lengths()`).
+#' R wrapper for C function `C_test_lengths()` (`C_test_lengths()`
+#' calls stringdist C function `R_lengths()`).
 #'
 #' @param x List
 #'
@@ -44,7 +44,24 @@ sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
 #'
 #' @examples
 #' test_list <- list(c(1, 2, 3), c("cats", "dogs"))
-#' list_lens(test_list)
-list_lens <- function(x) {
-  .Call("C_list_lens", x)
+#' str_dist_lengths(test_list)
+C_str_dist_lengths <- function(x) {
+  .Call("C_test_lengths", x)
+}
+
+#' Check to see if all elements of a list are integer vectors
+#'
+#' R wrapper for C function `C_test_all_int()` (`C_test_all_int()`
+#' calls stringdist C function `R_all_int()`)
+#'
+#' @param x List
+#'
+#' @return Logical
+#' @export
+#'
+#' @examples
+#' test_list <- list(c(1, 2, 3), c("cats", "dogs"))
+#' str_dist_all_int(test_list)
+C_str_dist_all_int <- function(x) {
+  .Call("C_test_all_int", x)
 }
