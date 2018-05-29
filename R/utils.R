@@ -34,7 +34,7 @@ sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
 
 #' Get Length of Each List Element
 #'
-#' R wrapper for C function `C_test_lengths()` (`C_test_lengths()`
+#' R wrapper for C function `Rcpp_str_dist_lengths()` (`Rcpp_str_dist_lengths()`
 #' calls stringdist C function `R_lengths()`).
 #'
 #' @param x List
@@ -44,14 +44,14 @@ sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
 #'
 #' @examples
 #' test_list <- list(c(1, 2, 3), c("cats", "dogs"))
-#' str_dist_lengths(test_list)
-C_str_dist_lengths <- function(x) {
-  .Call("C_test_lengths", x)
+#' Rcpp_str_dist_lengths(test_list)
+Rcpp_str_dist_lengths <- function(x) {
+  Rcpp_test_lengths(x)
 }
 
 #' Check to see if all elements of a list are integer vectors
 #'
-#' R wrapper for C function `C_test_all_int()` (`C_test_all_int()`
+#' R wrapper for C function `Rcpp_test_all_int()` (`Rcpp_test_all_int()`
 #' calls stringdist C function `R_all_int()`)
 #'
 #' @param x List
@@ -61,7 +61,7 @@ C_str_dist_lengths <- function(x) {
 #'
 #' @examples
 #' test_list <- list(c(1, 2, 3), c("cats", "dogs"))
-#' str_dist_all_int(test_list)
-C_str_dist_all_int <- function(x) {
-  .Call("C_test_all_int", x)
+#' Rcpp_str_dist_all_int(test_list)
+Rcpp_str_dist_all_int <- function(x) {
+  Rcpp_test_all_int(x)
 }

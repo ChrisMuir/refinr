@@ -21,6 +21,14 @@ cpp_get_char_ngrams <- function(vects, numgram) {
     .Call('_refinr_cpp_get_char_ngrams', PACKAGE = 'refinr', vects, numgram)
 }
 
+Rcpp_test_all_int <- function(x) {
+    .Call('_refinr_Rcpp_test_all_int', PACKAGE = 'refinr', x)
+}
+
+Rcpp_test_lengths <- function(x) {
+    .Call('_refinr_Rcpp_test_lengths', PACKAGE = 'refinr', x)
+}
+
 cpp_paste_list <- function(input, collapse_str) {
     .Call('_refinr_cpp_paste_list', PACKAGE = 'refinr', input, collapse_str)
 }

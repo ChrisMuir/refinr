@@ -72,6 +72,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Rcpp_test_all_int
+SEXP Rcpp_test_all_int(List x);
+RcppExport SEXP _refinr_Rcpp_test_all_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(Rcpp_test_all_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Rcpp_test_lengths
+NumericVector Rcpp_test_lengths(List x);
+RcppExport SEXP _refinr_Rcpp_test_lengths(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(Rcpp_test_lengths(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_paste_list
 CharacterVector cpp_paste_list(List input, std::string collapse_str);
 RcppExport SEXP _refinr_cpp_paste_list(SEXP inputSEXP, SEXP collapse_strSEXP) {
@@ -131,8 +153,6 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP C_test_all_int(SEXP);
-RcppExport SEXP C_test_lengths(SEXP);
 RcppExport SEXP sd_lower_tri(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -141,13 +161,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_ngram_merge_approx", (DL_FUNC) &_refinr_ngram_merge_approx, 6},
     {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 2},
     {"_refinr_cpp_get_char_ngrams", (DL_FUNC) &_refinr_cpp_get_char_ngrams, 2},
+    {"_refinr_Rcpp_test_all_int", (DL_FUNC) &_refinr_Rcpp_test_all_int, 1},
+    {"_refinr_Rcpp_test_lengths", (DL_FUNC) &_refinr_Rcpp_test_lengths, 1},
     {"_refinr_cpp_paste_list", (DL_FUNC) &_refinr_cpp_paste_list, 2},
     {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
     {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},
     {"_refinr_cpp_unique", (DL_FUNC) &_refinr_cpp_unique, 1},
     {"_refinr_cpp_trimws_left", (DL_FUNC) &_refinr_cpp_trimws_left, 1},
-    {"C_test_all_int",                     (DL_FUNC) &C_test_all_int,                     1},
-    {"C_test_lengths",                     (DL_FUNC) &C_test_lengths,                     1},
     {"sd_lower_tri",                       (DL_FUNC) &sd_lower_tri,                       8},
     {NULL, NULL, 0}
 };
