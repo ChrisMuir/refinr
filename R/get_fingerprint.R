@@ -77,9 +77,21 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
   return(vect)
 }
 
-#' Remove accents from chars, while properly handling UTF-8 strings.
-#'
-#' @noRd
+# Function that attempts to merge common business name suffixes within a
+# character string.
+business_suffix <- function(vect) {
+  vect <- gsub(" incorporated| incorporate", " inc", vect, perl = TRUE)
+  vect <- gsub(" corporation| corporations", " corp", vect, perl = TRUE)
+  vect <- gsub(" company| companys| companies", " co", vect, perl = TRUE)
+  vect <- gsub(" limited liability co", " llc", vect, fixed = TRUE)
+  vect <- gsub(" limited$", " ltd", vect, perl = TRUE)
+  vect <- gsub(" division| divisions", " div", vect, perl = TRUE)
+  vect <- gsub(" enterprises| enterprise", " ent", vect, perl = TRUE)
+  vect <- gsub(" limited partnership", " lp", vect, fixed = TRUE)
+  return(vect)
+}
+
+# Remove accents from chars, while properly handling UTF-8 strings.
 remove_accents <- function(vect) {
   enc <- Encoding(vect) == "UTF-8"
   vect[enc] <- stri_trans_general(vect[enc], "latin-ASCII")

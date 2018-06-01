@@ -87,17 +87,18 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
 
   # If any args were passed via ellipsis, check to make sure they are valid
   # stringdist args.
-  ellip_args <- list(...)
-  ellip_args_names <- names(ellip_args)
-  if (any(c("a", "b") %in% ellip_args_names)) {
+  dots <- list(...)
+  dots_names <- names(dots)
+  if (any(c("a", "b") %in% dots_names)) {
     stop("'stringdistmatrix' args 'a' and 'b' cannot be set manually",
          call. = FALSE)
   }
-  sdm_args <- c("method", "useBytes", "weight", "maxDist", "q", "p", "bt",
-                "useNames", "ncores", "cluster", "nthread")
-  if (!all(ellip_args_names %in% sdm_args)) {
+  # Vector of valid arg names for stringdistmatrix.
+  sdm_args <- c("method", "useBytes", "weight", "q", "p", "bt", "useNames",
+                "nthread")
+  if (!all(dots_names %in% sdm_args)) {
     bad_args <- paste(
-      ellip_args_names[!ellip_args_names %in% sdm_args],
+      dots_names[!dots_names %in% sdm_args],
       collapse = ", "
     )
     stop(paste("these input arg(s) are invalid:", bad_args), call. = FALSE)
@@ -106,69 +107,55 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   # More input validations for stringdist args. These steps also establish
   # variables that will be passed to function lower_tri()
   if (!edit_threshold_missing) {
-    if ("maxDist" %in% ellip_args_names && maxDist < Inf) {
-      warning("Arg 'maxDist' is deprecated for function 'stringdistmatrix'. ",
-              "This argument will be removed in the future.", call. = FALSE)
-    }
-
-    if ("ncores" %in% ellip_args_names) {
-      warning("Arg 'ncores' is deprecated as stringdist uses multithreading ",
-              "by default. This argument is currently ignored and will be ",
-              "removed in the future.", call. = FALSE)
-    }
-
-    if ("cluster" %in% ellip_args_names) {
-      warning("Arg 'cluster' is deprecaterd as stringdust uses ",
-              "multithreading by default. The argument is currently ignored ",
-              "and will be removed in the future", call. = FALSE)
-    }
-
-    if (!"method" %in% ellip_args_names) {
+    if (!"method" %in% dots_names) {
       method <- 1L
     } else {
-      if (!ellip_args$method %in% names(sdm_methods)) {
+      sdm_methods <- c(osa = 0L, lv = 1L, dl = 2L, hamming = 3L, lcs = 4L,
+                       qgram = 5L, cosine = 6L, jaccard = 7L, jw = 8L,
+                       soundex = 9L)
+      if (!dots$method %in% names(sdm_methods)) {
         stop(
           sprintf("arg 'method' must be one of:\n%s",
                   paste(names(sdm_methods), collapse = ", ")),
           call. = FALSE
         )
       }
-      method <- sdm_methods[ellip_args$method]
+      method <- sdm_methods[dots$method]
     }
 
-    if (!"nthread" %in% ellip_args_names) {
+    if (!"nthread" %in% dots_names) {
       nthread <- getOption("sd_num_thread")
     } else {
-      stopifnot(is.numeric(ellip_args$nthread) && ellip_args$nthread > 0)
-      nthread <- as.integer(ellip_args$nthread)
+      stopifnot(is.numeric(dots$nthread) && dots$nthread > 0)
+      nthread <- as.integer(dots$nthread)
     }
 
-    if (!"useBytes" %in% ellip_args_names) {
+    if (!"useBytes" %in% dots_names) {
       useBytes <- FALSE
     } else {
-      stopifnot(is.logical(ellip_args$useBytes))
-      useBytes <- ellip_args$useBytes
+      stopifnot(is.logical(dots$useBytes))
+      useBytes <- dots$useBytes
     }
 
-    if (!"q" %in% ellip_args_names) {
+    if (!"q" %in% dots_names) {
       q <- 1
     } else {
-      stopifnot(ellip_args$q >= 0)
-      q <- as.integer(ellip_args$q)
+      stopifnot(dots$q >= 0)
+      q <- as.integer(dots$q)
     }
 
-    if (!"p" %in% ellip_args_names) {
+    if (!"p" %in% dots_names) {
       p <- 0
     } else {
-      stopifnot(ellip_args$p <= 0.25 && ellip_args$p >= 0)
-      p <- as.double(ellip_args$p)
+      stopifnot(dots$p <= 0.25 && dots$p >= 0)
+      p <- as.double(dots$p)
     }
 
-    if (!"bt" %in% ellip_args_names) {
+    if (!"bt" %in% dots_names) {
       bt <- 0
     } else {
-      stopifnot(is.numeric(ellip_args$bt))
-      bt <- as.double(ellip_args$bt)
+      stopifnot(is.numeric(dots$bt))
+      bt <- as.double(dots$bt)
     }
   }
 
@@ -210,4 +197,20 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   # edits to the values of vect related to that cluster.
   return(ngram_merge_approx(n_gram_keys, univect, vect, distmatrices,
                             edit_threshold, initial_clust))
+}
+
+# Modified version of stats:::as.matrix.dist() that doesn't mess with dimnames.
+as_matrix <- function (x) {
+  size <- attr(x, "Size")
+  df <- matrix(0, size, size)
+  df[row(df) > col(df)] <- x
+  df + t.default(df)
+}
+
+# R wrapper for stringdist C function `R_lower_tri()`.`
+lower_tri <- function(a, method, weight, p, bt, q, useBytes, nthread) {
+  x <- .Call("sd_lower_tri", a, method, weight, p, bt, q, useBytes, nthread)
+  attributes(x) <- list(class = "dist", Size = length(a), Diag = TRUE,
+                        Upper = TRUE, method = method)
+  x
 }

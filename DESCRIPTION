@@ -13,7 +13,8 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-        Rcpp, 
+        Rcpp,
+        stringdist,
         stringi
 RoxygenNote: 6.0.1.9000
 LinkingTo: Rcpp,

@@ -3,9 +3,6 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins(cpp11)]]
 
-NumericVector stringdist_lengths(List X);
-SEXP stringdist_all_int(List X);
-
 // Define std::unordered_map using std::string as keys and std::vector<int>
 // as values.
 typedef std::unordered_map<std::string, std::vector<int> > refinr_map;
