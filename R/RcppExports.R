@@ -9,12 +9,8 @@ ngram_merge_no_approx <- function(n_gram_keys, univect, vect) {
     .Call('_refinr_ngram_merge_no_approx', PACKAGE = 'refinr', n_gram_keys, univect, vect)
 }
 
-ngram_merge_approx <- function(n_gram_keys, univect, vect, distmatrices, edit_threshold, initial_clust) {
-    .Call('_refinr_ngram_merge_approx', PACKAGE = 'refinr', n_gram_keys, univect, vect, distmatrices, edit_threshold, initial_clust)
-}
-
-get_ngram_initial_clusters <- function(ngram_keys, unigram_keys) {
-    .Call('_refinr_get_ngram_initial_clusters', PACKAGE = 'refinr', ngram_keys, unigram_keys)
+ngram_merge_approx <- function(n_gram_keys, one_gram_keys, univect, vect, edit_threshold, method, weight, p, bt, q, useBytes, nthread) {
+    .Call('_refinr_ngram_merge_approx', PACKAGE = 'refinr', n_gram_keys, one_gram_keys, univect, vect, edit_threshold, method, weight, p, bt, q, useBytes, nthread)
 }
 
 cpp_get_char_ngrams <- function(vects, numgram) {

@@ -178,39 +178,15 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     return(ngram_merge_no_approx(n_gram_keys, univect, vect))
   }
 
-  # If approximate string matching is enabled, get initial clusters by finding
-  # all elements of n_gram_keys for which their associated one_gram_key has
-  # one or more matches within the entire list of one_gram_keys. Then create a
-  # stringdistmatrix for each cluster, which will be used to filter the
-  # initial clusters.
-
-  # Get initial clusters.
-  initial_clust <- get_ngram_initial_clusters(n_gram_keys, one_gram_keys)
-
-  # Create a stringdistmatrix for every element of initial_clust.
-  distmatrices <- lapply(initial_clust, function(x) {
-    #as_matrix(stringdistmatrix(x, weight = weight, ...))
-    as_matrix(lower_tri(x, method, weight, p, bt, q, useBytes, nthread))
-  })
-
-  # Filter clusters based on distmatrices, then for each cluster, make mass
-  # edits to the values of vect related to that cluster.
-  return(ngram_merge_approx(n_gram_keys, univect, vect, distmatrices,
-                            edit_threshold, initial_clust))
-}
-
-# Modified version of stats:::as.matrix.dist() that doesn't mess with dimnames.
-as_matrix <- function (x) {
-  size <- attr(x, "Size")
-  df <- matrix(0, size, size)
-  df[row(df) > col(df)] <- x
-  df + t.default(df)
-}
-
-# R wrapper for stringdist C function `R_lower_tri()`.`
-lower_tri <- function(a, method, weight, p, bt, q, useBytes, nthread) {
-  x <- .Call("sd_lower_tri", a, method, weight, p, bt, q, useBytes, nthread)
-  attributes(x) <- list(class = "dist", Size = length(a), Diag = TRUE,
-                        Upper = TRUE, method = method)
-  x
+  # If approximate string matching is enabled, call ngram_merge_approx(). This
+  # will do the following:
+  # 1. Get initial clusters by finding all elements of n_gram_keys for which
+  #    their associated one_gram_key has one or more matches within the entire
+  #    list of one_gram_keys.
+  # 2. Create a stringdistmatrix for every initial cluster, then filter
+  #    clusters based on the dist matrices.
+  # 3. For each remaining cluster, make mass edits to the values of vect
+  #    related to that cluster. Return vect after mass edits have been made.
+  ngram_merge_approx(n_gram_keys, one_gram_keys, univect, vect, edit_threshold,
+                     method, weight, p, bt, q, useBytes, nthread)
 }

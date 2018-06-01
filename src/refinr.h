@@ -30,5 +30,14 @@ CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
                                        CharacterVector keys_dict);
 
 // n_gram_merge
+List get_ngram_initial_clusters(CharacterVector ngram_keys,
+                                CharacterVector unigram_keys);
+
+List get_stringdist_matrices(List clusters, SEXP method, SEXP weight, SEXP p,
+                             SEXP bt, SEXP q, SEXP useBytes, SEXP nthread);
+
 List filter_initial_clusters(List distmatrices, double edit_threshold,
                              List clusters);
+
+SEXP stringdist_lower_tri(SEXP a, SEXP method, SEXP weight, SEXP p, SEXP bt,
+                          SEXP q, SEXP useBytes, SEXP nthread);
