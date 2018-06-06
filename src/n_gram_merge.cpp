@@ -201,8 +201,8 @@ List get_stringdist_matrices(List clusters, SEXP method, SEXP weight, SEXP p,
   for(int j = 0; j < clust_len; ++j) {
     SEXP curr_clust = clusters[j];
     // Run args through stringdist lower_tri C function.
-    NumericVector x = stringdist_lower_tri(curr_clust, method, weight, p, bt,
-                                           q, useBytes, nthread);
+    NumericVector x = stringdist_lower_tri(curr_clust, method, weight, p,
+                                           bt, q, useBytes, nthread);
     // Initialize output matrix.
     int mat_dim = Rf_xlength(curr_clust);
     NumericMatrix mat(mat_dim, mat_dim);
@@ -213,7 +213,6 @@ List get_stringdist_matrices(List clusters, SEXP method, SEXP weight, SEXP p,
     // Loop to fill in the lower and upper tri of mat with the numeric values
     // of x.
     for(int i = 0; i < iter_len; ++i) {
-      //int row_idx = i + 1;
       for(int n = i + 1; n < mat_dim; ++n) {
         // Fill in lower tri.
         mat(n,i) = x[x_val];
