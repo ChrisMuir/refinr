@@ -55,7 +55,7 @@ key_collision_merge(x, ignore_strings = c("high", "school", "highschool"), dict 
 
 ## n_gram_merge
 
-Works similarly to `key_collision_merge`, however it features approximate string matching, which allows for merging of strings that contain slight spelling differences. Package [stringdist](https://CRAN.R-project.org/package=stringdist) is used for calculating edit distance between strings.
+Works similarly to `key_collision_merge`, however it features approximate string matching, which allows for merging of strings that contain slight spelling differences. The [stringdist](https://CRAN.R-project.org/package=stringdist) package is used for calculating edit distance between strings. `refinr` links to the stringdist C API to improve the speed of the functions.
 ```{r}
 x <- c("Acme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
 n_gram_merge(x)
@@ -66,7 +66,8 @@ The performance of the approximate string matching can be ajusted using paramete
 n_gram_merge(x, weight = c(d = 1, i = 0.4, s = 0.2, t = 0.2))
 ```
 
-Additional arguments can also be supplied that will be passed along to function [stringdistmatrix](https://github.com/markvanderloo/stringdist/blob/master/pkg/R/stringdist.R#L207) from the [stringdist](https://CRAN.R-project.org/package=stringdist) package.
+`n_gram_merge()` is designed to accept any of the arguments that [stringdist::stringdistmatrix](https://github.com/markvanderloo/stringdist/blob/master/pkg/R/stringdist.R#L207) 
+takes. These args will be passed along to the the `stringdist` functions.
 ```{r}
 n_gram_merge(x, method = "soundex", useBytes = TRUE)
 ```

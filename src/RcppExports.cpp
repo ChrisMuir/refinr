@@ -33,30 +33,24 @@ BEGIN_RCPP
 END_RCPP
 }
 // ngram_merge_approx
-CharacterVector ngram_merge_approx(CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect, List distmatrices, double edit_threshold, List initial_clust);
-RcppExport SEXP _refinr_ngram_merge_approx(SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP, SEXP distmatricesSEXP, SEXP edit_thresholdSEXP, SEXP initial_clustSEXP) {
+CharacterVector ngram_merge_approx(CharacterVector n_gram_keys, CharacterVector one_gram_keys, CharacterVector univect, CharacterVector vect, double edit_threshold, SEXP method, SEXP weight, SEXP p, SEXP bt, SEXP q, SEXP useBytes, SEXP nthread);
+RcppExport SEXP _refinr_ngram_merge_approx(SEXP n_gram_keysSEXP, SEXP one_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP, SEXP edit_thresholdSEXP, SEXP methodSEXP, SEXP weightSEXP, SEXP pSEXP, SEXP btSEXP, SEXP qSEXP, SEXP useBytesSEXP, SEXP nthreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type one_gram_keys(one_gram_keysSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    Rcpp::traits::input_parameter< List >::type distmatrices(distmatricesSEXP);
     Rcpp::traits::input_parameter< double >::type edit_threshold(edit_thresholdSEXP);
-    Rcpp::traits::input_parameter< List >::type initial_clust(initial_clustSEXP);
-    rcpp_result_gen = Rcpp::wrap(ngram_merge_approx(n_gram_keys, univect, vect, distmatrices, edit_threshold, initial_clust));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_ngram_initial_clusters
-List get_ngram_initial_clusters(CharacterVector ngram_keys, CharacterVector unigram_keys);
-RcppExport SEXP _refinr_get_ngram_initial_clusters(SEXP ngram_keysSEXP, SEXP unigram_keysSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type ngram_keys(ngram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type unigram_keys(unigram_keysSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_ngram_initial_clusters(ngram_keys, unigram_keys));
+    Rcpp::traits::input_parameter< SEXP >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type weight(weightSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type p(pSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type bt(btSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type q(qSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type useBytes(useBytesSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type nthread(nthreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(ngram_merge_approx(n_gram_keys, one_gram_keys, univect, vect, edit_threshold, method, weight, p, bt, q, useBytes, nthread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -134,8 +128,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_refinr_merge_KC_clusters", (DL_FUNC) &_refinr_merge_KC_clusters, 4},
     {"_refinr_ngram_merge_no_approx", (DL_FUNC) &_refinr_ngram_merge_no_approx, 3},
-    {"_refinr_ngram_merge_approx", (DL_FUNC) &_refinr_ngram_merge_approx, 6},
-    {"_refinr_get_ngram_initial_clusters", (DL_FUNC) &_refinr_get_ngram_initial_clusters, 2},
+    {"_refinr_ngram_merge_approx", (DL_FUNC) &_refinr_ngram_merge_approx, 12},
     {"_refinr_cpp_get_char_ngrams", (DL_FUNC) &_refinr_cpp_get_char_ngrams, 2},
     {"_refinr_cpp_paste_list", (DL_FUNC) &_refinr_cpp_paste_list, 2},
     {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
