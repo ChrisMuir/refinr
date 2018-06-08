@@ -3,7 +3,8 @@
 using namespace Rcpp;
 
 
-// Iterate over all clusters, make mass edits related to each cluster.
+// Iterate over all clusters, make mass edits to obj "vect", related to each
+// cluster.
 CharacterVector merge_ngram_clusters(List clusters,
                                      CharacterVector n_gram_keys,
                                      CharacterVector univect,
@@ -84,7 +85,7 @@ CharacterVector merge_ngram_clusters(List clusters,
 }
 
 
-// Prep steps prior to the merging clusters, given that approximate string
+// Prep steps prior to the merging of clusters, given that approximate string
 // matching is NOT being used (via arg edit_threshold). Generate clusters by
 // finding all elements of n_gram_keys that have one or more identical
 // matches, then pass args along to merge_ngram_clusters().
@@ -109,7 +110,7 @@ CharacterVector ngram_merge_no_approx(CharacterVector n_gram_keys,
 }
 
 
-// Prep steps prior to the merging clusters, given that approximate string
+// Prep steps prior to the merging of clusters, given that approximate string
 // matching is being used (via arg edit_threshold).
 // Create initial clusters, filter clusters based on matrices of numeric
 // string edit distance values, then pass args along to merge_ngram_clusters().
@@ -124,7 +125,8 @@ CharacterVector ngram_merge_approx(CharacterVector n_gram_keys,
   // Get initial clusters.
   List initial_clust = get_ngram_initial_clusters(n_gram_keys, one_gram_keys);
 
-  // Create an edit distance matrix for each initial cluster.
+  // Create an edit distance matrix for each initial cluster, using the
+  // function "sd_lower_tri()" from the stringdist package.
   List distmatrices = get_stringdist_matrices(initial_clust, method, weight, p,
                                               bt, q, useBytes, nthread);
 
@@ -137,7 +139,7 @@ CharacterVector ngram_merge_approx(CharacterVector n_gram_keys,
   // If length of clusters is zero, return vect unedited.
   if(clusters.size() == 0) return(vect);
 
-  // If clusters is no len zero, pass args along to merge_ngram_clusters().
+  // Pass args along to merge_ngram_clusters().
   return(merge_ngram_clusters(clusters, n_gram_keys, univect, vect));
 }
 
@@ -200,7 +202,7 @@ List get_stringdist_matrices(List clusters, SEXP method, SEXP weight, SEXP p,
 
   for(int j = 0; j < clust_len; ++j) {
     SEXP curr_clust = clusters[j];
-    // Run args through stringdist lower_tri C function.
+    // Run args through stringdist sd_lower_tri C function.
     NumericVector x = stringdist_lower_tri(curr_clust, method, weight, p,
                                            bt, q, useBytes, nthread);
     // Initialize output matrix.

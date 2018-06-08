@@ -5,7 +5,7 @@
 #' process, the first is clustering values based on their ngram fingerprint (described here
 #' \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}).
 #' The second step is merging values based on approximate string matching of
-#' the ngram fingerprints, using the [stringdistmatrix()] function from the
+#' the ngram fingerprints, using the [sd_lower_tri()] C function from the
 #' package \code{stringdist}.
 #'
 #' @param vect Character vector, items to be potentially clustered and merged.
@@ -26,15 +26,17 @@
 #'   c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
 #'   to the \code{stringdist} function. Must be either
 #'   a numeric vector of length four, or NA.
-#' @param ... additional args to be passed along to \code{stringdist}.
+#' @param ... additional args to be passed along to the \code{stringdist}
+#'   function. The acceptable args are identical to those of
+#'   [stringdistmatrix()].
 #'
 #' @details The values of arg \code{weight} are edit distance values that
 #'  get passed to the \code{stringdist} edit distance function. The
 #'  param takes four arguments, each one is a specific type of edit, with
 #'  default penalty value.
 #'  \itemize{
-#'  \item d: Deletion, default value is 0.33
-#'  \item i: Insertion, default value is 0.33
+#'  \item d: deletion, default value is 0.33
+#'  \item i: insertion, default value is 0.33
 #'  \item s: substitution, default value is 1
 #'  \item t: transposition, default value is 0.5
 #'  }
@@ -90,10 +92,10 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   dots <- list(...)
   dots_names <- names(dots)
   if (any(c("a", "b") %in% dots_names)) {
-    stop("'stringdistmatrix' args 'a' and 'b' cannot be set manually",
+    stop("'stringdist' args 'a' and 'b' cannot be set manually",
          call. = FALSE)
   }
-  # Vector of valid arg names for stringdistmatrix.
+  # Vector of valid arg names for stringdist.
   sdm_args <- c("method", "useBytes", "weight", "q", "p", "bt", "useNames",
                 "nthread")
   if (!all(dots_names %in% sdm_args)) {
@@ -104,8 +106,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     stop(paste("these input arg(s) are invalid:", bad_args), call. = FALSE)
   }
 
-  # More input validations for stringdist args. These steps also establish
-  # variables that will be passed to function lower_tri()
+  # More input validations for stringdist args.
   if (!edit_threshold_missing) {
     if (!"method" %in% dots_names) {
       method <- 1L

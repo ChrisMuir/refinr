@@ -32,7 +32,9 @@ c(d = 0.33, i = 0.33, s = 1, t = 0.5). This parameter gets passed along
 to the \code{stringdist} function. Must be either
 a numeric vector of length four, or NA.}
 
-\item{...}{additional args to be passed along to \code{stringdist}.}
+\item{...}{additional args to be passed along to the \code{stringdist}
+function. The acceptable args are identical to those of
+[stringdistmatrix()].}
 }
 \value{
 Character vector with similar values merged.
@@ -43,7 +45,7 @@ that are approximately equivalent yet not identical. It uses a two step
 process, the first is clustering values based on their ngram fingerprint (described here
 \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}).
 The second step is merging values based on approximate string matching of
-the ngram fingerprints, using the [stringdistmatrix()] function from the
+the ngram fingerprints, using the [sd_lower_tri()] C function from the
 package \code{stringdist}.
 }
 \details{
@@ -52,8 +54,8 @@ The values of arg \code{weight} are edit distance values that
  param takes four arguments, each one is a specific type of edit, with
  default penalty value.
  \itemize{
- \item d: Deletion, default value is 0.33
- \item i: Insertion, default value is 0.33
+ \item d: deletion, default value is 0.33
+ \item i: insertion, default value is 0.33
  \item s: substitution, default value is 1
  \item t: transposition, default value is 0.5
  }
