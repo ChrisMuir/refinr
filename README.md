@@ -48,7 +48,7 @@ key_collision_merge(x, dict = c("Nicks Pizza", "acme PIZZA inc"))
 #> [1] "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc"
 ```
 
-Function `n_gram_merge` can be used to merge similar values that contain slight spelling differences.
+Function `n_gram_merge` can be used to merge similar values that contain slight spelling differences. The [stringdist](https://CRAN.R-project.org/package=stringdist) package is used for calculating edit distance between strings. `refinr` links to the stringdist C API to improve the speed of the functions.
 ```r
 x <- c("Acmme Pizza, Inc.", "ACME PIZA COMPANY", "Acme Pizzazza LLC")
 n_gram_merge(x, weight = c(d = 0.2, i = 0.2, s = 1, t = 1))
