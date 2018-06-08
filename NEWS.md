@@ -3,7 +3,7 @@ refinr 0.3.1
 
 ## IMPROVEMENTS
 
-* Package is now linking to the `stringdist` C API, and calling C functions in place of using `stringdist::stringdistmatrix()`. This change results in speed improvements in function `n_gram_merge()`.
+* Package is now linking to the `stringdist` C API, and calling C functions in place of using `stringdist::stringdistmatrix()`. This change results in speed improvements in function `n_gram_merge()`, and requires that `stringdist` v0.9.5.1 or greater be installed.
 
 refinr 0.3.0
 ============
