@@ -36,14 +36,14 @@ library(refinr)
 ```
 
 ```r
-x <- c("Acme Pizza, Inc.", "Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
+x <- c("Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC", "Acme Pizza, Inc.")
 key_collision_merge(x)
 #> [1] "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc." "Acme Pizza, Inc."
 ```
 
 A dictionary character vector can be passed to `key_collision_merge`, which will dictate merge values when a cluster has a match within the dict vector.
 ```r
-x <- c("Acme Pizza, Inc.", "Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC")
+x <- c("Acme Pizza, Inc.", "ACME PIZZA COMPANY", "acme pizza LLC", "Acme Pizza, Inc.")
 key_collision_merge(x, dict = c("Nicks Pizza", "acme PIZZA inc"))
 #> [1] "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc" "acme PIZZA inc"
 ```
@@ -76,15 +76,16 @@ Workflow for checking the results of the refinr processes
 library(dplyr)
 library(knitr)
 
-x <- c("Clemsson University", 
-       "university-of-clemson", 
-       "CLEMSON", 
-       "Clem son, U.", 
-       "college, clemson u", 
-       "M.I.T.", 
-       "Technology, Massachusetts' Institute of", 
-       "Massachusetts Inst of Technology", 
-       "UNIVERSITY:  mit"
+x <- c(
+  "Clemsson University", 
+  "university-of-clemson", 
+  "CLEMSON", 
+  "Clem son, U.", 
+  "college, clemson u", 
+  "M.I.T.", 
+  "Technology, Massachusetts' Institute of", 
+  "Massachusetts Inst of Technology", 
+  "UNIVERSITY:  mit"
 )
 
 ignores <- c("university", "college", "u", "of", "institute", "inst")
