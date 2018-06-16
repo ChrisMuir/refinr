@@ -5,10 +5,10 @@ using namespace Rcpp;
 
 // Wrapper for the two KC merge functions (one with a data dict, one without).
 // [[Rcpp::export]]
-CharacterVector merge_KC_clusters(CharacterVector vect,
-                                  CharacterVector keys_vect,
-                                  CharacterVector dict,
-                                  CharacterVector keys_dict) {
+CharacterVector merge_KC_clusters(const CharacterVector &vect,
+                                  const CharacterVector &keys_vect,
+                                  const CharacterVector &dict,
+                                  const CharacterVector &keys_dict) {
   if(CharacterVector::is_na(dict[0])) {
     // If dict is NA, get vector of all key values that have at least one
     // duplicate within keys (this creates clusters). The "merge_" func will
@@ -33,9 +33,9 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
 
 // Merge key collision clusters of similar values, when no reference dict was
 // passed to func "key_collision_merge".
-CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
-                                          CharacterVector vect,
-                                          CharacterVector keys_vect) {
+CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
+                                          const CharacterVector &vect,
+                                          const CharacterVector &keys_vect) {
   // Create copy of vect to use as the output vector.
   CharacterVector output = clone(vect);
 
@@ -78,11 +78,11 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
 
 // Merge key collision clusters of similar values, when a reference dict was
 // passed to func "key_collision_merge".
-CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
-                                       CharacterVector vect,
-                                       CharacterVector keys_vect,
-                                       CharacterVector dict,
-                                       CharacterVector keys_dict) {
+CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
+                                       const CharacterVector &vect,
+                                       const CharacterVector &keys_vect,
+                                       const CharacterVector &dict,
+                                       const CharacterVector &keys_dict) {
   // Create copy of vect to use as the output vector.
   CharacterVector output = clone(vect);
 

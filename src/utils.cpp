@@ -8,8 +8,8 @@ using namespace Rcpp;
 
 
 // Create unordered_map with strings as keys, and integer vectors as values.
-refinr_map create_map(CharacterVector terms,
-                      std::vector<std::string> keys) {
+refinr_map create_map(const CharacterVector &terms,
+                      const std::vector<std::string> &keys) {
   int keys_len = keys.size();
   int terms_len = terms.size();
 
@@ -35,7 +35,7 @@ refinr_map create_map(CharacterVector terms,
 
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
-String most_freq_str(CharacterVector x) {
+String most_freq_str(const CharacterVector &x) {
   IntegerVector x_tab = table(x);
   CharacterVector tab_names = x_tab.attr("names");
   return(tab_names[which_max(x_tab)]);
@@ -43,7 +43,7 @@ String most_freq_str(CharacterVector x) {
 
 
 // cpp version of base::as.list(), for character vectors.
-List cpp_as_list(CharacterVector x) {
+List cpp_as_list(const CharacterVector &x) {
   int x_len = x.size();
   List out(x_len);
 
@@ -56,7 +56,7 @@ List cpp_as_list(CharacterVector x) {
 
 
 // cpp version of base::unlist(), for character vectors.
-CharacterVector cpp_unlist(List x) {
+CharacterVector cpp_unlist(const List &x) {
   int x_len = x.size();
 
   // Get size of output vector.
@@ -119,7 +119,8 @@ List cpp_flatten_list(List list_obj) {
 // functions being applied to each element of the list are equivelant to
 // R func paste(char_vect, collapse = collapse).
 // [[Rcpp::export]]
-CharacterVector cpp_paste_list(List input, std::string collapse_str) {
+CharacterVector cpp_paste_list(List input,
+                               const std::string &collapse_str) {
   CharacterVector output(input.size());
 
   // Initialize variables used in the loop below.
@@ -168,7 +169,7 @@ CharacterVector cpp_get_key_dups(CharacterVector keys) {
 
 
 // Does string x appear in char vect table.
-bool cpp_in(String x, CharacterVector table) {
+bool cpp_in(const String &x, const CharacterVector &table) {
   int table_len = table.size();
   bool out = false;
 
@@ -184,7 +185,7 @@ bool cpp_in(String x, CharacterVector table) {
 
 
 // Are all strings of char vect x found in table.
-bool cpp_all(CharacterVector x, CharacterVector table) {
+bool cpp_all(const CharacterVector &x, const CharacterVector &table) {
   int table_len = table.size();
   int x_len = x.size();
 

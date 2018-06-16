@@ -6,43 +6,43 @@
 using namespace Rcpp;
 
 // merge_KC_clusters
-CharacterVector merge_KC_clusters(CharacterVector vect, CharacterVector keys_vect, CharacterVector dict, CharacterVector keys_dict);
+CharacterVector merge_KC_clusters(const CharacterVector& vect, const CharacterVector& keys_vect, const CharacterVector& dict, const CharacterVector& keys_dict);
 RcppExport SEXP _refinr_merge_KC_clusters(SEXP vectSEXP, SEXP keys_vectSEXP, SEXP dictSEXP, SEXP keys_dictSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type keys_vect(keys_vectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type dict(dictSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type keys_dict(keys_dictSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type keys_vect(keys_vectSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type dict(dictSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type keys_dict(keys_dictSEXP);
     rcpp_result_gen = Rcpp::wrap(merge_KC_clusters(vect, keys_vect, dict, keys_dict));
     return rcpp_result_gen;
 END_RCPP
 }
 // ngram_merge_no_approx
-CharacterVector ngram_merge_no_approx(CharacterVector n_gram_keys, CharacterVector univect, CharacterVector vect);
+CharacterVector ngram_merge_no_approx(const CharacterVector& n_gram_keys, const CharacterVector& univect, const CharacterVector& vect);
 RcppExport SEXP _refinr_ngram_merge_no_approx(SEXP n_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type n_gram_keys(n_gram_keysSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type univect(univectSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vect(vectSEXP);
     rcpp_result_gen = Rcpp::wrap(ngram_merge_no_approx(n_gram_keys, univect, vect));
     return rcpp_result_gen;
 END_RCPP
 }
 // ngram_merge_approx
-CharacterVector ngram_merge_approx(CharacterVector n_gram_keys, CharacterVector one_gram_keys, CharacterVector univect, CharacterVector vect, double edit_threshold, SEXP method, SEXP weight, SEXP p, SEXP bt, SEXP q, SEXP useBytes, SEXP nthread);
+CharacterVector ngram_merge_approx(const CharacterVector& n_gram_keys, const CharacterVector& one_gram_keys, const CharacterVector& univect, const CharacterVector& vect, const double& edit_threshold, SEXP method, SEXP weight, SEXP p, SEXP bt, SEXP q, SEXP useBytes, SEXP nthread);
 RcppExport SEXP _refinr_ngram_merge_approx(SEXP n_gram_keysSEXP, SEXP one_gram_keysSEXP, SEXP univectSEXP, SEXP vectSEXP, SEXP edit_thresholdSEXP, SEXP methodSEXP, SEXP weightSEXP, SEXP pSEXP, SEXP btSEXP, SEXP qSEXP, SEXP useBytesSEXP, SEXP nthreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type n_gram_keys(n_gram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type one_gram_keys(one_gram_keysSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type univect(univectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    Rcpp::traits::input_parameter< double >::type edit_threshold(edit_thresholdSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type n_gram_keys(n_gram_keysSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type one_gram_keys(one_gram_keysSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type univect(univectSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< const double& >::type edit_threshold(edit_thresholdSEXP);
     Rcpp::traits::input_parameter< SEXP >::type method(methodSEXP);
     Rcpp::traits::input_parameter< SEXP >::type weight(weightSEXP);
     Rcpp::traits::input_parameter< SEXP >::type p(pSEXP);
@@ -55,25 +55,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_get_char_ngrams
-CharacterVector cpp_get_char_ngrams(std::vector<std::string> vects, int numgram);
+CharacterVector cpp_get_char_ngrams(const std::vector<std::string>& vects, int numgram);
 RcppExport SEXP _refinr_cpp_get_char_ngrams(SEXP vectsSEXP, SEXP numgramSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::vector<std::string> >::type vects(vectsSEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vects(vectsSEXP);
     Rcpp::traits::input_parameter< int >::type numgram(numgramSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_get_char_ngrams(vects, numgram));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_paste_list
-CharacterVector cpp_paste_list(List input, std::string collapse_str);
+CharacterVector cpp_paste_list(List input, const std::string& collapse_str);
 RcppExport SEXP _refinr_cpp_paste_list(SEXP inputSEXP, SEXP collapse_strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< std::string >::type collapse_str(collapse_strSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type collapse_str(collapse_strSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_paste_list(input, collapse_str));
     return rcpp_result_gen;
 END_RCPP
