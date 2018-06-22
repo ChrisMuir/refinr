@@ -5,6 +5,42 @@
 
 using namespace Rcpp;
 
+// dict_transforms
+CharacterVector dict_transforms(Nullable<CharacterVector> dict);
+RcppExport SEXP _refinr_dict_transforms(SEXP dictSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dict(dictSEXP);
+    rcpp_result_gen = Rcpp::wrap(dict_transforms(dict));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ignore_str_transforms
+CharacterVector ignore_str_transforms(Nullable<CharacterVector> ignore_strings);
+RcppExport SEXP _refinr_ignore_str_transforms(SEXP ignore_stringsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type ignore_strings(ignore_stringsSEXP);
+    rcpp_result_gen = Rcpp::wrap(ignore_str_transforms(ignore_strings));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_key_collision_merge
+CharacterVector cpp_key_collision_merge(CharacterVector vect, Nullable<CharacterVector> ignore_strings, bool bus_suffix, Nullable<CharacterVector> dict);
+RcppExport SEXP _refinr_cpp_key_collision_merge(SEXP vectSEXP, SEXP ignore_stringsSEXP, SEXP bus_suffixSEXP, SEXP dictSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type ignore_strings(ignore_stringsSEXP);
+    Rcpp::traits::input_parameter< bool >::type bus_suffix(bus_suffixSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dict(dictSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_key_collision_merge(vect, ignore_strings, bus_suffix, dict));
+    return rcpp_result_gen;
+END_RCPP
+}
 // merge_KC_clusters
 CharacterVector merge_KC_clusters(CharacterVector vect, CharacterVector keys_vect, CharacterVector dict, CharacterVector keys_dict);
 RcppExport SEXP _refinr_merge_KC_clusters(SEXP vectSEXP, SEXP keys_vectSEXP, SEXP dictSEXP, SEXP keys_dictSEXP) {
@@ -63,6 +99,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<std::string> >::type vects(vectsSEXP);
     Rcpp::traits::input_parameter< int >::type numgram(numgramSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_get_char_ngrams(vects, numgram));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_tolower
+CharacterVector cpp_tolower(CharacterVector x);
+RcppExport SEXP _refinr_cpp_tolower(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_tolower(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -126,10 +173,14 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_refinr_dict_transforms", (DL_FUNC) &_refinr_dict_transforms, 1},
+    {"_refinr_ignore_str_transforms", (DL_FUNC) &_refinr_ignore_str_transforms, 1},
+    {"_refinr_cpp_key_collision_merge", (DL_FUNC) &_refinr_cpp_key_collision_merge, 4},
     {"_refinr_merge_KC_clusters", (DL_FUNC) &_refinr_merge_KC_clusters, 4},
     {"_refinr_ngram_merge_no_approx", (DL_FUNC) &_refinr_ngram_merge_no_approx, 3},
     {"_refinr_ngram_merge_approx", (DL_FUNC) &_refinr_ngram_merge_approx, 12},
     {"_refinr_cpp_get_char_ngrams", (DL_FUNC) &_refinr_cpp_get_char_ngrams, 2},
+    {"_refinr_cpp_tolower", (DL_FUNC) &_refinr_cpp_tolower, 1},
     {"_refinr_cpp_paste_list", (DL_FUNC) &_refinr_cpp_paste_list, 2},
     {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
     {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},

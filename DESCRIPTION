@@ -15,10 +15,11 @@ LazyData: true
 Imports:
         Rcpp,
         stringdist (>= 0.9.5.0),
-        stringi
+        stringi (>= 1.1)
 RoxygenNote: 6.0.1.9000
 LinkingTo: Rcpp,
-    stringdist (>= 0.9.5.0)
+    stringdist (>= 0.9.5.0), 
+    stringi (>= 1.1)
 URL: https://github.com/ChrisMuir/refinr
 BugReports: https://github.com/ChrisMuir/refinr/issues
 Suggests: testthat,

@@ -33,6 +33,16 @@ refinr_map create_map(CharacterVector terms,
 }
 
 
+// [[Rcpp::export]]
+CharacterVector cpp_tolower(CharacterVector x) {
+  // Normalize case
+  CharacterVector out(x.size());
+  std::transform(x.begin(), x.end(), out.begin(),
+                 make_string_transformer(tolower));
+  return(out);
+}
+
+
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
 String most_freq_str(CharacterVector x) {

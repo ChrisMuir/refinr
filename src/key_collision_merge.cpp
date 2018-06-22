@@ -3,6 +3,52 @@
 using namespace Rcpp;
 
 
+// [[Rcpp::export]]
+CharacterVector dict_transforms(Nullable<CharacterVector> dict) {
+  if(dict.isNull()) {
+    return(CharacterVector(NA_STRING));
+  }
+  CharacterVector dict_(dict);
+  dict_ = dict_[!is_na(dict_)];
+  dict_ = unique(dict_);
+  return(dict_);
+}
+
+
+// [[Rcpp::export]]
+CharacterVector ignore_str_transforms(Nullable<CharacterVector> ignore_strings) {
+  if(ignore_strings.isNull()) {
+    return(CharacterVector(NA_STRING));
+  }
+  CharacterVector ignore_strings_(ignore_strings);
+  ignore_strings_ = ignore_strings_[!is_na(ignore_strings_)];
+  ignore_strings_ = unique(cpp_tolower(ignore_strings_));
+  return(ignore_strings_);
+}
+
+// [[Rcpp::export]]
+CharacterVector cpp_key_collision_merge(CharacterVector vect,
+                                        Nullable<CharacterVector> ignore_strings,
+                                        bool bus_suffix,
+                                        Nullable<CharacterVector> dict) {
+
+  // Make transformations to dict.
+  CharacterVector dict_ = dict_transforms(dict);
+
+  // Make transformations to ignore_strings.
+  CharacterVector ignore_strings_ = ignore_str_transforms(ignore_strings);
+
+  // Get string fingerprints.
+  CharacterVector keys_vect = cpp_get_fingerprint_KC(vect, bus_suffix,
+                                                     ignore_strings_);
+  CharacterVector keys_dict = cpp_get_fingerprint_KC(dict_, bus_suffix,
+                                                     ignore_strings_);
+
+  // Make mass edits to the values of vect related to each cluster.
+  return(merge_KC_clusters(vect, keys_vect, dict_, keys_dict));
+}
+
+
 // Wrapper for the two KC merge functions (one with a data dict, one without).
 // [[Rcpp::export]]
 CharacterVector merge_KC_clusters(CharacterVector vect,
