@@ -8,8 +8,8 @@ using namespace Rcpp;
 
 
 // Create unordered_map with strings as keys, and integer vectors as values.
-refinr_map create_map(CharacterVector terms,
-                      std::vector<std::string> keys) {
+refinr_map create_map(const CharacterVector &terms,
+                      const std::vector<std::string> &keys) {
   int keys_len = keys.size();
   int terms_len = terms.size();
 
@@ -34,7 +34,7 @@ refinr_map create_map(CharacterVector terms,
 
 
 // [[Rcpp::export]]
-CharacterVector cpp_tolower(CharacterVector x) {
+CharacterVector cpp_tolower(const CharacterVector &x) {
   // Normalize case
   CharacterVector out(x.size());
   std::transform(x.begin(), x.end(), out.begin(),
@@ -247,7 +247,7 @@ List cpp_list_unique(List input, bool sort_vals) {
 // Given a list of character vectors, for each vector, remove any strings that
 // appear in input vector "removes".
 // [[Rcpp::export]]
-List remove_strings(List input, CharacterVector removes) {
+List remove_strings(const List &input, CharacterVector removes) {
   // Create unordered_set of the "removes" strings.
   int removes_len = removes.size();
   std::unordered_set<std::string> removes_set;

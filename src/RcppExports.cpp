@@ -6,51 +6,51 @@
 using namespace Rcpp;
 
 // dict_transforms
-CharacterVector dict_transforms(Nullable<CharacterVector> dict);
+CharacterVector dict_transforms(const Nullable<CharacterVector>& dict);
 RcppExport SEXP _refinr_dict_transforms(SEXP dictSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dict(dictSEXP);
+    Rcpp::traits::input_parameter< const Nullable<CharacterVector>& >::type dict(dictSEXP);
     rcpp_result_gen = Rcpp::wrap(dict_transforms(dict));
     return rcpp_result_gen;
 END_RCPP
 }
 // ignore_str_transforms
-CharacterVector ignore_str_transforms(Nullable<CharacterVector> ignore_strings);
+CharacterVector ignore_str_transforms(const Nullable<CharacterVector>& ignore_strings);
 RcppExport SEXP _refinr_ignore_str_transforms(SEXP ignore_stringsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type ignore_strings(ignore_stringsSEXP);
+    Rcpp::traits::input_parameter< const Nullable<CharacterVector>& >::type ignore_strings(ignore_stringsSEXP);
     rcpp_result_gen = Rcpp::wrap(ignore_str_transforms(ignore_strings));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_key_collision_merge
-CharacterVector cpp_key_collision_merge(CharacterVector vect, Nullable<CharacterVector> ignore_strings, bool bus_suffix, Nullable<CharacterVector> dict);
+CharacterVector cpp_key_collision_merge(const CharacterVector& vect, const Nullable<CharacterVector>& ignore_strings, const bool& bus_suffix, const Nullable<CharacterVector>& dict);
 RcppExport SEXP _refinr_cpp_key_collision_merge(SEXP vectSEXP, SEXP ignore_stringsSEXP, SEXP bus_suffixSEXP, SEXP dictSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type ignore_strings(ignore_stringsSEXP);
-    Rcpp::traits::input_parameter< bool >::type bus_suffix(bus_suffixSEXP);
-    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dict(dictSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< const Nullable<CharacterVector>& >::type ignore_strings(ignore_stringsSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type bus_suffix(bus_suffixSEXP);
+    Rcpp::traits::input_parameter< const Nullable<CharacterVector>& >::type dict(dictSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_key_collision_merge(vect, ignore_strings, bus_suffix, dict));
     return rcpp_result_gen;
 END_RCPP
 }
 // merge_KC_clusters
-CharacterVector merge_KC_clusters(CharacterVector vect, CharacterVector keys_vect, CharacterVector dict, CharacterVector keys_dict);
+CharacterVector merge_KC_clusters(const CharacterVector& vect, const CharacterVector& keys_vect, const CharacterVector& dict, const CharacterVector& keys_dict);
 RcppExport SEXP _refinr_merge_KC_clusters(SEXP vectSEXP, SEXP keys_vectSEXP, SEXP dictSEXP, SEXP keys_dictSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type vect(vectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type keys_vect(keys_vectSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type dict(dictSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type keys_dict(keys_dictSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vect(vectSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type keys_vect(keys_vectSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type dict(dictSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type keys_dict(keys_dictSEXP);
     rcpp_result_gen = Rcpp::wrap(merge_KC_clusters(vect, keys_vect, dict, keys_dict));
     return rcpp_result_gen;
 END_RCPP
@@ -103,12 +103,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_tolower
-CharacterVector cpp_tolower(CharacterVector x);
+CharacterVector cpp_tolower(const CharacterVector& x);
 RcppExport SEXP _refinr_cpp_tolower(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_tolower(x));
     return rcpp_result_gen;
 END_RCPP
@@ -138,12 +138,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // remove_strings
-List remove_strings(List input, CharacterVector removes);
+List remove_strings(const List& input, CharacterVector removes);
 RcppExport SEXP _refinr_remove_strings(SEXP inputSEXP, SEXP removesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< const List& >::type input(inputSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type removes(removesSEXP);
     rcpp_result_gen = Rcpp::wrap(remove_strings(input, removes));
     return rcpp_result_gen;

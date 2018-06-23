@@ -8,34 +8,7 @@ using namespace Rcpp;
 #include <stringi.cpp>
 
 
-CharacterVector stringi_replace_all_fixed(CharacterVector str,
-                                          CharacterVector pattern,
-                                          CharacterVector replacement) {
-  LogicalVector vectorize_all = LogicalVector(true);
-  List opts_fixed = NULL;
-
-  return(stri_replace_all_fixed(str, pattern, replacement, vectorize_all,
-                                opts_fixed));
-}
-
-
-CharacterVector stringi_replace_all_regex(CharacterVector str,
-                                          CharacterVector pattern,
-                                          CharacterVector replacement) {
-  LogicalVector vectorize_all = LogicalVector(true);
-  List opts_regex = NULL;
-
-  return(stri_replace_all_regex(str, pattern, replacement, vectorize_all,
-                                opts_regex));
-}
-
-
-CharacterVector stringi_trans_general(CharacterVector str) {
-  return(stri_trans_general(str, CharacterVector("latin-ASCII")));
-}
-
-
-CharacterVector iconv_trans(CharacterVector str) {
+CharacterVector iconv_trans(const CharacterVector &str) {
   Environment base("package:base");
   Function iconv = base["iconv"];
 
@@ -44,8 +17,14 @@ CharacterVector iconv_trans(CharacterVector str) {
 }
 
 
-CharacterVector cpp_remove_accents(CharacterVector str) {
+CharacterVector stringi_trans_general(const CharacterVector &str) {
+  return(stri_trans_general(str, CharacterVector("latin-ASCII")));
+}
+
+
+CharacterVector cpp_remove_accents(const CharacterVector &str) {
   int str_len = str.size();
+  CharacterVector out(str_len);
 
   // Determine which strings in str are UTF-8.
   CharacterVector enc = stri_enc_mark(str);
@@ -54,10 +33,10 @@ CharacterVector cpp_remove_accents(CharacterVector str) {
     is_utf8[i] = enc[i] == "UTF-8";
   }
 
-  str[!is_utf8] = iconv_trans(str[!is_utf8]);
-  str[is_utf8] = stringi_trans_general(str[is_utf8]);
+  out[!is_utf8] = iconv_trans(str[!is_utf8]);
+  out[is_utf8] = stringi_trans_general(str[is_utf8]);
 
-  return(str);
+  return(out);
 }
 
 
@@ -113,7 +92,7 @@ CharacterVector cpp_business_suffix(CharacterVector vect) {
 }
 
 
-List stringi_split_regex(CharacterVector str, CharacterVector pattern) {
+List stringi_split_regex(const CharacterVector &str, CharacterVector pattern) {
   IntegerVector n = IntegerVector::create(-1);
   LogicalVector omit_empty = LogicalVector(false);
   LogicalVector tokens_only = LogicalVector(false);
@@ -157,6 +136,7 @@ CharacterVector get_ignore_strings(CharacterVector x, bool bus_suffix) {
 
   // If x is not NA and bus_suffix is TRUE, combine the input vector x with a
   // vector of common business suffix strings.
+  x = cpp_remove_accents(x);
   CharacterVector ignores =
     CharacterVector::create("inc", "corp", "co", "llc", "ltd", "div",
                             "ent", "lp", "and");
@@ -169,7 +149,7 @@ CharacterVector get_ignore_strings(CharacterVector x, bool bus_suffix) {
 }
 
 
-CharacterVector cpp_get_fingerprint_KC(CharacterVector vect,
+CharacterVector cpp_get_fingerprint_KC(const CharacterVector &vect,
                                        bool bus_suffix,
                                        CharacterVector ignore_strings) {
 
@@ -184,12 +164,7 @@ CharacterVector cpp_get_fingerprint_KC(CharacterVector vect,
   out = cpp_tolower(out);
 
   // Replace some punctuation with an empty string (want "Ed's" to be 1 word).
-  //out = stringi_replace_all_regex(out, "[;'`\"]", "");
-
   // Replace other punct with a blank space (want "cats,inc" to be 2 words).
-  //out = stringi_replace_all_regex(out, "[[:punct:]]", " ");
-
-
   out = stri_replace_all_regex(
     out,
     CharacterVector::create("[;'`\"]", "[[:punct:]]"),
@@ -199,23 +174,14 @@ CharacterVector cpp_get_fingerprint_KC(CharacterVector vect,
   );
 
   CharacterVector ignores = get_ignore_strings(ignore_strings, bus_suffix);
-  //CharacterVector ignores = CharacterVector(NA_STRING);
   if(bus_suffix) {
     // If bus_suffix is TRUE, normalize all common business suffix strings in
     // the output char vector.
     out = cpp_business_suffix(out);
   }
 
-  //Rcpp::Rcout << "ignores = " << ignores << std::endl;
-
   // Normalize all accent marks in chars.
   out = cpp_remove_accents(out);
-
-  // If ignores is not NA, remove accents marks in the chars.
-  bool ignore_str_empty = CharacterVector::is_na(ignores);
-  if(!ignore_str_empty) {
-    ignore_strings = cpp_remove_accents(ignores);
-  }
 
   // Trim whitespace.
   out = trimws(out, "both");
@@ -225,7 +191,7 @@ CharacterVector cpp_get_fingerprint_KC(CharacterVector vect,
 
   // If ignores is not NA, for each element of l_out, remove
   // any string that has a match within vector "ignores".
-  if(!ignore_str_empty) {
+  if(!CharacterVector::is_na(ignores)) {
     l_out = remove_strings(l_out, ignores);
   }
 

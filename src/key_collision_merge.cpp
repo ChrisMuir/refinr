@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-CharacterVector dict_transforms(Nullable<CharacterVector> dict) {
+CharacterVector dict_transforms(const Nullable<CharacterVector> &dict) {
   if(dict.isNull()) {
     return(CharacterVector(NA_STRING));
   }
@@ -16,7 +16,7 @@ CharacterVector dict_transforms(Nullable<CharacterVector> dict) {
 
 
 // [[Rcpp::export]]
-CharacterVector ignore_str_transforms(Nullable<CharacterVector> ignore_strings) {
+CharacterVector ignore_str_transforms(const Nullable<CharacterVector> &ignore_strings) {
   if(ignore_strings.isNull()) {
     return(CharacterVector(NA_STRING));
   }
@@ -27,10 +27,10 @@ CharacterVector ignore_str_transforms(Nullable<CharacterVector> ignore_strings) 
 }
 
 // [[Rcpp::export]]
-CharacterVector cpp_key_collision_merge(CharacterVector vect,
-                                        Nullable<CharacterVector> ignore_strings,
-                                        bool bus_suffix,
-                                        Nullable<CharacterVector> dict) {
+CharacterVector cpp_key_collision_merge(const CharacterVector &vect,
+                                        const Nullable<CharacterVector> &ignore_strings,
+                                        const bool &bus_suffix,
+                                        const Nullable<CharacterVector> &dict) {
 
   // Make transformations to dict.
   CharacterVector dict_ = dict_transforms(dict);
@@ -51,10 +51,10 @@ CharacterVector cpp_key_collision_merge(CharacterVector vect,
 
 // Wrapper for the two KC merge functions (one with a data dict, one without).
 // [[Rcpp::export]]
-CharacterVector merge_KC_clusters(CharacterVector vect,
-                                  CharacterVector keys_vect,
-                                  CharacterVector dict,
-                                  CharacterVector keys_dict) {
+CharacterVector merge_KC_clusters(const CharacterVector &vect,
+                                  const CharacterVector &keys_vect,
+                                  const CharacterVector &dict,
+                                  const CharacterVector &keys_dict) {
   if(CharacterVector::is_na(dict[0])) {
     // If dict is NA, get vector of all key values that have at least one
     // duplicate within keys (this creates clusters). The "merge_" func will
@@ -79,9 +79,9 @@ CharacterVector merge_KC_clusters(CharacterVector vect,
 
 // Merge key collision clusters of similar values, when no reference dict was
 // passed to func "key_collision_merge".
-CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
-                                          CharacterVector vect,
-                                          CharacterVector keys_vect) {
+CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
+                                          const CharacterVector &vect,
+                                          const CharacterVector &keys_vect) {
   // Create copy of vect to use as the output vector.
   CharacterVector output = clone(vect);
 
@@ -124,11 +124,11 @@ CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
 
 // Merge key collision clusters of similar values, when a reference dict was
 // passed to func "key_collision_merge".
-CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
-                                       CharacterVector vect,
-                                       CharacterVector keys_vect,
-                                       CharacterVector dict,
-                                       CharacterVector keys_dict) {
+CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
+                                       const CharacterVector &vect,
+                                       const CharacterVector &keys_vect,
+                                       const CharacterVector &dict,
+                                       const CharacterVector &keys_dict) {
   // Create copy of vect to use as the output vector.
   CharacterVector output = clone(vect);
 

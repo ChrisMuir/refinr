@@ -8,7 +8,8 @@ using namespace Rcpp;
 typedef std::unordered_map<std::string, std::vector<int> > refinr_map;
 
 // utils
-refinr_map create_map(CharacterVector terms, std::vector<std::string> keys);
+refinr_map create_map(const CharacterVector &terms,
+                      const std::vector<std::string> &keys);
 bool cpp_all(CharacterVector x, CharacterVector table);
 List cpp_list_unique(List input, bool sort_vals);
 CharacterVector cpp_paste_list(List input, std::string collapse_str);
@@ -17,29 +18,29 @@ List cpp_flatten_list(List list_obj);
 String most_freq_str(CharacterVector x);
 List cpp_as_list(CharacterVector x);
 CharacterVector cpp_unlist(List x);
-List remove_strings(List input, CharacterVector removes);
-CharacterVector cpp_tolower(CharacterVector x);
+List remove_strings(const List &input, CharacterVector removes);
+CharacterVector cpp_tolower(const CharacterVector &x);
 
 // get_fingerprint
-CharacterVector cpp_get_fingerprint_KC(CharacterVector vect,
+CharacterVector cpp_get_fingerprint_KC(const CharacterVector &vect,
                                        bool bus_suffix,
                                        CharacterVector ignore_strings);
 
 // key_collision_merge
-CharacterVector merge_KC_clusters_no_dict(CharacterVector clusters,
-                                          CharacterVector vect,
-                                          CharacterVector keys_vect);
+CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
+                                          const CharacterVector &vect,
+                                          const CharacterVector &keys_vect);
 
-CharacterVector merge_KC_clusters_dict(CharacterVector clusters,
-                                       CharacterVector vect,
-                                       CharacterVector keys_vect,
-                                       CharacterVector dict,
-                                       CharacterVector keys_dict);
+CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
+                                       const CharacterVector &vect,
+                                       const CharacterVector &keys_vect,
+                                       const CharacterVector &dict,
+                                       const CharacterVector &keys_dict);
 
-CharacterVector merge_KC_clusters(CharacterVector vect,
-                                  CharacterVector keys_vect,
-                                  CharacterVector dict,
-                                  CharacterVector keys_dict);
+CharacterVector merge_KC_clusters(const CharacterVector &vect,
+                                  const CharacterVector &keys_vect,
+                                  const CharacterVector &dict,
+                                  const CharacterVector &keys_dict);
 
 // n_gram_merge
 List get_ngram_initial_clusters(CharacterVector ngram_keys,
