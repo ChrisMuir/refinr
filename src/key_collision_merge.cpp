@@ -4,29 +4,6 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-CharacterVector dict_transforms(const Nullable<CharacterVector> &dict) {
-  if(dict.isNull()) {
-    return(CharacterVector(NA_STRING));
-  }
-  CharacterVector dict_(dict);
-  dict_ = dict_[!is_na(dict_)];
-  dict_ = unique(dict_);
-  return(dict_);
-}
-
-
-// [[Rcpp::export]]
-CharacterVector ignore_str_transforms(const Nullable<CharacterVector> &ignore_strings) {
-  if(ignore_strings.isNull()) {
-    return(CharacterVector(NA_STRING));
-  }
-  CharacterVector ignore_strings_(ignore_strings);
-  ignore_strings_ = ignore_strings_[!is_na(ignore_strings_)];
-  ignore_strings_ = unique(cpp_tolower(ignore_strings_));
-  return(ignore_strings_);
-}
-
-// [[Rcpp::export]]
 CharacterVector cpp_key_collision_merge(const CharacterVector &vect,
                                         const Nullable<CharacterVector> &ignore_strings,
                                         const bool &bus_suffix,
@@ -50,7 +27,6 @@ CharacterVector cpp_key_collision_merge(const CharacterVector &vect,
 
 
 // Wrapper for the two KC merge functions (one with a data dict, one without).
-// [[Rcpp::export]]
 CharacterVector merge_KC_clusters(const CharacterVector &vect,
                                   const CharacterVector &keys_vect,
                                   const CharacterVector &dict,

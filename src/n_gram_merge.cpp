@@ -3,6 +3,61 @@
 using namespace Rcpp;
 
 
+// [[Rcpp::export]]
+CharacterVector cpp_n_gram_merge(const CharacterVector &vect,
+                                 int numgram,
+                                 const Nullable<CharacterVector> &ignore_strings,
+                                 bool bus_suffix,
+                                 double edit_threshold,
+                                 bool approx_matching,
+                                 SEXP method, SEXP weight, SEXP p, SEXP bt,
+                                 SEXP q, SEXP useBytes, SEXP nthread) {
+
+  // Make transformations to ignore_strings.
+  CharacterVector ignore_strings_ = ignore_str_transforms(ignore_strings);
+
+  // Remove NA's from vect, then reduce to unique values.
+  CharacterVector univect = vect[!is_na(vect)];
+  univect = unique(univect);
+
+  // get ngram == 1 keys for all records (this will return NA if
+  // edit_threshold is NA).
+  CharacterVector one_gram_keys = cpp_get_fingerprint_ngram(univect,
+                                                            1,
+                                                            bus_suffix,
+                                                            ignore_strings_,
+                                                            edit_threshold);
+
+  // Get ngram == numgram keys for all records.
+  CharacterVector n_gram_keys = cpp_get_fingerprint_ngram(univect,
+                                                          numgram,
+                                                          bus_suffix,
+                                                          ignore_strings_,
+                                                          1.0);
+
+  // If approximate string matching is not being used, return output of
+  // ngram_merge_no_approx().
+  if(!approx_matching) {
+    return(ngram_merge_no_approx(n_gram_keys, univect, vect));
+  }
+
+  // If approximate string matching is enabled, call ngram_merge_approx(). This
+  // will do the following:
+  // 1. Get initial clusters by finding all elements of n_gram_keys for which
+  //    their associated one_gram_key has one or more matches within the entire
+  //    list of one_gram_keys.
+  // 2. Create a stringdistmatrix for every initial cluster, then filter
+  //    clusters based on the dist matrices.
+  // 3. For each remaining cluster, make mass edits to the values of vect
+  //    related to that cluster. Return vect after mass edits have been made.
+  return(
+    ngram_merge_approx(n_gram_keys, one_gram_keys, univect, vect,
+                       edit_threshold, method, weight, p, bt, q, useBytes,
+                       nthread)
+  );
+}
+
+
 // Iterate over all clusters, make mass edits related to each cluster.
 CharacterVector merge_ngram_clusters(List clusters,
                                      CharacterVector n_gram_keys,
@@ -88,7 +143,6 @@ CharacterVector merge_ngram_clusters(List clusters,
 // matching is NOT being used (via arg edit_threshold). Generate clusters by
 // finding all elements of n_gram_keys that have one or more identical
 // matches, then pass args along to merge_ngram_clusters().
-// [[Rcpp::export]]
 CharacterVector ngram_merge_no_approx(CharacterVector n_gram_keys,
                                       CharacterVector univect,
                                       CharacterVector vect) {
@@ -113,7 +167,6 @@ CharacterVector ngram_merge_no_approx(CharacterVector n_gram_keys,
 // matching is being used (via arg edit_threshold).
 // Create initial clusters, filter clusters based on matrices of numeric
 // string edit distance values, then pass args along to merge_ngram_clusters().
-// [[Rcpp::export]]
 CharacterVector ngram_merge_approx(CharacterVector n_gram_keys,
                                    CharacterVector one_gram_keys,
                                    CharacterVector univect,
@@ -415,7 +468,6 @@ List char_ngram(const std::vector<std::string>& strings, int numgram) {
 // Takes a list of character vectors. For each vector: Get char ngram tokens,
 // reduce to unique tokens, then collapse the tokens back together into single
 // string.
-// [[Rcpp::export]]
 CharacterVector cpp_get_char_ngrams(std::vector<std::string> vects,
                                     int numgram) {
 

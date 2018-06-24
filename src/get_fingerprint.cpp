@@ -4,10 +4,11 @@ using namespace Rcpp;
 
 #include <stringi.h>
 
-// The following directive aims to set up all required GetCCallables:
+// Set up all required stringi GetCCallables
 #include <stringi.cpp>
 
 
+// Call base::iconv() from Rcpp.
 CharacterVector iconv_trans(const CharacterVector &str) {
   Environment base("package:base");
   Function iconv = base["iconv"];
@@ -17,11 +18,14 @@ CharacterVector iconv_trans(const CharacterVector &str) {
 }
 
 
+// stringi::stri_trans_general()
 CharacterVector stringi_trans_general(const CharacterVector &str) {
   return(stri_trans_general(str, CharacterVector("latin-ASCII")));
 }
 
 
+// Combine base::iconv() and stringi::stri_trans_general() into one function
+// that properly removes accents from ACSII chars and UTF-8 chars.
 CharacterVector cpp_remove_accents(const CharacterVector &str) {
   int str_len = str.size();
   CharacterVector out(str_len);
@@ -92,13 +96,15 @@ CharacterVector cpp_business_suffix(CharacterVector vect) {
 }
 
 
+// stringi::stri_split_regex()
 List stringi_split_regex(const CharacterVector &str, CharacterVector pattern) {
   IntegerVector n = IntegerVector::create(-1);
   LogicalVector omit_empty = LogicalVector(false);
   LogicalVector tokens_only = LogicalVector(false);
   LogicalVector simplify = LogicalVector(false);
   List opts_regex = NULL;
-  return(stri_split_regex(str, pattern, n, omit_empty, tokens_only, simplify, opts_regex));
+  return(stri_split_regex(str, pattern, n, omit_empty, tokens_only, simplify,
+                          opts_regex));
 }
 
 
@@ -117,6 +123,7 @@ CharacterVector empty_str_to_na(CharacterVector x) {
 }
 
 
+// Establish vector of strings to ignore.
 CharacterVector get_ignore_strings(CharacterVector x, bool bus_suffix) {
   bool x_is_na = CharacterVector::is_na(x[0]);
 
@@ -149,6 +156,7 @@ CharacterVector get_ignore_strings(CharacterVector x, bool bus_suffix) {
 }
 
 
+// Get vector of key collision keys.
 CharacterVector cpp_get_fingerprint_KC(const CharacterVector &vect,
                                        bool bus_suffix,
                                        CharacterVector ignore_strings) {
@@ -167,7 +175,7 @@ CharacterVector cpp_get_fingerprint_KC(const CharacterVector &vect,
   // Replace other punct with a blank space (want "cats,inc" to be 2 words).
   out = stri_replace_all_regex(
     out,
-    CharacterVector::create("[;'`\"]", "[[:punct:]]"),
+    CharacterVector::create("[;'`\"$]", "[[:punct:]\\+]"),
     CharacterVector::create("", " "),
     LogicalVector(false),
     List(NULL)
@@ -206,5 +214,115 @@ CharacterVector cpp_get_fingerprint_KC(const CharacterVector &vect,
   // Convert empty strings to NA.
   out = empty_str_to_na(out);
 
+  return(out);
+}
+
+
+// cpp version of base::paste() with a 'collapse' argument.
+String cpp_paste(const CharacterVector &x, std::string collapse_str) {
+  int x_len = x.size();
+
+  if(x_len == 1) {
+    return(x[0]);
+  }
+
+  std::vector<std::string> x_ = as<std::vector<std::string> >(x);
+  std::string out = x_[0];
+  for(int i = 1; i < x_len; ++i) {
+    out += collapse_str;
+    out += x_[i];
+  }
+
+  return(wrap(out));
+}
+
+
+// Unigram character tokenizer. Vector input, list output.
+List cpp_str_split_char(const CharacterVector &x) {
+  int x_len = x.size();
+  List out(x_len);
+  std::vector<std::string> x_ = as<std::vector<std::string> >(x);
+
+  std::string curr_x;
+  int curr_x_len;
+  std::vector<char> curr_out;
+
+  for(int i = 0; i < x_len; ++i) {
+    curr_x = x_[i];
+    curr_x_len = curr_x.size();
+    curr_out.clear();
+    for(int chr = 0; chr < curr_x_len; ++chr) {
+      curr_out.push_back(curr_x[chr]);
+    }
+
+    out[i] = curr_out;
+  }
+
+  return(out);
+}
+
+
+// Get vector of ngram keys.
+CharacterVector cpp_get_fingerprint_ngram(const CharacterVector &vect,
+                                          int num_gram,
+                                          bool bus_suffix,
+                                          CharacterVector ignore_strings,
+                                          double edit_threshold) {
+  // If edit_threshold is NA, return NA.
+  if(R_IsNA(edit_threshold)) {
+    return(CharacterVector(NA_STRING));
+  }
+
+  CharacterVector out = clone(vect);
+
+  // Normalize case
+  out = cpp_tolower(out);
+
+  // Replace some punctuation with an empty string (want "Ed's" to be 1 word).
+  // Replace other punct with a blank space (want "cats,inc" to be 2 words).
+  out = stri_replace_all_regex(
+    out,
+    CharacterVector::create("[;'`\"$]", "[[:punct:]\\+]"),
+    CharacterVector::create("", " "),
+    LogicalVector(false),
+    List(NULL)
+  );
+
+  CharacterVector ignores = get_ignore_strings(ignore_strings, bus_suffix);
+  if(bus_suffix) {
+    // If bus_suffix is TRUE, normalize all common business suffix strings in
+    // the output char vector.
+    out = cpp_business_suffix(out);
+  }
+
+  // Remove all "ignore_strings" values and all spaces.
+  if(!CharacterVector::is_na(ignores)) {
+    // Use values in "ignore_strings" to create a regex of substrings to
+    // eliminate from each element of "vect" (also remove all spaces).
+    CharacterVector regex = CharacterVector::create(
+      "\\b(", cpp_paste(ignores, "|"), ")\\b|\\s"
+    );
+    out = stri_replace_all_regex(
+      out, CharacterVector::create(cpp_paste(regex, "")), CharacterVector(""),
+      LogicalVector(false), List(NULL)
+    );
+  } else {
+    out = stri_replace_all_regex(
+      out, CharacterVector("\\s+"), CharacterVector(""),
+      LogicalVector(false), List(NULL)
+    );
+  }
+
+  // Normalize all accent marks in chars.
+  out = cpp_remove_accents(out);
+
+  if(num_gram == 1) {
+    List out_l = cpp_str_split_char(out);
+    out_l = cpp_list_unique(out_l, TRUE);
+    out = cpp_paste_list(out_l, "");
+    return(out);
+  }
+
+  out = cpp_get_char_ngrams(as<std::vector<std::string> >(out), num_gram);
   return(out);
 }

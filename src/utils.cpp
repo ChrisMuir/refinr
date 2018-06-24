@@ -33,7 +33,31 @@ refinr_map create_map(const CharacterVector &terms,
 }
 
 
-// [[Rcpp::export]]
+// Function that returns a vector of dictionary strings, or NA.
+CharacterVector dict_transforms(const Nullable<CharacterVector> &dict) {
+  if(dict.isNull()) {
+    return(CharacterVector(NA_STRING));
+  }
+  CharacterVector dict_(dict);
+  dict_ = dict_[!is_na(dict_)];
+  dict_ = unique(dict_);
+  return(dict_);
+}
+
+
+// Function that returns a vector of strings to ignore, or NA.
+CharacterVector ignore_str_transforms(const Nullable<CharacterVector> &ignore_strings) {
+  if(ignore_strings.isNull()) {
+    return(CharacterVector(NA_STRING));
+  }
+  CharacterVector ignore_strings_(ignore_strings);
+  ignore_strings_ = ignore_strings_[!is_na(ignore_strings_)];
+  ignore_strings_ = unique(cpp_tolower(ignore_strings_));
+  return(ignore_strings_);
+}
+
+
+// Rcpp version of base::tolower()
 CharacterVector cpp_tolower(const CharacterVector &x) {
   // Normalize case
   CharacterVector out(x.size());
@@ -128,7 +152,6 @@ List cpp_flatten_list(List list_obj) {
 // separated by arg collapse, and append to a char vector output object. The
 // functions being applied to each element of the list are equivelant to
 // R func paste(char_vect, collapse = collapse).
-// [[Rcpp::export]]
 CharacterVector cpp_paste_list(List input, std::string collapse_str) {
   CharacterVector output(input.size());
 
@@ -216,7 +239,6 @@ bool cpp_all(CharacterVector x, CharacterVector table) {
 
 // Given a list of character vectors, return a list of the same length
 // containing the unique values of each vector.
-// [[Rcpp::export]]
 List cpp_list_unique(List input, bool sort_vals) {
 
   CharacterVector curr_vect;
@@ -246,7 +268,6 @@ List cpp_list_unique(List input, bool sort_vals) {
 
 // Given a list of character vectors, for each vector, remove any strings that
 // appear in input vector "removes".
-// [[Rcpp::export]]
 List remove_strings(const List &input, CharacterVector removes) {
   // Create unordered_set of the "removes" strings.
   int removes_len = removes.size();
@@ -278,18 +299,4 @@ List remove_strings(const List &input, CharacterVector removes) {
   }
 
   return out;
-}
-
-
-// cpp version of R function unique(), but only for char vectors.
-// [[Rcpp::export]]
-CharacterVector cpp_unique(CharacterVector vect) {
-  return unique(vect);
-}
-
-
-// cpp version of R function trimws()
-// [[Rcpp::export]]
-CharacterVector cpp_trimws_left(CharacterVector vect) {
-  return trimws(vect, "left");
 }

@@ -20,11 +20,19 @@ List cpp_as_list(CharacterVector x);
 CharacterVector cpp_unlist(List x);
 List remove_strings(const List &input, CharacterVector removes);
 CharacterVector cpp_tolower(const CharacterVector &x);
+CharacterVector dict_transforms(const Nullable<CharacterVector> &dict);
+CharacterVector ignore_str_transforms(const Nullable<CharacterVector> &ignore_strings);
 
 // get_fingerprint
 CharacterVector cpp_get_fingerprint_KC(const CharacterVector &vect,
                                        bool bus_suffix,
                                        CharacterVector ignore_strings);
+
+CharacterVector cpp_get_fingerprint_ngram(const CharacterVector &vect,
+                                          int num_gram,
+                                          bool bus_suffix,
+                                          CharacterVector ignore_strings,
+                                          double edit_threshold);
 
 // key_collision_merge
 CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
@@ -54,3 +62,19 @@ List filter_initial_clusters(List distmatrices, double edit_threshold,
 
 SEXP stringdist_lower_tri(SEXP a, SEXP method, SEXP weight, SEXP p, SEXP bt,
                           SEXP q, SEXP useBytes, SEXP nthread);
+
+List char_ngram(const std::vector<std::string>& strings, int numgram);
+CharacterVector cpp_get_char_ngrams(std::vector<std::string> vects,
+                                    int numgram);
+
+CharacterVector ngram_merge_no_approx(CharacterVector n_gram_keys,
+                                      CharacterVector univect,
+                                      CharacterVector vect);
+
+CharacterVector ngram_merge_approx(CharacterVector n_gram_keys,
+                                   CharacterVector one_gram_keys,
+                                   CharacterVector univect,
+                                   CharacterVector vect,
+                                   double edit_threshold,
+                                   SEXP method, SEXP weight, SEXP p, SEXP bt,
+                                   SEXP q, SEXP useBytes, SEXP nthread);
