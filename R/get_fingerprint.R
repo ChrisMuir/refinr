@@ -4,7 +4,7 @@
 get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                                ignore_strings = NULL) {
   # Replace some punctuation with an empty string (want "Ed's" to be 1 word).
-  vect <- gsub("[;'`\"]", "", tolower(vect), perl = TRUE)
+  vect <- gsub("[;'`\"]", "", cpp_tolower(vect), perl = TRUE)
   # Replace other punct with a blank space (want "cats,inc" to be 2 words).
   vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
   vect <- gsub(" {2,}", " ", vect, perl = TRUE)
@@ -29,7 +29,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
   # Final transformations, then return object "out".
   vect <- cpp_list_unique(vect, sort_vals = TRUE)
   vect <- cpp_paste_list(vect, collapse_str = " ")
-  vect[!nzchar(vect)] <- NA_character_
+  vect <- empty_str_to_na(vect)
   return(vect)
 }
 
@@ -39,7 +39,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
                                   ignore_strings = NULL) {
   # Replace some punctuation with an empty string (want "Ed's" to be 1 word).
-  vect <- gsub("[;'`\"]", "", tolower(vect), perl = TRUE)
+  vect <- gsub("[;'`\"]", "", cpp_tolower(vect), perl = TRUE)
   # Replace other punct with a blank space (want "cats,inc" to be 2 words).
   vect <- gsub("[[:punct:]]", " ", vect, perl = TRUE)
   # Compile variable ignore_strings.

@@ -160,6 +160,13 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     }
   }
 
+  # If ignore_strings is not NULL, make all values lower case then get uniques.
+  if (!is.null(ignore_strings)) {
+    ignore_strings <- unique(
+      cpp_tolower(ignore_strings[!is.na(ignore_strings)])
+    )
+  }
+
   # If approx string matching is being used, then get ngram == 1 keys for all
   # records.
   univect <- cpp_unique(vect[!is.na(vect)])

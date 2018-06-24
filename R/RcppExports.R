@@ -17,6 +17,14 @@ cpp_get_char_ngrams <- function(vects, numgram) {
     .Call('_refinr_cpp_get_char_ngrams', PACKAGE = 'refinr', vects, numgram)
 }
 
+cpp_tolower <- function(x) {
+    .Call('_refinr_cpp_tolower', PACKAGE = 'refinr', x)
+}
+
+empty_str_to_na <- function(x) {
+    .Call('_refinr_empty_str_to_na', PACKAGE = 'refinr', x)
+}
+
 cpp_paste_list <- function(input, collapse_str) {
     .Call('_refinr_cpp_paste_list', PACKAGE = 'refinr', input, collapse_str)
 }

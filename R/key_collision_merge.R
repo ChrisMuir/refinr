@@ -45,7 +45,9 @@ key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
 
   # If ignore_strings is not NULL, make all values lower case then get uniques.
   if (!is.null(ignore_strings)) {
-    ignore_strings <- unique(tolower(ignore_strings[!is.na(ignore_strings)]))
+    ignore_strings <- unique(
+      cpp_tolower(ignore_strings[!is.na(ignore_strings)])
+    )
   }
 
   # Get vector of key values. If dict is not NULL, get vector of key values

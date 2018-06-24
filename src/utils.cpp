@@ -33,6 +33,33 @@ refinr_map create_map(const CharacterVector &terms,
 }
 
 
+// Rcpp version of base::tolower()
+// [[Rcpp::export]]
+CharacterVector cpp_tolower(const CharacterVector &x) {
+  // Normalize case
+  CharacterVector out(x.size());
+  std::transform(x.begin(), x.end(), out.begin(),
+                 make_string_transformer(tolower));
+  return(out);
+}
+
+
+// Takes a char vector as input, converts any empty string values to NA_STRING,
+// returns as a char vector.
+// [[Rcpp::export]]
+CharacterVector empty_str_to_na(CharacterVector x) {
+  int x_len = x.size();
+
+  for(int i = 0; i < x_len; ++i) {
+    if(x[i] == "") {
+      x[i] = NA_STRING;
+    }
+  }
+
+  return(x);
+}
+
+
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
 String most_freq_str(const CharacterVector &x) {
