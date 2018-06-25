@@ -30,3 +30,8 @@ test_that("param 'ignore_strings' having expected effect", {
 vect <- c("César Moreira Nuñez", "cesar moreira nunez")
 test_that("encoding of input strings handled correctly",
           expect_equal(length(unique(key_collision_merge(vect))), 1))
+
+vect <- c("cats", "CATS", "NA", "na", "na na", NA, NA_character_, " ", "")
+test_that("NA values are handled correctly", {
+  expect_equal(sum(is.na(key_collision_merge(vect))), 2)
+})

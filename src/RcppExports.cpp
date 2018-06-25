@@ -77,17 +77,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// empty_str_to_na
-CharacterVector empty_str_to_na(CharacterVector x);
-RcppExport SEXP _refinr_empty_str_to_na(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(empty_str_to_na(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // cpp_paste_list
 CharacterVector cpp_paste_list(List input, const std::string& collapse_str);
 RcppExport SEXP _refinr_cpp_paste_list(SEXP inputSEXP, SEXP collapse_strSEXP) {
@@ -153,7 +142,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_refinr_ngram_merge_approx", (DL_FUNC) &_refinr_ngram_merge_approx, 12},
     {"_refinr_cpp_get_char_ngrams", (DL_FUNC) &_refinr_cpp_get_char_ngrams, 2},
     {"_refinr_cpp_tolower", (DL_FUNC) &_refinr_cpp_tolower, 1},
-    {"_refinr_empty_str_to_na", (DL_FUNC) &_refinr_empty_str_to_na, 1},
     {"_refinr_cpp_paste_list", (DL_FUNC) &_refinr_cpp_paste_list, 2},
     {"_refinr_cpp_list_unique", (DL_FUNC) &_refinr_cpp_list_unique, 2},
     {"_refinr_remove_strings", (DL_FUNC) &_refinr_remove_strings, 2},

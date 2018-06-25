@@ -33,7 +33,39 @@ refinr_map create_map(const CharacterVector &terms,
 }
 
 
+// Create unordered_map with strings as keys, and integer vectors as values,
+// and skip over string terms that are NA.
+refinr_map create_map_no_na(CharacterVector terms,
+                            const std::vector<std::string> &keys) {
+  int terms_len = terms.size();
+  int keys_len = keys.size();
+
+  // Initialize unordered_map.
+  refinr_map out;
+  for(int i = 0; i < keys_len; ++i) {
+    out[keys[i]];
+  }
+
+  // Fill values of the map.
+  refinr_map::iterator val;
+
+  for(int i = 0; i < terms_len; ++i) {
+    if(terms[i] == NA_STRING) {
+      continue;
+    }
+    val = out.find(as<std::string>(terms[i]));
+    if(val != out.end()) {
+      val->second.push_back(i);
+    }
+  }
+
+  return(out);
+}
+
+
 // Rcpp version of base::tolower()
+// NOTE: converts all NA values to string "NA", should only be used on vectors
+// that are known to not contain NA values.
 // [[Rcpp::export]]
 CharacterVector cpp_tolower(const CharacterVector &x) {
   // Normalize case
@@ -41,22 +73,6 @@ CharacterVector cpp_tolower(const CharacterVector &x) {
   std::transform(x.begin(), x.end(), out.begin(),
                  make_string_transformer(tolower));
   return(out);
-}
-
-
-// Takes a char vector as input, converts any empty string values to NA_STRING,
-// returns as a char vector.
-// [[Rcpp::export]]
-CharacterVector empty_str_to_na(CharacterVector x) {
-  int x_len = x.size();
-
-  for(int i = 0; i < x_len; ++i) {
-    if(x[i] == "") {
-      x[i] = NA_STRING;
-    }
-  }
-
-  return(x);
 }
 
 
@@ -266,6 +282,8 @@ List cpp_list_unique(List input, bool sort_vals) {
 // appear in input vector "removes".
 // [[Rcpp::export]]
 List remove_strings(List input, std::vector<std::string> removes) {
+  // Add "NA" to removes.
+  removes.push_back("NA");
   // Create unordered_set of the "removes" strings.
   std::unordered_set<std::string> removes_set(removes.begin(), removes.end());
 

@@ -17,8 +17,8 @@ CharacterVector merge_ngram_clusters(List clusters,
   // Create maps
   std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);
   std::vector<std::string> uni = as<std::vector<std::string> >(univect);
-  refinr_map ngram_map = create_map(n_gram_keys, cl_ul);
-  refinr_map univect_map = create_map(vect, uni);
+  refinr_map ngram_map = create_map_no_na(n_gram_keys, cl_ul);
+  refinr_map univect_map = create_map_no_na(vect, uni);
 
   // initialize iterators.
   List::iterator clust_end = clusters.end();
