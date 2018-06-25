@@ -265,13 +265,9 @@ List cpp_list_unique(List input, bool sort_vals) {
 // Given a list of character vectors, for each vector, remove any strings that
 // appear in input vector "removes".
 // [[Rcpp::export]]
-List remove_strings(List input, CharacterVector removes) {
+List remove_strings(List input, std::vector<std::string> removes) {
   // Create unordered_set of the "removes" strings.
-  int removes_len = removes.size();
-  std::unordered_set<std::string> removes_set;
-  for(int n = 0; n < removes_len; ++n) {
-    removes_set.insert(as<std::string>(removes[n]));
-  }
+  std::unordered_set<std::string> removes_set(removes.begin(), removes.end());
 
   int input_len = input.size();
   List out(input_len);

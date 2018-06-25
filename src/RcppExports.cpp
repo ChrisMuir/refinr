@@ -113,13 +113,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // remove_strings
-List remove_strings(List input, CharacterVector removes);
+List remove_strings(List input, std::vector<std::string> removes);
 RcppExport SEXP _refinr_remove_strings(SEXP inputSEXP, SEXP removesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type removes(removesSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type removes(removesSEXP);
     rcpp_result_gen = Rcpp::wrap(remove_strings(input, removes));
     return rcpp_result_gen;
 END_RCPP
