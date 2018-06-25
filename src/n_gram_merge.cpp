@@ -12,7 +12,7 @@ CharacterVector merge_ngram_clusters(List clusters,
   CharacterVector output = clone(vect);
 
   // Unlist clusters to a char vector, and get uniques.
-  CharacterVector clust_unlist = unique(cpp_unlist(clusters));
+  CharacterVector clust_unlist = unique(noNA(cpp_unlist(clusters)));
 
   // Create maps
   std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);
@@ -287,16 +287,16 @@ List filter_initial_clusters(const List &distmatrices, const double &edit_thresh
       }
 
       curr_row = curr_row[row_bool];
-      lowest = min(curr_row);
+      lowest = min(noNA(curr_row));
       lows[row_idx] = lowest;
       if(lowest < edit_threshold) {
-        olap[row_idx] = sum(curr_row == lowest);
+        olap[row_idx] = sum(noNA(curr_row == lowest));
       }
     }
 
     // If none of the rows in curr_mat contain an edit distance value below
     // the edit_threshold, return NA and move on to the next iteration.
-    if(is_true(all(lows > edit_threshold))) {
+    if(is_true(all(noNA(lows > edit_threshold)))) {
       out[i] = NA_STRING;
       na_filter[i] = FALSE;
       continue;
@@ -317,7 +317,7 @@ List filter_initial_clusters(const List &distmatrices, const double &edit_thresh
     curr_clust = clusters[i];
     for(int n = 0; n < lows_idx_len; ++n) {
       terms = curr_clust[curr_mat(lows_idx[n], _) < edit_threshold];
-      terms = unique(terms);
+      terms = unique(noNA(terms));
       clust[n] = terms;
       // Check to see if terms is a complete subset of an existing cluster.
       if(n > 0) {
@@ -338,7 +338,7 @@ List filter_initial_clusters(const List &distmatrices, const double &edit_thresh
     // eliminate any clusters that are complete subsets of the longest
     // cluster of the group.
     clust_len = clust.size();
-    if(sum(olap > 1) > 0 and clust_len > 1) {
+    if(sum(noNA(olap > 1)) > 0 and clust_len > 1) {
       NumericVector lens_of_clusts(clust_len);
       for(int n = 0; n < clust_len; ++n) {
         lens_of_clusts[n] = clust.size();
@@ -346,7 +346,7 @@ List filter_initial_clusters(const List &distmatrices, const double &edit_thresh
 
       // Eliminate any clusters that are complete subsets of the longest
       // cluster of the group.
-      max_clust_idx = which_max(lens_of_clusts);
+      max_clust_idx = which_max(noNA(lens_of_clusts));
       max_clust = clust[max_clust_idx];
       LogicalVector clust_bool(clust_len);
 

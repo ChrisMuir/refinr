@@ -63,9 +63,9 @@ CharacterVector empty_str_to_na(CharacterVector x) {
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
 String most_freq_str(const CharacterVector &x) {
-  IntegerVector x_tab = table(x);
+  IntegerVector x_tab = table(noNA(x));
   CharacterVector tab_names = x_tab.attr("names");
-  return(tab_names[which_max(x_tab)]);
+  return(tab_names[which_max(noNA(x_tab))]);
 }
 
 
@@ -191,7 +191,7 @@ CharacterVector cpp_get_key_dups(CharacterVector keys) {
   // return unique values.
   keys = keys[duplicated(keys)];
   keys = keys[!is_na(keys)];
-  return unique(keys);
+  return unique(noNA(keys));
 }
 
 
@@ -298,7 +298,7 @@ List remove_strings(List input, std::vector<std::string> removes) {
 // cpp version of R function unique(), but only for char vectors.
 // [[Rcpp::export]]
 CharacterVector cpp_unique(CharacterVector vect) {
-  return unique(vect);
+  return unique(noNA(vect));
 }
 
 
