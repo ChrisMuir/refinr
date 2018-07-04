@@ -35,7 +35,7 @@ refinr_map create_map(const CharacterVector &terms,
 
 // Create unordered_map with strings as keys, and integer vectors as values,
 // and skip over string terms that are NA.
-refinr_map create_map_no_na(CharacterVector terms,
+refinr_map create_map_no_na(CharacterVector &terms,
                             const std::vector<std::string> &keys) {
   int terms_len = terms.size();
   int keys_len = keys.size();
@@ -128,7 +128,7 @@ CharacterVector cpp_unlist(const List &x) {
 
 // Flatten a nested list such that each character vector occupies its own
 // element in the return list.
-List cpp_flatten_list(List list_obj) {
+List cpp_flatten_list(List &list_obj) {
   // Get the size of the output list by getting the sum of the lengths of each
   // element of the input list.
   List::iterator list_obj_begin = list_obj.begin();
@@ -162,7 +162,7 @@ List cpp_flatten_list(List list_obj) {
 // functions being applied to each element of the list are equivelant to
 // R func paste(char_vect, collapse = collapse).
 // [[Rcpp::export]]
-CharacterVector cpp_paste_list(List input,
+CharacterVector cpp_paste_list(List &input,
                                const std::string &collapse_str) {
   CharacterVector output(input.size());
 
@@ -202,12 +202,13 @@ CharacterVector cpp_paste_list(List input,
 
 // Input a char vector, subset to only include duplicated values, remove NA's,
 // and then get unique values. Return the subset.
-CharacterVector cpp_get_key_dups(CharacterVector keys) {
+CharacterVector cpp_get_key_dups(CharacterVector &keys) {
   // Subset to only keep those that have a duplicate, remove, NA's, then
   // return unique values.
-  keys = keys[duplicated(keys)];
-  keys = keys[!is_na(keys)];
-  return unique(noNA(keys));
+  CharacterVector out = clone(keys);
+  out = out[duplicated(out)];
+  out = out[!is_na(out)];
+  return unique(noNA(out));
 }
 
 
@@ -251,7 +252,7 @@ bool cpp_all(const CharacterVector &x, const CharacterVector &table) {
 // Given a list of character vectors, return a list of the same length
 // containing the unique values of each vector.
 // [[Rcpp::export]]
-List cpp_list_unique(List input, bool sort_vals) {
+List cpp_list_unique(List &input, const bool &sort_vals) {
 
   CharacterVector curr_vect;
 
@@ -281,9 +282,10 @@ List cpp_list_unique(List input, bool sort_vals) {
 // Given a list of character vectors, for each vector, remove any strings that
 // appear in input vector "removes".
 // [[Rcpp::export]]
-List remove_strings(List input, std::vector<std::string> removes) {
+List remove_strings(List &input, std::vector<std::string> &removes) {
   // Add "NA" to removes.
   removes.push_back("NA");
+
   // Create unordered_set of the "removes" strings.
   std::unordered_set<std::string> removes_set(removes.begin(), removes.end());
 
@@ -315,13 +317,13 @@ List remove_strings(List input, std::vector<std::string> removes) {
 
 // cpp version of R function unique(), but only for char vectors.
 // [[Rcpp::export]]
-CharacterVector cpp_unique(CharacterVector vect) {
+CharacterVector cpp_unique(const CharacterVector &vect) {
   return unique(noNA(vect));
 }
 
 
 // cpp version of R function trimws()
 // [[Rcpp::export]]
-CharacterVector cpp_trimws_left(CharacterVector vect) {
+CharacterVector cpp_trimws_left(const CharacterVector &vect) {
   return trimws(vect, "left");
 }

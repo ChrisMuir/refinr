@@ -5,8 +5,8 @@ using namespace Rcpp;
 
 // Iterate over all clusters, make mass edits to obj "vect", related to each
 // cluster.
-CharacterVector merge_ngram_clusters(List clusters,
-                                     const CharacterVector &n_gram_keys,
+CharacterVector merge_ngram_clusters(List &clusters,
+                                     CharacterVector &n_gram_keys,
                                      const CharacterVector &univect,
                                      const CharacterVector &vect) {
   CharacterVector output = clone(vect);
@@ -18,7 +18,7 @@ CharacterVector merge_ngram_clusters(List clusters,
   std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);
   std::vector<std::string> uni = as<std::vector<std::string> >(univect);
   refinr_map ngram_map = create_map_no_na(n_gram_keys, cl_ul);
-  refinr_map univect_map = create_map_no_na(vect, uni);
+  refinr_map univect_map = create_map_no_na(output, uni);
 
   // initialize iterators.
   List::iterator clust_end = clusters.end();
@@ -90,7 +90,7 @@ CharacterVector merge_ngram_clusters(List clusters,
 // finding all elements of n_gram_keys that have one or more identical
 // matches, then pass args along to merge_ngram_clusters().
 // [[Rcpp::export]]
-CharacterVector ngram_merge_no_approx(const CharacterVector &n_gram_keys,
+CharacterVector ngram_merge_no_approx(CharacterVector &n_gram_keys,
                                       const CharacterVector &univect,
                                       const CharacterVector &vect) {
   // Find all elements of n_gram_keys that have one or more identical
@@ -115,13 +115,18 @@ CharacterVector ngram_merge_no_approx(const CharacterVector &n_gram_keys,
 // Create initial clusters, filter clusters based on matrices of numeric
 // string edit distance values, then pass args along to merge_ngram_clusters().
 // [[Rcpp::export]]
-CharacterVector ngram_merge_approx(const CharacterVector &n_gram_keys,
-                                   const CharacterVector &one_gram_keys,
+CharacterVector ngram_merge_approx(CharacterVector &n_gram_keys,
+                                   CharacterVector &one_gram_keys,
                                    const CharacterVector &univect,
                                    const CharacterVector &vect,
                                    const double &edit_threshold,
-                                   SEXP method, SEXP weight, SEXP p, SEXP bt,
-                                   SEXP q, SEXP useBytes, SEXP nthread) {
+                                   const SEXP &method,
+                                   const SEXP &weight,
+                                   const SEXP &p,
+                                   const SEXP &bt,
+                                   const SEXP &q,
+                                   const SEXP &useBytes,
+                                   const SEXP &nthread) {
   // Get initial clusters.
   List initial_clust = get_ngram_initial_clusters(n_gram_keys, one_gram_keys);
 
@@ -149,8 +154,8 @@ CharacterVector ngram_merge_approx(const CharacterVector &n_gram_keys,
 // in unigram_keys, then use those indices to get a subset of ngram_keys. Add
 // the subset to List "out". After "out" is compiled, remove elements of the
 // list that have length less than 2.
-List get_ngram_initial_clusters(CharacterVector ngram_keys,
-                                CharacterVector unigram_keys) {
+List get_ngram_initial_clusters(CharacterVector &ngram_keys,
+                                CharacterVector &unigram_keys) {
   CharacterVector unigram_dups = cpp_get_key_dups(unigram_keys);
   List out(unigram_dups.size());
 
@@ -195,13 +200,19 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
 
 // Take in a list of character vectors, create a stringdist edit matrix for
 // each vector, return a list of edit matrices.
-List get_stringdist_matrices(const List &clusters, SEXP method, SEXP weight, SEXP p,
-                             SEXP bt, SEXP q, SEXP useBytes, SEXP nthread) {
+List get_stringdist_matrices(const List &clusters,
+                             const SEXP &method,
+                             const SEXP &weight,
+                             const SEXP &p,
+                             const SEXP &bt,
+                             const SEXP &q,
+                             const SEXP &useBytes,
+                             const SEXP &nthread) {
   int clust_len = clusters.size();
   List out(clust_len);
 
   for(int j = 0; j < clust_len; ++j) {
-    SEXP curr_clust = clusters[j];
+    const SEXP &curr_clust = clusters[j];
     // Run args through stringdist sd_lower_tri C function.
     NumericVector x = stringdist_lower_tri(curr_clust, method, weight, p,
                                            bt, q, useBytes, nthread);
@@ -238,7 +249,8 @@ List get_stringdist_matrices(const List &clusters, SEXP method, SEXP weight, SEX
 // within the matrix, based on lowest numeric edit distance. (matches must
 // have a value below edit_threshold in order to be considered a cluster
 // suitable for merging).
-List filter_initial_clusters(const List &distmatrices, const double &edit_threshold,
+List filter_initial_clusters(const List &distmatrices,
+                             const double &edit_threshold,
                              const List &clusters) {
   int distmatrices_len = distmatrices.size();
   List out(distmatrices_len);
@@ -381,7 +393,7 @@ List filter_initial_clusters(const List &distmatrices, const double &edit_thresh
 // string that's been tokenized by individual char. This function iterates
 // over the list, for each char vector it will compile every available ngram
 // of length equal to arg numgram. Output is a list of ngrams as char vectors.
-List char_ngram(const std::vector<std::string>& strings, int numgram) {
+List char_ngram(const std::vector<std::string> &strings, const int &numgram) {
   int strings_len = strings.size();
   List out(strings_len);
   int numgram_sub = numgram - 1;
@@ -419,7 +431,7 @@ List char_ngram(const std::vector<std::string>& strings, int numgram) {
 // string.
 // [[Rcpp::export]]
 CharacterVector cpp_get_char_ngrams(const std::vector<std::string> &vects,
-                                    int numgram) {
+                                    const int &numgram) {
 
   // Get character ngrams for each element of vects.
   List vects_mod = char_ngram(vects, numgram);

@@ -6,7 +6,7 @@ using namespace Rcpp;
 // Wrapper for the two KC merge functions (one with a data dict, one without).
 // [[Rcpp::export]]
 CharacterVector merge_KC_clusters(const CharacterVector &vect,
-                                  const CharacterVector &keys_vect,
+                                  CharacterVector &keys_vect,
                                   const CharacterVector &dict,
                                   const CharacterVector &keys_dict) {
   if(CharacterVector::is_na(dict[0])) {
@@ -35,7 +35,7 @@ CharacterVector merge_KC_clusters(const CharacterVector &vect,
 // passed to func "key_collision_merge".
 CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
                                           const CharacterVector &vect,
-                                          const CharacterVector &keys_vect) {
+                                          CharacterVector &keys_vect) {
   // Create copy of vect to use as the output vector.
   CharacterVector output = clone(vect);
 
@@ -80,7 +80,7 @@ CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
 // passed to func "key_collision_merge".
 CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
                                        const CharacterVector &vect,
-                                       const CharacterVector &keys_vect,
+                                       CharacterVector &keys_vect,
                                        const CharacterVector &dict,
                                        const CharacterVector &keys_dict) {
   // Create copy of vect to use as the output vector.

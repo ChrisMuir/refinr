@@ -9,7 +9,13 @@ using namespace Rcpp;
 // via the header file "stringdist_api.h".
 
 // Function that wraps the stringdist C function "sd_lower_tri()".
-SEXP stringdist_lower_tri(const SEXP &a, SEXP method, SEXP weight, SEXP p, SEXP bt,
-                          SEXP q, SEXP useBytes, SEXP nthread) {
+SEXP stringdist_lower_tri(const SEXP &a,
+                          const SEXP &method,
+                          const SEXP &weight,
+                          const SEXP &p,
+                          const SEXP &bt,
+                          const SEXP &q,
+                          const SEXP &useBytes,
+                          const SEXP &nthread) {
   return(sd_lower_tri(a, method, weight, p, bt, q, useBytes, nthread));
 }
