@@ -154,8 +154,8 @@ CharacterVector ngram_merge_approx(CharacterVector &n_gram_keys,
 // in unigram_keys, then use those indices to get a subset of ngram_keys. Add
 // the subset to List "out". After "out" is compiled, remove elements of the
 // list that have length less than 2.
-List get_ngram_initial_clusters(CharacterVector &ngram_keys,
-                                CharacterVector &unigram_keys) {
+List get_ngram_initial_clusters(CharacterVector ngram_keys,
+                                CharacterVector unigram_keys) {
   CharacterVector unigram_dups = cpp_get_key_dups(unigram_keys);
   List out(unigram_dups.size());
 

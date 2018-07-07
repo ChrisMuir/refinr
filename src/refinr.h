@@ -38,8 +38,8 @@ CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
 
 
 // n_gram_merge
-List get_ngram_initial_clusters(CharacterVector &ngram_keys,
-                                CharacterVector &unigram_keys);
+List get_ngram_initial_clusters(CharacterVector ngram_keys,
+                                CharacterVector unigram_keys);
 
 List filter_initial_clusters(const List &distmatrices, const double &edit_threshold,
                              const List &clusters);
