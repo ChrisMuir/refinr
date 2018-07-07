@@ -39,7 +39,8 @@ test_that("no errors when input includes len 1 str, len 0 str, NA's", {
 
 vect <- c("cats", "CATS", "NA", "na", "na na", NA, NA_character_, " ", "")
 test_that("NA values are handled correctly", {
-  expect_equal(sum(is.na(key_collision_merge(vect))), 2)
+  expect_equal(sum(is.na(n_gram_merge(vect))), 2)
+  expect_equal(sum(n_gram_merge(vect) == "NA", na.rm = TRUE), 3)
 })
 
 test_that("ellipsis args are being handled properly", {

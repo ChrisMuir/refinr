@@ -202,13 +202,12 @@ CharacterVector cpp_paste_list(List &input,
 
 // Input a char vector, subset to only include duplicated values, remove NA's,
 // and then get unique values. Return the subset.
-CharacterVector cpp_get_key_dups(CharacterVector &keys) {
+CharacterVector cpp_get_key_dups(CharacterVector keys) {
   // Subset to only keep those that have a duplicate, remove, NA's, then
   // return unique values.
-  CharacterVector out = clone(keys);
-  out = out[duplicated(out)];
-  out = out[!is_na(out)];
-  return unique(noNA(out));
+  keys = keys[duplicated(keys)];
+  keys = keys[!is_na(keys)];
+  return unique(noNA(keys));
 }
 
 

@@ -18,7 +18,7 @@ refinr_map create_map_no_na(CharacterVector &terms,
 bool cpp_all(const CharacterVector &x, const CharacterVector &table);
 List cpp_list_unique(List &input, const bool &sort_vals);
 CharacterVector cpp_paste_list(List &input, const std::string &collapse_str);
-CharacterVector cpp_get_key_dups(CharacterVector &keys);
+CharacterVector cpp_get_key_dups(CharacterVector keys);
 List cpp_flatten_list(List &list_obj);
 String most_freq_str(const CharacterVector &x);
 List cpp_as_list(const CharacterVector &x);

@@ -8,7 +8,7 @@ using namespace Rcpp;
 CharacterVector merge_ngram_clusters(List &clusters,
                                      CharacterVector &n_gram_keys,
                                      const CharacterVector &univect,
-                                     const CharacterVector &vect) {
+                                     CharacterVector &vect) {
   CharacterVector output = clone(vect);
 
   // Unlist clusters to a char vector, and get uniques.
@@ -18,7 +18,7 @@ CharacterVector merge_ngram_clusters(List &clusters,
   std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);
   std::vector<std::string> uni = as<std::vector<std::string> >(univect);
   refinr_map ngram_map = create_map_no_na(n_gram_keys, cl_ul);
-  refinr_map univect_map = create_map_no_na(output, uni);
+  refinr_map univect_map = create_map_no_na(vect, uni);
 
   // initialize iterators.
   List::iterator clust_end = clusters.end();
@@ -92,7 +92,7 @@ CharacterVector merge_ngram_clusters(List &clusters,
 // [[Rcpp::export]]
 CharacterVector ngram_merge_no_approx(CharacterVector &n_gram_keys,
                                       const CharacterVector &univect,
-                                      const CharacterVector &vect) {
+                                      CharacterVector &vect) {
   // Find all elements of n_gram_keys that have one or more identical
   // matches.
   CharacterVector n_gram_keys_dups = cpp_get_key_dups(n_gram_keys);
@@ -118,7 +118,7 @@ CharacterVector ngram_merge_no_approx(CharacterVector &n_gram_keys,
 CharacterVector ngram_merge_approx(CharacterVector &n_gram_keys,
                                    CharacterVector &one_gram_keys,
                                    const CharacterVector &univect,
-                                   const CharacterVector &vect,
+                                   CharacterVector &vect,
                                    const double &edit_threshold,
                                    const SEXP &method,
                                    const SEXP &weight,
