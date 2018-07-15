@@ -41,8 +41,9 @@ CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
 
   // Create unordered_map, using clusters as keys, values will be the indices
   // of each cluster in keys_vect.
-  std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
-  refinr_map keys_vect_map = create_map(keys_vect, cl);
+  //std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
+  //refinr_map keys_vect_map = create_map(keys_vect, cl);
+  refinr_map keys_vect_map = create_map(keys_vect, clusters);
 
   // Initialize variables used in the loop below.
   std::vector<int> curr_idx;
@@ -50,13 +51,16 @@ CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
   String most_freq_string;
 
   // Iterate over clusters, make mass edits to output.
-  std::vector<std::string>::iterator clust_end = cl.end();
-  std::vector<std::string>::iterator iter;
+  //std::vector<std::string>::iterator clust_end = cl.end();
+  //std::vector<std::string>::iterator iter;
+  SEXP* ptr = get_string_ptr(clusters);
 
-  for(iter = cl.begin(); iter != clust_end; ++iter) {
+  //for(iter = cl.begin(); iter != clust_end; ++iter) {
+  for(unsigned int j = 0; j < clusters.size(); ++j) {
     // Create subset of vect using the indices from keys_vect_map that
     // correspond to the current cluster iteration.
-    curr_idx = keys_vect_map[*iter];
+    //curr_idx = keys_vect_map[*iter];
+    curr_idx = keys_vect_map[ptr[j]];
     curr_idx_len = curr_idx.size();
     CharacterVector curr_vect(curr_idx_len);
     for(int i = 0; i < curr_idx_len; ++i) {
@@ -89,12 +93,14 @@ CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
   // Create two unordered_maps, both using clusters as keys. Values for
   // keys_vect_map will be the indices of each cluster in keys_vect. Values for
   // keys_dict_map will be the indices of each cluster in keys_dict.
-  std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
-  refinr_map keys_vect_map = create_map(keys_vect, cl);
-  refinr_map keys_dict_map = create_map(keys_dict, cl);
+  //std::vector<std::string> cl = as<std::vector<std::string> >(clusters);
+  //refinr_map keys_vect_map = create_map(keys_vect, cl);
+  //refinr_map keys_dict_map = create_map(keys_dict, cl);
+  refinr_map keys_vect_map = create_map(keys_vect, clusters);
+  refinr_map keys_dict_map = create_map(keys_dict, clusters);
 
   // Initialize variables used in the loop below.
-  std::string curr_clust;
+  //std::string curr_clust;
   std::vector<int> curr_vect_idx;
   int curr_vect_len;
   std::vector<int> curr_dict_idx;
@@ -103,14 +109,17 @@ CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
   String most_freq_string;
 
   // Iterate over clusters, make mass edits to output.
-  std::vector<std::string>::iterator clust_end = cl.end();
-  std::vector<std::string>::iterator iter;
+  //std::vector<std::string>::iterator clust_end = cl.end();
+  //std::vector<std::string>::iterator iter;
+  SEXP* ptr = get_string_ptr(clusters);
 
-  for(iter = cl.begin(); iter != clust_end; ++iter) {
-    curr_clust = *iter;
+  //for(iter = cl.begin(); iter != clust_end; ++iter) {
+  for(unsigned int j = 0; j < clusters.size(); ++j) {
+    //curr_clust = *iter;
 
     // Create subset of vect using the indices that correspond to curr_clust.
-    curr_vect_idx = keys_vect_map[curr_clust];
+    //curr_vect_idx = keys_vect_map[curr_clust];
+    curr_vect_idx = keys_vect_map[ptr[j]];
     curr_vect_len = curr_vect_idx.size();
     CharacterVector curr_vect(curr_vect_len);
     for(int i = 0; i < curr_vect_len; ++i) {
@@ -119,7 +128,8 @@ CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
 
     // Check to see if curr_clust appears in keys_dict_map. If it does, create
     // subset of dict using the indices that correspond to curr_clust.
-    curr_dict_idx = keys_dict_map[curr_clust];
+    //curr_dict_idx = keys_dict_map[curr_clust];
+    curr_dict_idx = keys_dict_map[ptr[j]];
     curr_dict_len = curr_dict_idx.size();
     CharacterVector curr_dict(curr_dict_len);
     not_in_dict = true;

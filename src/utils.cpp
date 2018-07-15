@@ -9,21 +9,23 @@ using namespace Rcpp;
 
 // Create unordered_map with strings as keys, and integer vectors as values.
 refinr_map create_map(const CharacterVector &terms,
-                      const std::vector<std::string> &keys) {
+                      const CharacterVector &keys) {
   int keys_len = keys.size();
   int terms_len = terms.size();
 
   // Initialize unordered_map.
   refinr_map out;
+  SEXP* ptr = get_string_ptr(keys);
   for(int i = 0; i < keys_len; ++i) {
-    out[keys[i]];
+    out[ptr[i]];
   }
 
   // Fill values of the map.
+  ptr = get_string_ptr(terms);
   refinr_map::iterator val;
 
   for(int i = 0; i < terms_len; ++i) {
-    val = out.find(as<std::string>(terms[i]));
+    val = out.find(ptr[i]);
     if(val != out.end()) {
       val->second.push_back(i);
     }
@@ -36,24 +38,26 @@ refinr_map create_map(const CharacterVector &terms,
 // Create unordered_map with strings as keys, and integer vectors as values,
 // and skip over string terms that are NA.
 refinr_map create_map_no_na(CharacterVector &terms,
-                            const std::vector<std::string> &keys) {
+                            const CharacterVector &keys) {
   int terms_len = terms.size();
   int keys_len = keys.size();
 
   // Initialize unordered_map.
   refinr_map out;
+  SEXP* ptr = get_string_ptr(keys);
   for(int i = 0; i < keys_len; ++i) {
     out[keys[i]];
   }
 
   // Fill values of the map.
+  ptr = get_string_ptr(terms);
   refinr_map::iterator val;
 
   for(int i = 0; i < terms_len; ++i) {
     if(terms[i] == NA_STRING) {
       continue;
     }
-    val = out.find(as<std::string>(terms[i]));
+    val = out.find(ptr[i]);
     if(val != out.end()) {
       val->second.push_back(i);
     }

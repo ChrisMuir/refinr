@@ -5,15 +5,15 @@ using namespace Rcpp;
 
 // Define std::unordered_map using std::string as keys and std::vector<int>
 // as values.
-typedef std::unordered_map<std::string, std::vector<int> > refinr_map;
+typedef std::unordered_map<SEXP, std::vector<int> > refinr_map;
 
 
 // utils
 refinr_map create_map(const CharacterVector &vect,
-                      const std::vector<std::string> &clusters);
+                      const CharacterVector &clusters);
 
 refinr_map create_map_no_na(CharacterVector &terms,
-                            const std::vector<std::string> &keys);
+                            const CharacterVector &keys);
 
 bool cpp_all(const CharacterVector &x, const CharacterVector &table);
 List cpp_list_unique(List &input, const bool &sort_vals);
@@ -41,7 +41,8 @@ CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
 List get_ngram_initial_clusters(CharacterVector ngram_keys,
                                 CharacterVector unigram_keys);
 
-List filter_initial_clusters(const List &distmatrices, const double &edit_threshold,
+List filter_initial_clusters(const List &distmatrices,
+                             const double &edit_threshold,
                              const List &clusters);
 
 SEXP stringdist_lower_tri(const SEXP &a,
