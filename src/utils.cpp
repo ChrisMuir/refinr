@@ -13,9 +13,13 @@ refinr_map create_map(const CharacterVector &terms,
   int keys_len = keys.size();
   int terms_len = terms.size();
 
+  // refinr_map uses pointers to CHARSXP SEXP as keys. Object "ptr" is used
+  // to house pointers to the underlying SEXP of CharacterVectors.
+  SEXP* ptr;
+
   // Initialize unordered_map.
   refinr_map out;
-  SEXP* ptr = get_string_ptr(keys);
+  ptr = get_string_ptr(keys);
   for(int i = 0; i < keys_len; ++i) {
     out[ptr[i]];
   }
@@ -42,9 +46,13 @@ refinr_map create_map_no_na(CharacterVector &terms,
   int terms_len = terms.size();
   int keys_len = keys.size();
 
+  // refinr_map uses pointers to CHARSXP SEXP as keys. Object "ptr" is used
+  // to house pointers to the underlying SEXP of CharacterVectors.
+  SEXP* ptr;
+
   // Initialize unordered_map.
   refinr_map out;
-  SEXP* ptr = get_string_ptr(keys);
+  ptr = get_string_ptr(keys);
   for(int i = 0; i < keys_len; ++i) {
     out[keys[i]];
   }

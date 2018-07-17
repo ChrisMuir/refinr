@@ -15,10 +15,6 @@ CharacterVector merge_ngram_clusters(List &clusters,
   CharacterVector clust_unlist = unique(noNA(cpp_unlist(clusters)));
 
   // Create maps
-  //std::vector<std::string> cl_ul = as<std::vector<std::string> >(clust_unlist);
-  //std::vector<std::string> uni = as<std::vector<std::string> >(univect);
-  //refinr_map ngram_map = create_map_no_na(n_gram_keys, cl_ul);
-  //refinr_map univect_map = create_map_no_na(vect, uni);
   refinr_map ngram_map = create_map_no_na(n_gram_keys, clust_unlist);
   refinr_map univect_map = create_map_no_na(vect, univect);
 
@@ -39,27 +35,28 @@ CharacterVector merge_ngram_clusters(List &clusters,
   std::vector<int> ngram_idx;
   std::vector<int> curr_ngram_idx;
 
+  // refinr_map uses pointers to CHARSXP SEXP as keys. In the loop below,
+  // there are two points in which elements of CharacterVectors will be looked
+  // up in the two refinr_maps (ngram_map, univect_map), object "ptr" is used
+  // in each instance to house pointers to the underlying SEXP of the
+  // CharacterVectors.
   SEXP* ptr;
 
   for(iter = clusters.begin(); iter != clust_end; ++iter) {
-  //for(unsigned int j = 0; j < clusters.size(); ++j) {
     curr_clust = *iter;
     ptr = get_string_ptr(curr_clust);
 
     // Create subset of univect using the indices of n_gram_keys that appear
     // in curr_clust.
-
     curr_clust_len = curr_clust.size();
     ngram_idx.clear();
     for(int i = 0; i < curr_clust_len; ++i) {
-      //curr_clust_str = as<std::string>(curr_clust[i]);
       curr_ngram_idx = ngram_map[ptr[i]];
       ngram_idx.insert(
         ngram_idx.end(), curr_ngram_idx.begin(), curr_ngram_idx.end()
       );
     }
     ngram_idx_len = ngram_idx.size();
-    //std::vector<std::string> univect_sub(ngram_idx_len);
     CharacterVector univect_sub(ngram_idx_len);
     for(int i = 0; i < ngram_idx_len; ++i) {
       univect_sub[i] = univect[ngram_idx[i]];
@@ -175,26 +172,23 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   unigram_keys = unigram_keys[na_idx];
 
   // Create unordered_map, using unigram_dups as keys, values will be the
-  // indices of each dup in unigram_keys.
-  //std::vector<std::string> dups = as<std::vector<std::string> >(unigram_dups);
+  // indices of each unigram_dup in unigram_keys.
   refinr_map unigram_map = create_map(unigram_keys, unigram_dups);
 
-  // Iterate over unigram_dups, for each value get the corresponding indices
-  // from unigram_map, Use those indices to subset ngram_keys, save the subset
-  // to the list output.
-  //std::vector<std::string>::iterator dups_end = dups.end();
-  //std::vector<std::string>::iterator iter;
+  // refinr_map uses pointers to CHARSXP SEXP as keys. Get pointers to the
+  // SEXP unigram_dups, to iterate over in the loop below.
   SEXP* ptr = get_string_ptr(unigram_dups);
 
   int i = 0;
   int curr_idx_len;
   std::vector<int> curr_idx;
 
-  //for(iter = dups.begin(); iter != dups_end; ++iter) {
+  // Iterate over unigram_dups, for each value get the corresponding indices
+  // from unigram_map, Use those indices to subset ngram_keys, save the subset
+  // to the list output.
   for(unsigned int j = 0; j < unigram_dups.size(); ++j) {
     // Create subset of ngram_keys using the indices from unigram_map that
     // correspond to the current unigram_dup iteration.
-    //curr_idx = unigram_map[*iter];
     curr_idx = unigram_map[ptr[j]];
     curr_idx_len = curr_idx.size();
     CharacterVector curr_ngram(curr_idx_len);
