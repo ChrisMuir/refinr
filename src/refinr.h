@@ -3,7 +3,15 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins(cpp11)]]
 
-// Define std::unordered_map using std::string as keys and std::vector<int>
+
+// Data structure used by function most_freq_str()
+struct freq_string {
+  String mf_str;
+  IntegerVector x_tab;
+  CharacterVector tab_names;
+};
+
+// Define std::unordered_map using SEXP as keys and std::vector<int>
 // as values.
 typedef std::unordered_map<SEXP, std::vector<int> > refinr_map;
 
@@ -20,7 +28,7 @@ List cpp_list_unique(List &input, const bool &sort_vals);
 CharacterVector cpp_paste_list(List &input, const std::string &collapse_str);
 CharacterVector cpp_get_key_dups(CharacterVector keys);
 List cpp_flatten_list(List &list_obj);
-String most_freq_str(const CharacterVector &x);
+void most_freq_str(const CharacterVector &x, freq_string &mfs);
 List cpp_as_list(const CharacterVector &x);
 CharacterVector cpp_unlist(const List &x);
 

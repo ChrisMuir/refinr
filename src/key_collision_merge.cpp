@@ -46,7 +46,7 @@ CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
   // Initialize variables used in the loop below.
   std::vector<int> curr_idx;
   int curr_idx_len;
-  String most_freq_string;
+  freq_string mfs;
 
   // refinr_map uses pointers to CHARSXP SEXP as keys. Get pointers to the
   // SEXP clusters, to iterate over in the loop below.
@@ -64,11 +64,11 @@ CharacterVector merge_KC_clusters_no_dict(const CharacterVector &clusters,
     }
 
     // Get the string that appears most often in curr_vect.
-    most_freq_string = most_freq_str(curr_vect);
+    most_freq_str(curr_vect, mfs);
 
     // For each index in curr_idx, edit output to be equal to most_freq_string.
     for(int n = 0; n < curr_idx_len; ++n) {
-      output[curr_idx[n]] = most_freq_string;
+      output[curr_idx[n]] = mfs.mf_str;
     }
   }
 
@@ -98,7 +98,7 @@ CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
   std::vector<int> curr_dict_idx;
   int curr_dict_len;
   bool not_in_dict;
-  String most_freq_string;
+  freq_string mfs;
 
   // refinr_map uses pointers to CHARSXP SEXP as keys. Get pointers to the
   // SEXP clusters, to iterate over in the loop below.
@@ -131,19 +131,19 @@ CharacterVector merge_KC_clusters_dict(const CharacterVector &clusters,
     // most_freq_string from curr_dict. Otherwise get most_freq_string from
     // curr_vect.
     if(not_in_dict) {
-      most_freq_string = most_freq_str(curr_vect);
+      most_freq_str(curr_vect, mfs);
     } else {
       if(curr_dict_len == 1) {
-        most_freq_string = curr_dict[0];
+        mfs.mf_str = curr_dict[0];
       } else {
-        most_freq_string = most_freq_str(curr_dict);
+        most_freq_str(curr_dict, mfs);
       }
     }
 
     // For each index in curr_vect_idx, edit output to be equal to
     // most_freq_string.
     for(int n = 0; n < curr_vect_len; ++n) {
-      output[curr_vect_idx[n]] = most_freq_string;
+      output[curr_vect_idx[n]] = mfs.mf_str;
     }
   }
 

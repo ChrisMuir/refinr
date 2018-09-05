@@ -24,7 +24,7 @@ CharacterVector merge_ngram_clusters(List &clusters,
 
   // Initialize variables used throughout the loop below.
   CharacterVector curr_clust;
-  String most_freq_string;
+  freq_string mfs;
   int curr_clust_len;
   int ngram_idx_len;
   int univect_sub_len;
@@ -79,11 +79,11 @@ CharacterVector merge_ngram_clusters(List &clusters,
     }
 
     // Find the string that appears most frequently in vect_sub.
-    most_freq_string = most_freq_str(vect_sub);
+    most_freq_str(vect_sub, mfs);
 
     // Edit all elements of output[uni_idx] to be equal to most_freq_string.
     for(int n = 0; n < uni_idx_len; ++n) {
-      output[uni_idx[n]] = most_freq_string;
+      output[uni_idx[n]] = mfs.mf_str;
     }
   }
 

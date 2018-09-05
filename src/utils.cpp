@@ -90,10 +90,10 @@ CharacterVector cpp_tolower(const CharacterVector &x) {
 
 // Given a CharacterVector, return the string that appears most frequently.
 // Ties are determined by the string that appears first alphabetically.
-String most_freq_str(const CharacterVector &x) {
-  IntegerVector x_tab = table(noNA(x));
-  CharacterVector tab_names = x_tab.attr("names");
-  return(tab_names[which_max(noNA(x_tab))]);
+void most_freq_str(const CharacterVector &x, freq_string &mfs) {
+  mfs.x_tab = table(noNA(x));
+  mfs.tab_names = mfs.x_tab.attr("names");
+  mfs.mf_str = mfs.tab_names[which_max(noNA(mfs.x_tab))];
 }
 
 
