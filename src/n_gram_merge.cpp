@@ -216,18 +216,23 @@ List get_stringdist_matrices(const List &clusters,
                              const SEXP &nthread) {
   int clust_len = clusters.size();
   List out(clust_len);
+  NumericVector x;
+  SEXP curr_clust;
+  int mat_dim;
+  int iter_len;
+  int x_val;
 
   for(int j = 0; j < clust_len; ++j) {
-    const SEXP &curr_clust = clusters[j];
+    curr_clust = clusters[j];
     // Run args through stringdist sd_lower_tri C function.
-    NumericVector x = stringdist_lower_tri(curr_clust, method, weight, p,
+    x = stringdist_lower_tri(curr_clust, method, weight, p,
                                            bt, q, useBytes, nthread);
     // Initialize output matrix.
-    int mat_dim = Rf_xlength(curr_clust);
+    mat_dim = Rf_xlength(curr_clust);
     NumericMatrix mat(mat_dim, mat_dim);
 
-    int iter_len = mat_dim - 1;
-    int x_val = 0;
+    iter_len = mat_dim - 1;
+    x_val = 0;
 
     // Loop to fill in the lower and upper tri of mat with the numeric values
     // of x.
