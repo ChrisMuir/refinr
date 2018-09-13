@@ -226,7 +226,7 @@ List get_stringdist_matrices(const List &clusters,
     curr_clust = clusters[j];
     // Run args through stringdist sd_lower_tri C function.
     x = stringdist_lower_tri(curr_clust, method, weight, p,
-                                           bt, q, useBytes, nthread);
+                             bt, q, useBytes, nthread);
     // Initialize output matrix.
     mat_dim = Rf_xlength(curr_clust);
     NumericMatrix mat(mat_dim, mat_dim);
@@ -271,7 +271,8 @@ List filter_initial_clusters(const List &distmatrices,
   CharacterVector max_clust;
   CharacterVector terms;
   DoubleVector curr_row;
-  IntegerVector lows_idx;
+  NumericMatrix curr_mat;
+  std::vector<int> lows_idx;
   double lowest;
   int lows_idx_len;
   int clust_len;
@@ -280,7 +281,7 @@ List filter_initial_clusters(const List &distmatrices,
 
   for(int i = 0; i < distmatrices_len; ++i) {
     // Get current matrix object, establish other variables.
-    NumericMatrix curr_mat = distmatrices[i];
+    curr_mat = as<NumericMatrix>(distmatrices[i]);
     mat_nrow = curr_mat.nrow();
 
     if(mat_nrow < 2) {
@@ -298,6 +299,7 @@ List filter_initial_clusters(const List &distmatrices,
     // iteration. Also ID whether or not any of the rows of curr_mat have more
     // than one cluster match (ie a min value that repeats within any given
     // row).
+    lows_idx.clear();
     for(int row_idx = 0; row_idx < mat_nrow; ++row_idx) {
       curr_row = curr_mat(row_idx,_);
       LogicalVector row_bool(mat_nrow);
@@ -314,6 +316,7 @@ List filter_initial_clusters(const List &distmatrices,
       lows[row_idx] = lowest;
       if(lowest < edit_threshold) {
         olap[row_idx] = sum(noNA(curr_row == lowest));
+        lows_idx.push_back(row_idx);
       }
     }
 
@@ -329,19 +332,17 @@ List filter_initial_clusters(const List &distmatrices,
     // edit distance less than edit_threshold.
     olap = olap[olap > 0];
 
-    // Get indices of obj lows that are less than edit_threshold.
-    lows_idx = seq(0, mat_nrow - 1);
-    lows_idx = lows_idx[lows < edit_threshold];
-    lows_idx_len = lows_idx.size();
-
     // Generate clusters of char keys based on the edit distance matrix values.
+    lows_idx_len = lows_idx.size();
     List clust(lows_idx_len);
     LogicalVector trim_idx(lows_idx_len, TRUE);
+    NumericVector lens_of_clusts(lows_idx_len);
     curr_clust = clusters[i];
     for(int n = 0; n < lows_idx_len; ++n) {
       terms = curr_clust[curr_mat(lows_idx[n], _) < edit_threshold];
       terms = unique(noNA(terms));
       clust[n] = terms;
+      lens_of_clusts[n] = terms.size();
       // Check to see if terms is a complete subset of an existing cluster.
       if(n > 0) {
         for(int k = 0; k < n; ++k) {
@@ -355,6 +356,7 @@ List filter_initial_clusters(const List &distmatrices,
 
     // trim objs clust and olap to only include unique clusters.
     clust = clust[trim_idx];
+    lens_of_clusts = lens_of_clusts[trim_idx];
     olap = olap[trim_idx];
 
     // If any rows of curr_mat have a min edit distance that repeats,
@@ -362,11 +364,6 @@ List filter_initial_clusters(const List &distmatrices,
     // cluster of the group.
     clust_len = clust.size();
     if(sum(noNA(olap > 1)) > 0 and clust_len > 1) {
-      NumericVector lens_of_clusts(clust_len);
-      for(int n = 0; n < clust_len; ++n) {
-        lens_of_clusts[n] = clust.size();
-      }
-
       // Eliminate any clusters that are complete subsets of the longest
       // cluster of the group.
       max_clust_idx = which_max(noNA(lens_of_clusts));
