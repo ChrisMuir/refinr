@@ -302,20 +302,15 @@ List remove_strings(List &input, std::vector<std::string> &removes) {
 
   int input_len = input.size();
   List out(input_len);
-
-  CharacterVector curr_vect;
-  int curr_vect_len;
+  std::vector<std::string> curr_vect;
   std::deque<std::string> curr_vect_out;
-  std::string curr_str;
 
   for(int i = 0; i < input_len; ++i) {
-    curr_vect = input[i];
-    curr_vect_len = curr_vect.size();
+    curr_vect = as<std::vector<std::string> >(input[i]);
     curr_vect_out.clear();
-    for(int n = 0; n < curr_vect_len; ++n) {
-      curr_str = as<std::string>(curr_vect[n]);
-      if(removes_set.find(curr_str) == removes_set.end()) {
-        curr_vect_out.push_back(curr_str);
+    for(unsigned int n = 0; n < curr_vect.size(); ++n) {
+      if(removes_set.find(curr_vect[n]) == removes_set.end()) {
+        curr_vect_out.push_back(curr_vect[n]);
       }
     }
 

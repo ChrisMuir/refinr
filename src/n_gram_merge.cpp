@@ -179,9 +179,9 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
   // SEXP unigram_dups, to iterate over in the loop below.
   SEXP* ptr = get_string_ptr(unigram_dups);
 
-  int i = 0;
-  int curr_idx_len;
   std::vector<int> curr_idx;
+  std::vector<std::string> curr_ngram;
+  std::string curr_str;
 
   // Iterate over unigram_dups, for each value get the corresponding indices
   // from unigram_map, Use those indices to subset ngram_keys, save the subset
@@ -190,14 +190,13 @@ List get_ngram_initial_clusters(CharacterVector ngram_keys,
     // Create subset of ngram_keys using the indices from unigram_map that
     // correspond to the current unigram_dup iteration.
     curr_idx = unigram_map[ptr[j]];
-    curr_idx_len = curr_idx.size();
-    CharacterVector curr_ngram(curr_idx_len);
-    for(int n = 0; n < curr_idx_len; ++n) {
-      curr_ngram[n] = ngram_keys[curr_idx[n]];
+    curr_ngram.clear();
+    for(unsigned int n = 0; n < curr_idx.size(); ++n) {
+      curr_str = ngram_keys[curr_idx[n]];
+      curr_ngram.push_back(curr_str);
     }
 
-    out[i] = curr_ngram;
-    i++;
+    out[j] = curr_ngram;
   }
 
   return out;
@@ -407,6 +406,7 @@ List char_ngram(const std::vector<std::string> &strings, const int &numgram) {
   int numgram_sub = numgram - 1;
 
   IntegerVector idx;
+  std::vector<std::string> curr_out;
   std::string curr_str;
   std::string curr_token;
   int curr_str_len;
@@ -418,14 +418,14 @@ List char_ngram(const std::vector<std::string> &strings, const int &numgram) {
       out[i] = NA_STRING;
       continue;
     }
-    CharacterVector curr_out(curr_str_len);
+    curr_out.clear();
     for(int j = 0; j < curr_str_len; ++j) {
       idx = seq(j, j + numgram_sub);
       curr_token.clear();
       for(int k = 0; k < numgram; ++k) {
         curr_token += curr_str[idx[k]];
       }
-      curr_out[j] = curr_token;
+      curr_out.push_back(curr_token);
     }
     out[i] = curr_out;
   }
