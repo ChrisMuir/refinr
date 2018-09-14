@@ -270,10 +270,12 @@ List filter_initial_clusters(const List &distmatrices,
   CharacterVector curr_clust;
   CharacterVector max_clust;
   CharacterVector terms;
-  DoubleVector curr_row;
   NumericMatrix curr_mat;
   std::vector<int> lows_idx;
+  std::vector<double> lows;
+  std::vector<double> curr_row;
   double lowest;
+  int lowest_count;
   int lows_idx_len;
   int clust_len;
   int max_clust_idx;
@@ -291,38 +293,39 @@ List filter_initial_clusters(const List &distmatrices,
       continue;
     }
 
-    DoubleVector lows(mat_nrow);
-    IntegerVector olap(mat_nrow, 0);
-
     // For each row of curr_mat, get the min value present. If none are below
     // the edit_threshold, append NA to the output and move to the next
     // iteration. Also ID whether or not any of the rows of curr_mat have more
     // than one cluster match (ie a min value that repeats within any given
     // row).
+    IntegerVector olap(mat_nrow, 0);
+    curr_row.clear();
+    lows.clear();
     lows_idx.clear();
     for(int row_idx = 0; row_idx < mat_nrow; ++row_idx) {
-      curr_row = curr_mat(row_idx,_);
-      LogicalVector row_bool(mat_nrow);
+      curr_row.clear();
       for(int n = 0; n < mat_nrow; ++n) {
         if(n != row_idx) {
-          row_bool[n] = TRUE;
-        } else {
-          row_bool[n] = FALSE;
+          curr_row.push_back(curr_mat(row_idx, n));
         }
       }
-
-      curr_row = curr_row[row_bool];
-      lowest = min(noNA(curr_row));
-      lows[row_idx] = lowest;
+      lowest = *std::min_element(curr_row.begin(), curr_row.end());
+      lows.push_back(lowest);
       if(lowest < edit_threshold) {
-        olap[row_idx] = sum(noNA(curr_row == lowest));
+        lowest_count = 0;
+        for(unsigned int n = 0; n < curr_row.size(); ++n) {
+          if(curr_row[n] == lowest) {
+            lowest_count += 1;
+          }
+        }
+        olap[row_idx] = lowest_count;
         lows_idx.push_back(row_idx);
       }
     }
 
     // If none of the rows in curr_mat contain an edit distance value below
     // the edit_threshold, return NA and move on to the next iteration.
-    if(is_true(all(noNA(lows > edit_threshold)))) {
+    if(lows_idx.size() == 0) {
       out[i] = NA_STRING;
       na_filter[i] = FALSE;
       continue;
@@ -368,16 +371,13 @@ List filter_initial_clusters(const List &distmatrices,
       // cluster of the group.
       max_clust_idx = which_max(noNA(lens_of_clusts));
       max_clust = clust[max_clust_idx];
-      LogicalVector clust_bool(clust_len);
+      LogicalVector clust_bool(clust_len, TRUE);
 
       for(int n = 0; n < clust_len; ++n) {
-        curr_clust = clust[n];
         if(n == max_clust_idx) {
-          clust_bool[n] = TRUE;
           continue;
         }
-
-        clust_bool[n] = !cpp_all(curr_clust, max_clust);
+        clust_bool[n] = !cpp_all(clust[n], max_clust);
       }
 
       clust = clust[clust_bool];
