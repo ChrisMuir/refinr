@@ -5,7 +5,7 @@
 \title{Value merging based on Key Collision}
 \usage{
 key_collision_merge(vect, ignore_strings = NULL, bus_suffix = TRUE,
-  dict = NULL)
+  address_suffix = TRUE, dict = NULL)
 }
 \arguments{
 \item{vect}{Character vector, items to be potentially clustered and merged.}
@@ -15,6 +15,9 @@ the merging of values within \code{vect}. Default value is NULL.}
 
 \item{bus_suffix}{Logical, indicating whether the merging of records should
 be insensitive to common business suffixes or not. Default value is TRUE.}
+
+\item{address_suffix}{Logical, indicating whether the merging of records should
+be insensitive to common address street/road strings or not. Default value is TRUE.}
 
 \item{dict}{Character vector, meant to act as a dictionary during the
 merging process. If any items within \code{vect} have a match in dict,

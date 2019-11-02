@@ -10,6 +10,8 @@
 #'   the merging of values within \code{vect}. Default value is NULL.
 #' @param bus_suffix Logical, indicating whether the merging of records should
 #'   be insensitive to common business suffixes or not. Default value is TRUE.
+#' @param address_suffix Logical, indicating whether the merging of records should
+#'   be insensitive to common address street/road strings or not. Default value is TRUE.
 #' @param dict Character vector, meant to act as a dictionary during the
 #'   merging process. If any items within \code{vect} have a match in dict,
 #'   then those items will always be edited to be identical to their match in
@@ -33,9 +35,10 @@
 #' key_collision_merge(x, ignore_strings = c("high", "school", "highschool"))
 #'
 key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
-                                dict = NULL) {
+                                address_suffix = TRUE, dict = NULL) {
   stopifnot(is.character(vect))
   stopifnot(is.logical(bus_suffix))
+  stopifnot(is.logical(address_suffix))
   stopifnot(is.null(dict) || is.character(dict))
   stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
 
@@ -52,9 +55,9 @@ key_collision_merge <- function(vect, ignore_strings = NULL, bus_suffix = TRUE,
 
   # Get vector of key values. If dict is not NULL, get vector of key values
   # for dict as well.
-  keys_vect <- get_fingerprint_KC(vect, bus_suffix, ignore_strings)
+  keys_vect <- get_fingerprint_KC(vect, bus_suffix, address_suffix, ignore_strings)
   if (!is_dict_null) {
-    keys_dict <- get_fingerprint_KC(dict, bus_suffix, ignore_strings)
+    keys_dict <- get_fingerprint_KC(dict, bus_suffix, address_suffix, ignore_strings)
   } else {
     keys_dict <- NA_character_
     dict <- NA_character_

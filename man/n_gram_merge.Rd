@@ -4,8 +4,9 @@
 \alias{n_gram_merge}
 \title{Value merging based on ngram fingerprints}
 \usage{
-n_gram_merge(vect, numgram = 2, ignore_strings = NULL, bus_suffix = TRUE,
-  edit_threshold = 1, weight = c(d = 0.33, i = 0.33, s = 1, t = 0.5), ...)
+n_gram_merge(vect, numgram = 2, ignore_strings = NULL,
+  bus_suffix = TRUE, address_suffix = TRUE, edit_threshold = 1,
+  weight = c(d = 0.33, i = 0.33, s = 1, t = 0.5), ...)
 }
 \arguments{
 \item{vect}{Character vector, items to be potentially clustered and merged.}
@@ -18,6 +19,9 @@ the merging of values within \code{vect}. Default value is NULL.}
 
 \item{bus_suffix}{Logical, indicating whether the merging of records should
 be insensitive to common business suffixes or not. Default value is TRUE.}
+
+\item{address_suffix}{Logical, indicating whether the merging of records should
+be insensitive to common address street/road strings or not. Default value is TRUE.}
 
 \item{edit_threshold}{Numeric value, indicating the threshold at which a
 merge is performed, based on the sum of the edit values derived from

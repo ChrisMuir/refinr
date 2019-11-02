@@ -1,7 +1,7 @@
 #' Given a character vector as input, get the key collision fingerprint for
 #' each element.
 #' @noRd
-get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
+get_fingerprint_KC <- function(vect, bus_suffix = TRUE, address_suffix = TRUE,
                                ignore_strings = NULL) {
   # Remove char accent marks.
   vect <- remove_accents(vect)
@@ -22,6 +22,9 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
                           "lp", "and")
     }
   }
+  if (address_suffix) {
+    vect <- address_suffix(vect)
+  }
   vect <- strsplit(cpp_trimws_left(vect), " ", fixed = TRUE)
   # If "ignore_strings" is not NULL, for each element of list "vect", remove
   # any string that has a match within vector "ignore_strings".
@@ -36,7 +39,7 @@ get_fingerprint_KC <- function(vect, bus_suffix = TRUE,
 #' element of the input.
 #'@noRd
 get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
-                                  ignore_strings = NULL) {
+                                  address_suffix = TRUE, ignore_strings = NULL) {
   # Remove char accent marks.
   vect <- remove_accents(vect)
   if(!is.null(ignore_strings)) ignore_strings <- remove_accents(ignore_strings)
@@ -55,6 +58,9 @@ get_fingerprint_ngram <- function(vect, numgram = 2, bus_suffix = TRUE,
       ignore_strings <- c("inc", "corp", "co", "llc", "ltd", "div", "ent",
                           "lp", "and")
     }
+  }
+  if (address_suffix) {
+    vect <- address_suffix(vect)
   }
   if (!is.null(ignore_strings)) {
     # Use values in "ignore_strings" to create a regex of substrings to
@@ -91,6 +97,15 @@ business_suffix <- function(vect) {
   vect <- gsub(" division| divisions", " div", vect, perl = TRUE)
   vect <- gsub(" enterprises| enterprise", " ent", vect, perl = TRUE)
   vect <- gsub(" limited partnership", " lp", vect, fixed = TRUE)
+  return(vect)
+}
+
+# Function that attempts to merge common address suffixes within a
+# character string.
+address_suffix <- function(vect) {
+  vect <- gsub(" avenue| av", " ave", vect, perl = TRUE)
+  vect <- gsub(" street", " st", vect, fixed = TRUE)
+  vect <- gsub(" road", " rd", vect, fixed = TRUE)
   return(vect)
 }
 

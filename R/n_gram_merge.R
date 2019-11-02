@@ -15,6 +15,8 @@
 #'   the merging of values within \code{vect}. Default value is NULL.
 #' @param bus_suffix Logical, indicating whether the merging of records should
 #'   be insensitive to common business suffixes or not. Default value is TRUE.
+#' @param address_suffix Logical, indicating whether the merging of records should
+#'   be insensitive to common address street/road strings or not. Default value is TRUE.
 #' @param edit_threshold Numeric value, indicating the threshold at which a
 #'   merge is performed, based on the sum of the edit values derived from
 #'   param \code{weight}. Default value is 1. If this parameter is
@@ -61,13 +63,14 @@
 #' n_gram_merge(vect = x, ignore_strings = c("high", "school", "highschool"))
 #'
 n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
-                         bus_suffix = TRUE, edit_threshold = 1,
+                         bus_suffix = TRUE, address_suffix = TRUE, edit_threshold = 1,
                          weight = c(d = 0.33, i = 0.33, s = 1, t = 0.5), ...) {
   # Input validation.
   stopifnot(is.character(vect))
   stopifnot(is.numeric(numgram))
   stopifnot(is.numeric(edit_threshold) || is.na(edit_threshold))
   stopifnot(is.logical(bus_suffix))
+  stopifnot(is.logical(address_suffix))
   stopifnot(is.null(ignore_strings) || is.character(ignore_strings))
   if (all(!is.na(weight))) {
     if (!is.numeric(weight) && length(weight) != 4) {
@@ -172,13 +175,13 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
   univect <- cpp_unique(vect[!is.na(vect)])
   if (!edit_threshold_missing) {
     one_gram_keys <- get_fingerprint_ngram(univect, numgram = 1, bus_suffix,
-                                           ignore_strings)
+                                           address_suffix, ignore_strings)
   } else {
     one_gram_keys <- NULL
   }
   # Get ngram == numgram keys for all records.
   n_gram_keys <- get_fingerprint_ngram(univect, numgram = numgram, bus_suffix,
-                                       ignore_strings)
+                                       address_suffix, ignore_strings)
 
   # If approximate string matching is not being used, return output of
   # ngram_merge_no_approx().
