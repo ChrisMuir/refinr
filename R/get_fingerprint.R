@@ -103,10 +103,15 @@ business_suffix <- function(vect) {
 # Function that attempts to merge common address suffixes within a
 # character string.
 address_suffix <- function(vect) {
-  vect <- gsub(" avenue| av\\b", " ave", vect, perl = TRUE)
-  vect <- gsub(" street", " st", vect, fixed = TRUE)
-  vect <- gsub(" road", " rd", vect, fixed = TRUE)
-  vect <- gsub(" boulevard", " blvd", vect, fixed = TRUE)
+  vect <- gsub(" avenue\\b| av\\b", " ave", vect, perl = TRUE)
+  vect <- gsub(" street\\b", " st", vect, perl = TRUE)
+  vect <- gsub(" road\\b", " rd", vect, perl = TRUE)
+  vect <- gsub(" boulevard\\b", " blvd", vect, perl = TRUE)
+  vect <- gsub(" highway\\b", " hwy", vect, perl = TRUE)
+  vect <- gsub(" court\\b", " ct", vect, perl = TRUE)
+  vect <- gsub(" lane\\b", " ln", vect, perl = TRUE)
+  vect <- gsub(" parkway\\b", " pkwy", vect, perl = TRUE)
+  vect <- gsub(" circle\\b", " cir", vect, perl = TRUE)
   return(vect)
 }
 
