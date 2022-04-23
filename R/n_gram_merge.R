@@ -82,7 +82,7 @@ n_gram_merge <- function(vect, numgram = 2, ignore_strings = NULL,
     edit_threshold <- NA
   }
   edit_threshold_missing <- is.na(edit_threshold)
-  if (!edit_threshold_missing && is.na(weight)) {
+  if (!edit_threshold_missing && any(is.na(weight))) {
     stop("param 'weight' must not be NA if 'edit_threshold'is not NA",
          call. = FALSE)
   }
