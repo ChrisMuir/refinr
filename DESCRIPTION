@@ -7,7 +7,7 @@ Description: These functions take a character vector as input, identify and
   become identical. The functions are an implementation of the key collision 
   and ngram fingerprint algorithms from the open source tool Open Refine 
   <https://openrefine.org/>. More info on key collision and ngram fingerprint 
-  can be found here <https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth>.
+  can be found here <https://docs.openrefine.org/next/technical-reference/clustering-in-depth/>.
 Depends: R (>= 3.0.2)
 License: GPL-3
 Encoding: UTF-8

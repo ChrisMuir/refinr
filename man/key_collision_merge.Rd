@@ -32,7 +32,7 @@ Character vector with similar values merged.
 This function takes a character vector and makes edits and merges values
 that are approximately equivalent yet not identical. It clusters values
 based on the key collision method, described here
-\url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}.
+\url{https://docs.openrefine.org/next/technical-reference/clustering-in-depth/}.
 }
 \examples{
 x <- c("Acme Pizza, Inc.", "ACME PIZZA COMPANY", "pizza, acme llc",

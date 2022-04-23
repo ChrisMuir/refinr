@@ -9,7 +9,7 @@
 #'
 #' \itemize{
 #'   \item Open Refine Site \url{https://openrefine.org/}
-#'   \item Details on Open Refine clustering algorithms \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}
+#'   \item Details on Open Refine clustering algorithms \url{https://docs.openrefine.org/next/technical-reference/clustering-in-depth/}
 #' }
 #'
 #' @section Development links:
