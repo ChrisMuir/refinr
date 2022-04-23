@@ -4,8 +4,15 @@
 \alias{n_gram_merge}
 \title{Value merging based on ngram fingerprints}
 \usage{
-n_gram_merge(vect, numgram = 2, ignore_strings = NULL, bus_suffix = TRUE,
-  edit_threshold = 1, weight = c(d = 0.33, i = 0.33, s = 1, t = 0.5), ...)
+n_gram_merge(
+  vect,
+  numgram = 2,
+  ignore_strings = NULL,
+  bus_suffix = TRUE,
+  edit_threshold = 1,
+  weight = c(d = 0.33, i = 0.33, s = 1, t = 0.5),
+  ...
+)
 }
 \arguments{
 \item{vect}{Character vector, items to be potentially clustered and merged.}

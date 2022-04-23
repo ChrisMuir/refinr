@@ -4,8 +4,12 @@
 \alias{key_collision_merge}
 \title{Value merging based on Key Collision}
 \usage{
-key_collision_merge(vect, ignore_strings = NULL, bus_suffix = TRUE,
-  dict = NULL)
+key_collision_merge(
+  vect,
+  ignore_strings = NULL,
+  bus_suffix = TRUE,
+  dict = NULL
+)
 }
 \arguments{
 \item{vect}{Character vector, items to be potentially clustered and merged.}

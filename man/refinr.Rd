@@ -3,7 +3,6 @@
 \docType{package}
 \name{refinr}
 \alias{refinr}
-\alias{refinr-package}
 \title{Cluster and Merge Similar Values Within a Character Vector}
 \description{
 These functions take a character vector as input, identify and
@@ -15,7 +14,7 @@ These functions take a character vector as input, identify and
 
 
 \itemize{
-  \item Open Refine Site \url{http://openrefine.org/}
+  \item Open Refine Site \url{https://openrefine.org/}
   \item Details on Open Refine clustering algorithms \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}
 }
 }

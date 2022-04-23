@@ -1,13 +1,15 @@
 ## Test environments
-* local Windows 10 install, R 3.5.0
-* OSX 10.12.6 (on travis-ci), R 3.5.0
-* ubuntu 14.04.5 (on travis-ci), R 3.5.0
-* CRAN win-builder, R Under development (unstable) (2018-06-15 r74904)
+* macOS Catalina 10.15.7, R 4.1.3
+* CRAN win-builder, R Under development (unstable) (2022-04-22 r82232 ucrt)
 
 ## R CMD check results
+0 errors | 0 warnings | 1 notes
 
-0 errors | 0 warnings | 0 note
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Chris Muir <chrismuirRVA@gmail.com>'
 
-## Reverse dependencies
+------------
 
-There are no reverse dependencies.
+Package changes implemented in this version:
+
+* Fix `failure: length > 1 in coercion to logical` issue in `n_gram_merge()`, in commit [4336ee6](https://github.com/ChrisMuir/refinr/commit/4336ee617a075a0b8cd0af1092ef299c14b49f25).

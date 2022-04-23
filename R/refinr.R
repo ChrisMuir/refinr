@@ -8,7 +8,7 @@
 #' @section Documentation for Open Refine:
 #'
 #' \itemize{
-#'   \item Open Refine Site \url{http://openrefine.org/}
+#'   \item Open Refine Site \url{https://openrefine.org/}
 #'   \item Details on Open Refine clustering algorithms \url{https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth}
 #' }
 #'

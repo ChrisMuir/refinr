@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ## Package Information
 
-The purpose of this package is to assist in working with strings that are effectively equivalent, yet are not quite identical. The functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The clustering performed by these functions are implementations of the "key collision" and "ngram fingerprint" algorithms from the open source tool [Open Refine](http://openrefine.org/). More info on key collision and ngram fingerprint can be found [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth).
+The purpose of this package is to assist in working with strings that are effectively equivalent, yet are not quite identical. The functions take a character vector as input, identify and cluster similar values, and then merge clusters together so their values become identical. The clustering performed by these functions are implementations of the "key collision" and "ngram fingerprint" algorithms from the open source tool [Open Refine](https://openrefine.org/). More info on key collision and ngram fingerprint can be found [here](https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth).
 
 In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process.
 

@@ -1,3 +1,8 @@
+refinr 0.3.2
+============
+
+* Fix `failure: length > 1 in coercion to logical` issue in `n_gram_merge()`, in commit [4336ee6](https://github.com/ChrisMuir/refinr/commit/4336ee617a075a0b8cd0af1092ef299c14b49f25).
+
 refinr 0.3.1
 ============
 
