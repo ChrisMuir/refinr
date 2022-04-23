@@ -449,7 +449,7 @@ CharacterVector cpp_get_char_ngrams(const std::vector<std::string> &vects,
   vects_mod = cpp_list_unique(vects_mod, TRUE);
 
   // For each element of vects, combine all ngram strings into a single string,
-  // equivelant to calling r func paste(char_vect, collapse = "") on each
+  // equivalent to calling r func paste(char_vect, collapse = "") on each
   // element of vects.
   CharacterVector out = cpp_paste_list(vects_mod, "");
 
