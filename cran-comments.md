@@ -13,3 +13,4 @@ Maintainer: 'Chris Muir <chrismuirRVA@gmail.com>'
 Package changes implemented in this version:
 
 * Docs patch, at the request of CRAN ([#15](https://github.com/ChrisMuir/refinr/issues/15))
+* Remove requirement on C++11. For more info, see [here](https://www.tidyverse.org/blog/2023/03/cran-checks-compiled-code/#note-regarding-systemrequirements-c11).
