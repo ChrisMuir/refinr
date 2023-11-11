@@ -9,7 +9,7 @@
 #'
 #' \itemize{
 #'   \item Open Refine Site \url{https://openrefine.org/}
-#'   \item Details on Open Refine clustering algorithms \url{https://docs.openrefine.org/next/technical-reference/clustering-in-depth/}
+#'   \item Details on Open Refine clustering algorithms \url{https://openrefine.org/docs/technical-reference/clustering-in-depth}
 #' }
 #'
 #' @section Development links:
@@ -31,4 +31,4 @@
 #' @importFrom stringi stri_trans_general
 #' @docType package
 #' @name refinr
-NULL
+"_PACKAGE"

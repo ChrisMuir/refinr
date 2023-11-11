@@ -1,13 +1,13 @@
 refinr
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/ChrisMuir/refinr.svg?branch=master)](https://travis-ci.org/ChrisMuir/refinr)
+[![Travis-CI Build Status](https://app.travis-ci.com/ChrisMuir/refinr)](https://app.travis-ci.com/ChrisMuir/refinr)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ChrisMuir/refinr?branch=master&svg=true)](https://ci.appveyor.com/project/ChrisMuir/refinr)
 [![Coverage Status](https://img.shields.io/codecov/c/github/ChrisMuir/refinr/master.svg)](https://app.codecov.io/gh/ChrisMuir/refinr)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/refinr)](https://cran.r-project.org/package=refinr)
 
 
-refinr is designed to cluster and merge similar values within a character vector. It features two functions that are implementations of clustering algorithms from the open source software [OpenRefine](https://openrefine.org/). The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://docs.openrefine.org/next/technical-reference/clustering-in-depth/)).
+refinr is designed to cluster and merge similar values within a character vector. It features two functions that are implementations of clustering algorithms from the open source software [OpenRefine](https://openrefine.org/). The cluster methods used are key collision and ngram fingerprint (more info on these [here](https://openrefine.org/docs/technical-reference/clustering-in-depth)).
 
 In addition, there are a few add-on features included, to make the clustering/merging functions more useful. These include approximate string matching to allow for merging despite minor mispellings, the option to pass a dictionary vector to dictate edit values, and the option to pass a vector of strings to ignore during the clustering process.
 

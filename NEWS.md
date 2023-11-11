@@ -1,3 +1,8 @@
+refinr 0.3.3
+============
+
+* Docs patch, at the request of CRAN ([#15](https://github.com/ChrisMuir/refinr/issues/15))
+
 refinr 0.3.2
 ============
 
