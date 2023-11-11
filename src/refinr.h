@@ -1,8 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::plugins(cpp11)]]
-
 
 // Data structure used by function most_freq_str()
 struct freq_string {
