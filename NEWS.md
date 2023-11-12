@@ -2,6 +2,7 @@ refinr 0.3.3
 ============
 
 * Docs patch, at the request of CRAN ([#15](https://github.com/ChrisMuir/refinr/issues/15))
+* Remove requirement on C++11. For more info, see [here](https://www.tidyverse.org/blog/2023/03/cran-checks-compiled-code/#note-regarding-systemrequirements-c11).
 
 refinr 0.3.2
 ============
