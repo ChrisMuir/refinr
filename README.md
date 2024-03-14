@@ -1,7 +1,6 @@
 refinr
 ======
 
-[![Travis-CI Build Status](https://app.travis-ci.com/ChrisMuir/refinr)](https://app.travis-ci.com/ChrisMuir/refinr)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ChrisMuir/refinr?branch=master&svg=true)](https://ci.appveyor.com/project/ChrisMuir/refinr)
 [![Coverage Status](https://img.shields.io/codecov/c/github/ChrisMuir/refinr/master.svg)](https://app.codecov.io/gh/ChrisMuir/refinr)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/refinr)](https://cran.r-project.org/package=refinr)
